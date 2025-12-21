@@ -1,0 +1,17 @@
+{
+  "seoTitle": "Shopping Cart - Online24 Pharma",
+  "title": "Your Cart",
+  "itemsCount": "You have {{count}} item(s) in your cart",
+  "emptyTitle": "Your Cart is Empty",
+  "emptyDescription": "Add some products to get started",
+  "unitPrice": "Unit Price",
+  "quantity": "Quantity",
+  "total": "Total",
+  "subtotal": "Subtotal",
+  "deliveryFee": "Delivery Fee",
+  "free": "Free",
+  "proceedCheckout": "Proceed to Checkout",
+  "continueShopping": "Continue Shopping",
+  "prescriptionRequired": "Prescription Required",
+  "prescriptionWarning": "Please upload prescriptions for required items"
+}

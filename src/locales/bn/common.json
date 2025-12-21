@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "home": "হোম",
+    "products": "পণ্য",
+    "categories": "বিভাগ",
+    "prescription": "প্রেসক্রিপশন",
+    "deliveryMap": "ডেলিভারি ম্যাপ",
+    "trackOrder": "অর্ডার ট্র্যাক করুন",
+    "myOrders": "আমার অর্ডার",
+    "about": "আমাদের সম্পর্কে",
+    "contact": "যোগাযোগ",
+    "login": "লগইন",
+    "signup": "সাইন আপ",
+    "logout": "লগআউট",
+    "account": "অ্যাকাউন্ট",
+    "cart": "কার্ট"
+  },
+  "buttons": {
+    "save": "সংরক্ষণ করুন",
+    "cancel": "বাতিল",
+    "delete": "মুছুন",
+    "edit": "সম্পাদনা",
+    "submit": "জমা দিন",
+    "close": "বন্ধ করুন",
+    "confirm": "নিশ্চিত করুন",
+    "back": "পিছনে",
+    "next": "পরবর্তী",
+    "viewAll": "সব দেখুন",
+    "browseProducts": "পণ্য ব্রাউজ করুন",
+    "addToCart": "কার্টে যোগ করুন",
+    "buyNow": "এখনই কিনুন"
+  },
+  "status": {
+    "loading": "লোড হচ্ছে...",
+    "saving": "সংরক্ষণ করা হচ্ছে...",
+    "submitting": "জমা দেওয়া হচ্ছে...",
+    "processing": "প্রক্রিয়াধীন...",
+    "success": "সফল",
+    "error": "ত্রুটি",
+    "pending": "অপেক্ষমাণ",
+    "confirmed": "নিশ্চিত",
+    "delivered": "ডেলিভার হয়েছে",
+    "cancelled": "বাতিল"
+  },
+  "errors": {
+    "required": "এই ক্ষেত্রটি প্রয়োজনীয়",
+    "invalidEmail": "অবৈধ ইমেইল ঠিকানা",
+    "invalidPhone": "অবৈধ ফোন নম্বর",
+    "networkError": "নেটওয়ার্ক ত্রুটি। আবার চেষ্টা করুন।",
+    "serverError": "সার্ভার ত্রুটি। পরে আবার চেষ্টা করুন।",
+    "notFound": "পাওয়া যায়নি",
+    "unauthorized": "অননুমোদিত অ্যাক্সেস"
+  },
+  "footer": {
+    "aboutUs": "আমাদের সম্পর্কে",
+    "customerService": "গ্রাহক সেবা",
+    "contactUs": "যোগাযোগ করুন",
+    "faqs": "সাধারণ প্রশ্ন",
+    "privacyPolicy": "গোপনীয়তা নীতি",
+    "termsOfService": "সেবার শর্তাবলী",
+    "copyright": "© {{year}} অনলাইন২৪ ফার্মাসি। সর্বস্বত্ব সংরক্ষিত।",
+    "licensed": "ডিজিডিএ লাইসেন্সপ্রাপ্ত"
+  }
+}

@@ -1,0 +1,99 @@
+[
+  {
+    "id": "1765271486636",
+    "referenceNumber": "RX17652714866237R19OS",
+    "userId": "user_001",
+    "prescriptionImage": "/uploads/prescriptions/rx-1765271486546-994900501.jpeg",
+    "patientName": "SHAWON",
+    "patientAge": 23,
+    "patientPhone": "01712353914",
+    "patientAddress": "Uttara",
+    "doctorName": "DR. SKF",
+    "hospitalClinic": "DMC",
+    "prescriptionDate": "2025-12-09T00:00:00.000Z",
+    "expiresAt": "2026-06-09T00:00:00.000Z",
+    "isReorderable": true,
+    "status": "APPROVED",
+    "items": [
+      "/uploads/prescriptions/rx-1765271486546-994900501.jpeg"
+    ],
+    "createdAt": "2025-12-09T09:11:26.636Z",
+    "adminNotes": "Verified",
+    "verifiedBy": "550e8400-e29b-41d4-a716-446655440000",
+    "verifiedAt": "2025-12-09T09:12:24.174Z"
+  },
+  {
+    "id": "1765260454500",
+    "userId": "550e8400-e29b-41d4-a716-446655440000",
+    "prescriptionImage": "/uploads/prescriptions/rx-1765260454346-36762013.jpg",
+    "doctorName": "DR. SK",
+    "prescriptionDate": "2025-12-09T00:00:00.000Z",
+    "expiresAt": "2026-06-09T00:00:00.000Z",
+    "isReorderable": true,
+    "status": "APPROVED",
+    "items": [
+      "/uploads/prescriptions/rx-1765260454346-36762013.jpg"
+    ],
+    "createdAt": "2025-12-09T06:07:34.500Z",
+    "referenceNumber": "RX1765260454500",
+    "adminNotes": "Verified",
+    "verifiedBy": "550e8400-e29b-41d4-a716-446655440000",
+    "verifiedAt": "2025-12-09T09:08:49.909Z"
+  },
+  {
+    "id": "1765259475385",
+    "userId": "550e8400-e29b-41d4-a716-446655440000",
+    "prescriptionImage": "/uploads/prescriptions/rx-1765259475332-893535624.png",
+    "doctorName": "DR. shawon",
+    "prescriptionDate": "2025-12-09T00:00:00.000Z",
+    "expiresAt": "2026-06-09T00:00:00.000Z",
+    "isReorderable": true,
+    "status": "APPROVED",
+    "items": [
+      "/uploads/prescriptions/rx-1765259475332-893535624.png"
+    ],
+    "createdAt": "2025-12-09T05:51:15.385Z",
+    "referenceNumber": "RX1765259475385",
+    "adminNotes": "Verified",
+    "verifiedBy": "550e8400-e29b-41d4-a716-446655440000",
+    "verifiedAt": "2025-12-09T09:08:53.991Z"
+  },
+  {
+    "id": "1764651855570",
+    "userId": "550e8400-e29b-41d4-a716-446655440000",
+    "referenceNumber": "RX1764651855566",
+    "patientName": "Test Patient",
+    "patientAge": 30,
+    "patientPhone": "+8801712345678",
+    "patientAddress": "Test Address",
+    "doctorName": "Dr. Test",
+    "hospitalClinic": "Test Hospital",
+    "prescriptionDate": "2025-12-02T05:04:15.553Z",
+    "files": [],
+    "status": "APPROVED",
+    "createdAt": "2025-12-02T05:04:15.570Z",
+    "adminNotes": "Verified",
+    "verifiedBy": "550e8400-e29b-41d4-a716-446655440000",
+    "verifiedAt": "2025-12-09T09:08:57.769Z"
+  },
+  {
+    "id": "1764234509495",
+    "userId": "user_001",
+    "referenceNumber": "RX1764234509495",
+    "patientName": "shawon",
+    "patientAge": "24",
+    "patientPhone": "02987407441",
+    "patientAddress": "Uttara",
+    "doctorName": "DR. shawon",
+    "hospitalClinic": "DMC",
+    "prescriptionDate": "2025-11-27",
+    "files": [
+      "/uploads/prescriptions/rx-1764234509431-635065441.jpg"
+    ],
+    "status": "APPROVED",
+    "createdAt": "2025-11-27T09:08:29.495Z",
+    "adminNotes": "Verified",
+    "verifiedBy": "550e8400-e29b-41d4-a716-446655440000",
+    "verifiedAt": "2025-12-09T09:09:01.788Z"
+  }
+]

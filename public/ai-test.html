@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #10B981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #059669;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #10B981;
+            background: #f0fdf4;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 AI Pharmacy Assistant Test</h1>
+    
+    <div class="test-card">
+        <h2>📋 Manual Testing Instructions</h2>
+        <div class="info status">
+            <strong>Step 1:</strong> Look for the AI chatbot button in the bottom-right corner
+        </div>
+        <div class="info status">
+            <strong>Step 2:</strong> Click the pulsing green button with "AI" badge
+        </div>
+        <div class="info status">
+            <strong>Step 3:</strong> Wait for the greeting message
+        </div>
+        <div class="info status">
+            <strong>Step 4:</strong> Try these test queries below
+        </div>
+    </div>
+
+    <div class="test-card">
+        <h2>🧪 Test Queries</h2>
+        <p>Click any button to copy the test query, then paste it into the AI chatbot:</p>
+        
+        <button onclick="copyText('Hello')">Test 1: Greeting</button>
+        <button onclick="copyText('I have fever')">Test 2: Symptom</button>
+        <button onclick="copyText('Tell me about Paracetamol')">Test 3: Medicine</button>
+        <button onclick="copyText('What are your delivery areas?')">Test 4: Store Info</button>
+        <button onclick="copyText('chest pain emergency')">Test 5: Emergency</button>
+        <button onclick="copyText('জ্বর আছে')">Test 6: Bengali</button>
+        
+        <div id="copyStatus" style="margin-top: 10px;"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>✅ Expected Results</h2>
+        
+        <div class="test-result">
+            <h3>Test 1: Greeting</h3>
+            <strong>Input:</strong> "Hello"<br>
+            <strong>Expected:</strong> Welcome message with service overview and quick actions
+        </div>
+
+        <div class="test-result">
+            <h3>Test 2: Symptom Query</h3>
+            <strong>Input:</strong> "I have fever"<br>
+            <strong>Expected:</strong>
+            <ul>
+                <li>Medicine recommendations (Paracetamol, Ibuprofen)</li>
+                <li>Care instructions with dosages</li>
+                <li>Warning about when to see doctor</li>
+                <li>AI Response badge visible</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Test 3: Medicine Information</h3>
+            <strong>Input:</strong> "Tell me about Paracetamol"<br>
+            <strong>Expected:</strong>
+            <ul>
+                <li>Generic name (Acetaminophen)</li>
+                <li>Uses (fever, headache, pain)</li>
+                <li>Dosage instructions</li>
+                <li>Maximum dose</li>
+                <li>Side effects and precautions</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Test 4: Store Information</h3>
+            <strong>Input:</strong> "What are your delivery areas?"<br>
+            <strong>Expected:</strong>
+            <ul>
+                <li>Delivery zones information</li>
+                <li>Time estimates</li>
+                <li>Charges</li>
+                <li>Tracking info</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Test 5: Emergency Detection</h3>
+            <strong>Input:</strong> "chest pain emergency"<br>
+            <strong>Expected:</strong>
+            <ul>
+                <li>🚨 Emergency alert</li>
+                <li>Call 999 instruction</li>
+                <li>Aspirin advice</li>
+                <li>Urgent tone</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Test 6: Bengali Language</h3>
+            <strong>Input:</strong> "জ্বর আছে"<br>
+            <strong>Expected:</strong>
+            <ul>
+                <li>Bengali response</li>
+                <li>Same quality information</li>
+                <li>Bengali suggestions</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-card">
+        <h2>🔍 Visual Checks</h2>
+        <div class="test-result">
+            <h3>Chatbot Button</h3>
+            <ul>
+                <li>✓ Pulsing animation visible</li>
+                <li>✓ Green gradient (emerald/teal)</li>
+                <li>✓ "AI" badge visible</li>
+                <li>✓ Sparkles icon animated</li>
+                <li>✓ Located bottom-right</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Chat Window</h3>
+            <ul>
+                <li>✓ Header: "AI Pharmacy Assistant"</li>
+                <li>✓ "SMART" badge</li>
+                <li>✓ "Powered by Deep Learning" text</li>
+                <li>✓ Green status indicator pulsing</li>
+                <li>✓ Reset button (circular arrow)</li>
+                <li>✓ Close button (X)</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Messages</h3>
+            <ul>
+                <li>✓ User messages: green gradient, right-aligned</li>
+                <li>✓ Bot messages: white background, left-aligned</li>
+                <li>✓ "AI Response" badge on bot messages</li>
+                <li>✓ Timestamps shown</li>
+                <li>✓ Typing indicator (3 bouncing dots)</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Quick Actions</h3>
+            <ul>
+                <li>✓ Suggestions appear after responses</li>
+                <li>✓ Light bulb icon visible</li>
+                <li>✓ Clickable suggestion pills</li>
+                <li>✓ Hover effects working</li>
+            </ul>
+        </div>
+
+        <div class="test-result">
+            <h3>Disclaimer</h3>
+            <ul>
+                <li>✓ Amber background</li>
+                <li>✓ Warning icon</li>
+                <li>✓ Medical disclaimer text</li>
+                <li>✓ Always visible at bottom</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-card">
+        <h2>⚙️ Functionality Checks</h2>
+        <div class="test-result">
+            <ul>
+                <li>✓ Button opens chat window</li>
+                <li>✓ Greeting appears automatically</li>
+                <li>✓ Can type and send messages</li>
+                <li>✓ AI responds within 1 second</li>
+                <li>✓ Suggestions are clickable</li>
+                <li>✓ Reset button clears conversation</li>
+                <li>✓ Close button hides chat</li>
+                <li>✓ Scroll works smoothly</li>
+                <li>✓ Input disabled while typing</li>
+                <li>✓ Enter key sends message</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-card">
+        <h2>📊 Test Results Summary</h2>
+        <div id="results">
+            <div class="info status">
+                <strong>Status:</strong> Ready for testing<br>
+                <strong>Server:</strong> http://localhost:5173/<br>
+                <strong>Time:</strong> <span id="testTime"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('testTime').textContent = new Date().toLocaleString();
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const status = document.getElementById('copyStatus');
+                status.innerHTML = `<div class="success status">✅ Copied: "${text}" - Now paste it in the AI chatbot!</div>`;
+                setTimeout(() => {
+                    status.innerHTML = '';
+                }, 3000);
+            });
+        }
+
+        // Check if chatbot button exists
+        setTimeout(() => {
+            const hasButton = document.querySelector('[class*="fixed"][class*="bottom"]');
+            if (hasButton) {
+                document.getElementById('results').innerHTML += `
+                    <div class="success status">
+                        ✅ AI Chatbot button detected on page!
+                    </div>
+                `;
+            } else {
+                document.getElementById('results').innerHTML += `
+                    <div class="error status">
+                        ❌ AI Chatbot button not found. Check if it's rendered.
+                    </div>
+                `;
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

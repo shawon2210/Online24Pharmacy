@@ -1,0 +1,14 @@
+{
+  "seoTitle": "Products - Online24 Pharmacy",
+  "title": "All Products",
+  "searchPlaceholder": "Search products...",
+  "filterBy": "Filter by",
+  "sortBy": "Sort by",
+  "noResults": "No Products Found",
+  "noResultsDescription": "Try adjusting your search or filters",
+  "inStock": "In Stock",
+  "outOfStock": "Out of Stock",
+  "prescriptionRequired": "Prescription Required",
+  "addToCart": "Add to Cart",
+  "viewDetails": "View Details"
+}

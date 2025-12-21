@@ -1,0 +1,95 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dhanmondi",
+        "deliveryTime": "2-4 hours",
+        "fee": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [90.3650, 23.7450],
+          [90.3850, 23.7450],
+          [90.3850, 23.7650],
+          [90.3650, 23.7650],
+          [90.3650, 23.7450]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gulshan",
+        "deliveryTime": "2-4 hours",
+        "fee": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [90.4050, 23.7750],
+          [90.4250, 23.7750],
+          [90.4250, 23.7950],
+          [90.4050, 23.7950],
+          [90.4050, 23.7750]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Uttara",
+        "deliveryTime": "3-6 hours",
+        "fee": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [90.3850, 23.8550],
+          [90.4150, 23.8550],
+          [90.4150, 23.8850],
+          [90.3850, 23.8850],
+          [90.3850, 23.8550]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mirpur",
+        "deliveryTime": "3-6 hours",
+        "fee": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [90.3550, 23.7950],
+          [90.3750, 23.7950],
+          [90.3750, 23.8250],
+          [90.3550, 23.8250],
+          [90.3550, 23.7950]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Banani",
+        "deliveryTime": "2-4 hours",
+        "fee": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [90.4000, 23.7900],
+          [90.4150, 23.7900],
+          [90.4150, 23.8000],
+          [90.4000, 23.8000],
+          [90.4000, 23.7900]
+        ]]
+      }
+    }
+  ]
+}

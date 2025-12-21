@@ -1,0 +1,47 @@
+[
+  {
+    "_id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "admin@pharmacy.com",
+    "phone": "+8801712345678",
+    "passwordHash": "$2b$12$zMJcSDFxbZL0t554PTRFluaJqs8JUWZFHY5coZ64OhqkFd4.qSytK",
+    "firstName": "Admin",
+    "lastName": "User",
+    "role": "ADMIN"
+  },
+  {
+    "_id": "user_001",
+    "email": "user@example.com",
+    "phone": "+8801812345678",
+    "passwordHash": "$2b$12$Xg6wZT7yMCODoLi44.caUOR.eeRE3ldZ27Oc2mo8WnmQXkkC4Io1O",
+    "firstName": "Test",
+    "lastName": "User",
+    "role": "CUSTOMER"
+  },
+  {
+    "_id": "delivery_001",
+    "email": "delivery@pharmacy.com",
+    "phone": "+8801912345678",
+    "passwordHash": "$2b$12$Xg6wZT7yMCODoLi44.caUOR.eeRE3ldZ27Oc2mo8WnmQXkkC4Io1O",
+    "firstName": "Delivery",
+    "lastName": "Person",
+    "role": "DELIVERY"
+  },
+  {
+    "_id": "dev_1763972735342",
+    "email": "test1763972734327@example.com",
+    "phone": "+8801922695527",
+    "passwordHash": "$2b$12$0tb8LrNg2qzjeaEb/19oNuWcrzXmWez.leg9eVZynXdwfsWDpHWui",
+    "firstName": "Test",
+    "lastName": "User",
+    "role": "CUSTOMER"
+  },
+  {
+    "_id": "dev_1763974827837",
+    "email": "smoke-admin@example.com",
+    "phone": "+10000000000",
+    "passwordHash": "$2b$12$BOG1NhF4ThjCsDI.j.KWouMVInkbBw6N/Jc7OBcv7CMbe1C72O246",
+    "firstName": "Smoke",
+    "lastName": "Admin",
+    "role": "ADMIN"
+  }
+]

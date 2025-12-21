@@ -1,0 +1,212 @@
+[
+  {
+    "id": "dgda-faq-1",
+    "question": "What is DGDA?",
+    "answer": "DGDA (Directorate General of Drug Administration) is the regulatory authority in Bangladesh responsible for ensuring the quality, safety, and efficacy of drugs and pharmaceutical products.",
+    "category": "General",
+    "tags": ["dgda", "regulation", "authority"]
+  },
+  {
+    "id": "dgda-faq-2",
+    "question": "What are Schedule H drugs?",
+    "answer": "Schedule H drugs are prescription-only medicines that can only be sold on the prescription of a registered medical practitioner. Examples include antibiotics, hormones, and certain pain medications.",
+    "category": "Drug Classification",
+    "tags": ["schedule-h", "prescription", "antibiotics"]
+  },
+  {
+    "id": "dgda-faq-3",
+    "question": "What are Schedule X drugs?",
+    "answer": "Schedule X drugs are highly controlled substances that require strict prescription and documentation. These include narcotics, psychotropic substances, and drugs with high abuse potential.",
+    "category": "Drug Classification",
+    "tags": ["schedule-x", "narcotics", "controlled"]
+  },
+  {
+    "id": "dgda-faq-4",
+    "question": "What are Schedule G drugs?",
+    "answer": "Schedule G drugs are prescription medicines that must be sold under the supervision of a registered pharmacist. These require proper documentation and patient counseling.",
+    "category": "Drug Classification",
+    "tags": ["schedule-g", "prescription", "pharmacist"]
+  },
+  {
+    "id": "dgda-faq-5",
+    "question": "What are OTC drugs?",
+    "answer": "OTC (Over-The-Counter) drugs are medicines that can be sold without a prescription. These are generally safe for self-medication when used as directed. Examples include common pain relievers, antacids, and cough syrups.",
+    "category": "Drug Classification",
+    "tags": ["otc", "non-prescription", "self-medication"]
+  },
+  {
+    "id": "dgda-faq-6",
+    "question": "Can I buy antibiotics without prescription in Bangladesh?",
+    "answer": "No. Antibiotics are Schedule H drugs in Bangladesh and require a valid prescription from a registered medical practitioner. This is to prevent antibiotic resistance and ensure proper use.",
+    "category": "Prescription Requirements",
+    "tags": ["antibiotics", "prescription", "schedule-h"]
+  },
+  {
+    "id": "dgda-faq-7",
+    "question": "How long is a prescription valid?",
+    "answer": "For most medicines, a prescription is valid for 6 months from the date of issue. However, for certain controlled substances, the validity may be shorter as per DGDA guidelines.",
+    "category": "Prescription Requirements",
+    "tags": ["prescription", "validity", "duration"]
+  },
+  {
+    "id": "dgda-faq-8",
+    "question": "Can I use the same prescription multiple times?",
+    "answer": "It depends on the medicine. For chronic conditions, doctors may specify refills. For Schedule X and certain Schedule H drugs, a new prescription is required each time. Always check with your pharmacist.",
+    "category": "Prescription Requirements",
+    "tags": ["prescription", "refills", "chronic"]
+  },
+  {
+    "id": "dgda-faq-9",
+    "question": "What information must be on a valid prescription?",
+    "answer": "A valid prescription must include: patient name and age, doctor's name and registration number, hospital/clinic name, date, medicine name with dosage form and strength, quantity, directions for use, and doctor's signature.",
+    "category": "Prescription Requirements",
+    "tags": ["prescription", "requirements", "validity"]
+  },
+  {
+    "id": "dgda-faq-10",
+    "question": "Are online pharmacies legal in Bangladesh?",
+    "answer": "Yes, online pharmacies are legal if they are licensed by DGDA. They must follow all DGDA regulations including prescription requirements for scheduled drugs and proper storage and delivery protocols.",
+    "category": "Online Pharmacy",
+    "tags": ["online", "legal", "licensing"]
+  },
+  {
+    "id": "dgda-faq-11",
+    "question": "Can online pharmacies deliver prescription medicines?",
+    "answer": "Yes, licensed online pharmacies can deliver prescription medicines after verifying a valid prescription. The prescription must be uploaded and verified before dispensing Schedule H, X, or G drugs.",
+    "category": "Online Pharmacy",
+    "tags": ["online", "delivery", "prescription"]
+  },
+  {
+    "id": "dgda-faq-12",
+    "question": "What should I do if I suspect counterfeit medicine?",
+    "answer": "Report it immediately to DGDA through their hotline or website. Check for DGDA registration number, proper packaging, and purchase only from licensed pharmacies. Counterfeit medicines are dangerous and illegal.",
+    "category": "Safety",
+    "tags": ["counterfeit", "safety", "reporting"]
+  },
+  {
+    "id": "dgda-faq-13",
+    "question": "How can I verify if a medicine is DGDA approved?",
+    "answer": "Check the DGDA registration number on the medicine package. You can verify this on the DGDA official website or mobile app. All legally sold medicines in Bangladesh must have DGDA approval.",
+    "category": "Safety",
+    "tags": ["dgda", "approval", "verification"]
+  },
+  {
+    "id": "dgda-faq-14",
+    "question": "Can I import medicines for personal use?",
+    "answer": "Personal import of medicines requires DGDA approval. Some medicines are restricted or banned. Contact DGDA before attempting to import any medicine. Prescription may be required.",
+    "category": "Import/Export",
+    "tags": ["import", "personal", "approval"]
+  },
+  {
+    "id": "dgda-faq-15",
+    "question": "What are the storage requirements for medicines?",
+    "answer": "Most medicines should be stored in a cool, dry place away from direct sunlight. Some require refrigeration (2-8°C). Always follow storage instructions on the label. Keep out of reach of children.",
+    "category": "Storage",
+    "tags": ["storage", "temperature", "safety"]
+  },
+  {
+    "id": "dgda-faq-16",
+    "question": "Can I use expired medicines?",
+    "answer": "No. Expired medicines may lose potency or become harmful. They should be disposed of properly. Do not flush medicines down the toilet. Return expired medicines to pharmacies for safe disposal.",
+    "category": "Safety",
+    "tags": ["expiry", "disposal", "safety"]
+  },
+  {
+    "id": "dgda-faq-17",
+    "question": "What is generic medicine?",
+    "answer": "Generic medicines contain the same active ingredient as brand-name drugs but are usually cheaper. They must meet the same DGDA quality standards. Generics are equally effective and safe.",
+    "category": "Medicine Types",
+    "tags": ["generic", "brand", "cost"]
+  },
+  {
+    "id": "dgda-faq-18",
+    "question": "Can I split or crush tablets?",
+    "answer": "Not all tablets can be split or crushed. Extended-release, enteric-coated, or capsules should not be crushed. Always consult your pharmacist or doctor before modifying medicine form.",
+    "category": "Administration",
+    "tags": ["tablet", "crushing", "dosage"]
+  },
+  {
+    "id": "dgda-faq-19",
+    "question": "What should I do if I miss a dose?",
+    "answer": "Take it as soon as you remember, unless it's almost time for the next dose. Do not double the dose. For critical medicines, contact your doctor. Read the patient information leaflet for specific guidance.",
+    "category": "Administration",
+    "tags": ["missed-dose", "dosing", "timing"]
+  },
+  {
+    "id": "dgda-faq-20",
+    "question": "Can I take medicines with food or alcohol?",
+    "answer": "It depends on the medicine. Some must be taken with food, others on an empty stomach. Alcohol can interact dangerously with many medicines. Always read the label and consult your pharmacist.",
+    "category": "Administration",
+    "tags": ["food", "alcohol", "interactions"]
+  },
+  {
+    "id": "dgda-faq-21",
+    "question": "What are common side effects?",
+    "answer": "Side effects vary by medicine. Common ones include nausea, drowsiness, headache, or dizziness. Most are mild and temporary. Report severe or persistent side effects to your doctor immediately.",
+    "category": "Side Effects",
+    "tags": ["side-effects", "adverse-reactions", "safety"]
+  },
+  {
+    "id": "dgda-faq-22",
+    "question": "Can pregnant women take all medicines?",
+    "answer": "No. Many medicines are unsafe during pregnancy. Always inform your doctor if you are pregnant or planning pregnancy. Some medicines require dose adjustment or alternative options during pregnancy.",
+    "category": "Special Populations",
+    "tags": ["pregnancy", "safety", "contraindication"]
+  },
+  {
+    "id": "dgda-faq-23",
+    "question": "Can I breastfeed while taking medicines?",
+    "answer": "It depends on the medicine. Some pass into breast milk and may affect the baby. Always consult your doctor before taking any medicine while breastfeeding. Do not stop prescribed medicines without medical advice.",
+    "category": "Special Populations",
+    "tags": ["breastfeeding", "lactation", "safety"]
+  },
+  {
+    "id": "dgda-faq-24",
+    "question": "Are there special considerations for children?",
+    "answer": "Yes. Children require age and weight-appropriate dosing. Never give adult medicines to children without doctor's advice. Many medicines are not approved for pediatric use. Follow pediatrician's instructions carefully.",
+    "category": "Special Populations",
+    "tags": ["pediatric", "children", "dosing"]
+  },
+  {
+    "id": "dgda-faq-25",
+    "question": "Are there special considerations for elderly?",
+    "answer": "Yes. Elderly patients may need lower doses due to reduced kidney/liver function. They are more prone to side effects and drug interactions. Regular monitoring and medication review are important.",
+    "category": "Special Populations",
+    "tags": ["elderly", "geriatric", "dosing"]
+  },
+  {
+    "id": "dgda-faq-26",
+    "question": "What is drug interaction?",
+    "answer": "Drug interaction occurs when one medicine affects how another works. This can reduce effectiveness or increase side effects. Always inform your doctor and pharmacist about all medicines, supplements, and herbal products you take.",
+    "category": "Interactions",
+    "tags": ["interactions", "drug-drug", "safety"]
+  },
+  {
+    "id": "dgda-faq-27",
+    "question": "Can I take herbal supplements with medicines?",
+    "answer": "Herbal supplements can interact with prescription medicines. Some interactions are serious. Always inform your healthcare provider about all supplements. Do not assume natural means safe.",
+    "category": "Interactions",
+    "tags": ["herbal", "supplements", "interactions"]
+  },
+  {
+    "id": "dgda-faq-28",
+    "question": "What is antibiotic resistance?",
+    "answer": "Antibiotic resistance occurs when bacteria evolve to resist antibiotics. This is caused by overuse and misuse of antibiotics. Always complete the full course as prescribed. Never share antibiotics or use leftover ones.",
+    "category": "Antibiotics",
+    "tags": ["resistance", "antibiotics", "public-health"]
+  },
+  {
+    "id": "dgda-faq-29",
+    "question": "Should I take probiotics with antibiotics?",
+    "answer": "Probiotics may help prevent antibiotic-associated diarrhea. Take them at least 2 hours apart from antibiotics. Consult your pharmacist for appropriate probiotic selection. This is supportive care, not a substitute for proper antibiotic use.",
+    "category": "Antibiotics",
+    "tags": ["probiotics", "antibiotics", "diarrhea"]
+  },
+  {
+    "id": "dgda-faq-30",
+    "question": "How should I dispose of unused medicines?",
+    "answer": "Return unused medicines to pharmacies for safe disposal. Do not throw in regular trash or flush down toilet. Remove personal information from containers. Some medicines have specific disposal requirements per DGDA guidelines.",
+    "category": "Disposal",
+    "tags": ["disposal", "environment", "safety"]
+  }
+]

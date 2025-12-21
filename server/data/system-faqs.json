@@ -1,0 +1,226 @@
+[
+  {
+    "id": "sys-faq-1",
+    "question": "How do I create an account on Online24 Pharmacy?",
+    "answer": "Click 'Sign Up' on the homepage. Enter your email, phone number, password, and personal details (first name, last name, date of birth, gender). Verify your email and phone number. Your account is ready to use.",
+    "category": "Account Management",
+    "tags": ["signup", "registration", "account"]
+  },
+  {
+    "id": "sys-faq-2",
+    "question": "How do I reset my password?",
+    "answer": "Click 'Forgot Password' on the login page. Enter your email address. We'll send you a reset link to your email. Click the link and create a new password. Use this new password to log in.",
+    "category": "Account Management",
+    "tags": ["password", "reset", "login"]
+  },
+  {
+    "id": "sys-faq-3",
+    "question": "How do I update my profile information?",
+    "answer": "Log in and go to 'My Account' or 'Profile' section. Click 'Edit Profile'. Update your details such as phone number, date of birth, address, or gender. Save changes. Your updated information will be used for orders.",
+    "category": "Account Management",
+    "tags": ["profile", "update", "account"]
+  },
+  {
+    "id": "sys-faq-4",
+    "question": "How do I browse products on Online24?",
+    "answer": "Visit the 'Products' page or use the category menu to browse by type (medicines, surgical supplies, etc.). Use the search bar to find specific products. Filter by price, prescription requirement, or availability. Click on a product to see details, price, and reviews.",
+    "category": "Shopping",
+    "tags": ["browse", "search", "products"]
+  },
+  {
+    "id": "sys-faq-5",
+    "question": "How do I add products to my cart?",
+    "answer": "Browse products and click 'Add to Cart' on the product page or listing. Specify the quantity if needed. The item is added to your cart. You can continue shopping or go to cart to review before checkout.",
+    "category": "Shopping",
+    "tags": ["cart", "add", "shopping"]
+  },
+  {
+    "id": "sys-faq-6",
+    "question": "How do I view my shopping cart?",
+    "answer": "Click the cart icon in the header or navigate to 'My Cart'. Your cart shows all items, quantities, prices, and total cost. You can update quantities, remove items, or proceed to checkout from this page.",
+    "category": "Shopping",
+    "tags": ["cart", "view", "items"]
+  },
+  {
+    "id": "sys-faq-7",
+    "question": "How do I proceed to checkout?",
+    "answer": "Go to your cart and click 'Proceed to Checkout'. Verify your delivery address or add a new one. Select payment method (Cash on Delivery, bKash, Nagad, Card). Review order summary and click 'Place Order'. You'll receive order confirmation.",
+    "category": "Checkout",
+    "tags": ["checkout", "payment", "order"]
+  },
+  {
+    "id": "sys-faq-8",
+    "question": "What payment methods does Online24 accept?",
+    "answer": "We accept Cash on Delivery (COD), bKash, Nagad, and credit/debit cards. Choose your preferred method at checkout. For card payments, use a secure gateway. For mobile money, follow the payment prompts.",
+    "category": "Payment",
+    "tags": ["payment", "methods", "bkash", "nagad"]
+  },
+  {
+    "id": "sys-faq-9",
+    "question": "Is it safe to enter my card details on Online24?",
+    "answer": "Yes. We use SSL encryption and PCI-DSS compliant payment gateways to protect your card information. Your payment details are never stored on our servers. We recommend using mobile money (bKash, Nagad) or Cash on Delivery for added security.",
+    "category": "Payment",
+    "tags": ["security", "payment", "safe"]
+  },
+  {
+    "id": "sys-faq-10",
+    "question": "How do I upload a prescription for medicines?",
+    "answer": "Go to 'Prescription' section and click 'Upload Prescription'. Take a clear photo or scan of your prescription. Upload the image in JPEG, PNG, or PDF format (max 5MB). Add patient details and doctor information. Submit for verification. We'll verify within 24 hours.",
+    "category": "Prescription",
+    "tags": ["prescription", "upload", "verify"]
+  },
+  {
+    "id": "sys-faq-11",
+    "question": "What information is needed on a valid prescription?",
+    "answer": "Patient name and age, doctor's name and registration number, hospital/clinic name, date, medicine names with dosages, quantity, directions for use, and doctor's signature. The prescription should be dated within 6 months.",
+    "category": "Prescription",
+    "tags": ["prescription", "requirements", "valid"]
+  },
+  {
+    "id": "sys-faq-12",
+    "question": "How long does prescription verification take?",
+    "answer": "Prescriptions are typically verified within 24 hours during business hours. You'll receive a notification once verified. For urgent orders, contact our support team. Incomplete or unclear prescriptions may take longer or be rejected.",
+    "category": "Prescription",
+    "tags": ["prescription", "verification", "time"]
+  },
+  {
+    "id": "sys-faq-13",
+    "question": "What is the delivery area coverage of Online24?",
+    "answer": "We deliver throughout Dhaka city and nearby areas. Delivery is free within Dhaka. Delivery usually takes 2-24 hours depending on location and order time. Check our delivery zone map at checkout. If your area is not covered, we'll suggest alternatives.",
+    "category": "Delivery",
+    "tags": ["delivery", "area", "coverage"]
+  },
+  {
+    "id": "sys-faq-14",
+    "question": "How much is the delivery charge?",
+    "answer": "Delivery is FREE throughout Dhaka. Some remote areas may have additional charges shown at checkout. Express delivery (2-4 hours) may have a small surcharge. Cash on Delivery has no additional fee.",
+    "category": "Delivery",
+    "tags": ["delivery", "charge", "free"]
+  },
+  {
+    "id": "sys-faq-15",
+    "question": "How do I track my order?",
+    "answer": "Log in and go to 'My Orders'. Click on your order to see real-time tracking status and delivery agent location. You'll also receive SMS updates at each milestone: confirmed, packed, out for delivery, and delivered.",
+    "category": "Delivery",
+    "tags": ["tracking", "order", "status"]
+  },
+  {
+    "id": "sys-faq-16",
+    "question": "Can I change my delivery address after placing an order?",
+    "answer": "Yes, but only if the order hasn't been packed yet. Go to 'My Orders', find the order, and click 'Change Delivery Address'. Confirm the new address. If the order is already packed, contact our support team immediately.",
+    "category": "Delivery",
+    "tags": ["delivery", "address", "change"]
+  },
+  {
+    "id": "sys-faq-17",
+    "question": "What is the return policy for medicines?",
+    "answer": "OTC medicines in original sealed packaging can be returned within 7 days for a refund. Prescription medicines, surgical items, and used/opened products are non-returnable. Damaged items are replaced at no cost. Refunds are processed within 5-7 business days.",
+    "category": "Returns & Refunds",
+    "tags": ["return", "refund", "policy"]
+  },
+  {
+    "id": "sys-faq-18",
+    "question": "How do I initiate a return?",
+    "answer": "Go to 'My Orders' and select the product to return. Click 'Return Item' and provide a reason. Pack the product in original packaging and arrange pickup or drop it at our location. Once received and verified, your refund will be processed.",
+    "category": "Returns & Refunds",
+    "tags": ["return", "initiate", "process"]
+  },
+  {
+    "id": "sys-faq-19",
+    "question": "When will I receive my refund?",
+    "answer": "Refunds are processed within 5-7 business days after we receive and verify the returned item. The refund is credited to your original payment method. For Cash on Delivery orders, refund is issued as store credit or bank transfer.",
+    "category": "Returns & Refunds",
+    "tags": ["refund", "timeline", "payment"]
+  },
+  {
+    "id": "sys-faq-20",
+    "question": "Can I use coupons or discount codes on Online24?",
+    "answer": "Yes. During checkout, enter your coupon code in the 'Promo Code' field and click 'Apply'. The discount will be deducted from your total. Codes have specific terms (minimum order, validity period, eligible products). Check 'Offers' section for current promotions.",
+    "category": "Promotions",
+    "tags": ["coupon", "discount", "code"]
+  },
+  {
+    "id": "sys-faq-21",
+    "question": "How do I view my order history?",
+    "answer": "Log in and go to 'My Account' > 'My Orders'. This shows all your past and current orders with dates, items, amounts, and delivery status. Click on an order to view details, track, or request return.",
+    "category": "Account Management",
+    "tags": ["orders", "history", "account"]
+  },
+  {
+    "id": "sys-faq-22",
+    "question": "How do I leave a product review?",
+    "answer": "Go to 'My Orders' and find a delivered order. Click 'Write Review'. Rate the product (1-5 stars), add comments about quality, effectiveness, packaging, and delivery. Include your purchase date. Submit the review. Verified reviews help other customers.",
+    "category": "Reviews & Ratings",
+    "tags": ["review", "rating", "feedback"]
+  },
+  {
+    "id": "sys-faq-23",
+    "question": "Can I modify an order after placing it?",
+    "answer": "If the order is in 'Confirmed' status, you may modify quantities or cancel items. Contact our support team immediately with your order number. Once packed or out for delivery, modifications are not possible. For urgent changes, call our hotline.",
+    "category": "Order Management",
+    "tags": ["modify", "change", "order"]
+  },
+  {
+    "id": "sys-faq-24",
+    "question": "How do I cancel an order?",
+    "answer": "Go to 'My Orders', select the order, and click 'Cancel Order'. You can cancel only if the status is 'Confirmed'. Canceled orders result in a full refund. If already shipped, return the item for refund. Cancellations are processed within 24 hours.",
+    "category": "Order Management",
+    "tags": ["cancel", "order", "refund"]
+  },
+  {
+    "id": "sys-faq-25",
+    "question": "Is my personal information secure on Online24?",
+    "answer": "Yes. We use SSL encryption, secure servers, and follow data protection protocols. Your personal, payment, and health information are kept confidential and used only for order fulfillment and customer service. We never share data with third parties without consent.",
+    "category": "Privacy & Security",
+    "tags": ["security", "privacy", "data"]
+  },
+  {
+    "id": "sys-faq-26",
+    "question": "How do I contact customer support?",
+    "answer": "Contact us via: Phone: +880-1XXX-XXXXXX (9 AM - 9 PM, 7 days), Email: support@online24-pharmacy.bd, Live Chat on website, or WhatsApp. Our support team responds within 2 hours. For urgent matters, call our hotline.",
+    "category": "Support",
+    "tags": ["support", "contact", "help"]
+  },
+  {
+    "id": "sys-faq-27",
+    "question": "What are the business hours of Online24?",
+    "answer": "Online24 operates 24/7 for orders. Delivery: 6 AM - 11 PM daily. Customer support: 9 AM - 9 PM, 7 days a week. Prescription verification: 9 AM - 5 PM, Monday to Friday. Emergency support: 24/7 for critical issues.",
+    "category": "Support",
+    "tags": ["hours", "business", "time"]
+  },
+  {
+    "id": "sys-faq-28",
+    "question": "Do you offer subscription or auto-refill options?",
+    "answer": "Yes. For chronic medication users, set up auto-refill for regular orders. Go to your prescription and enable 'Auto-Refill'. Choose frequency (weekly, bi-weekly, monthly). Orders are placed automatically and you'll receive reminders. Cancel anytime.",
+    "category": "Subscription",
+    "tags": ["subscription", "autorefill", "chronic"]
+  },
+  {
+    "id": "sys-faq-29",
+    "question": "How do I set a prescription expiry reminder?",
+    "answer": "Go to 'My Prescriptions' and click 'Set Reminder'. Choose when to be reminded (3 days, 1 week, 2 weeks before expiry). You'll receive SMS/email reminders. One-click reorder from the reminder. This helps ensure continuous medication supply.",
+    "category": "Prescriptions",
+    "tags": ["reminder", "expiry", "prescription"]
+  },
+  {
+    "id": "sys-faq-30",
+    "question": "What is the 'Smart Prescription Reorder' feature?",
+    "answer": "Smart Reorder lets you quickly reorder medicines from previously approved prescriptions. Your cart is pre-filled with your last order. Perfect for chronic medications. Upload a new prescription if required. Saves time and ensures medication continuity.",
+    "category": "Prescriptions",
+    "tags": ["reorder", "smart", "prescription"]
+  },
+  {
+    "id": "sys-faq-31",
+    "question": "Can I use the chatbot to get medicine information?",
+    "answer": "Yes. Our AI chatbot can answer questions about medicine uses, side effects, storage, interactions, and our services. It provides general information only—not medical advice. For clinical decisions, consult a doctor or pharmacist. Available 24/7 in English and Bengali.",
+    "category": "Chatbot",
+    "tags": ["chatbot", "ai", "medicine"]
+  },
+  {
+    "id": "sys-faq-32",
+    "question": "Can I track my prescription status?",
+    "answer": "Yes. Go to 'My Prescriptions' to see all uploaded prescriptions with their verification status: Pending, Approved, or Rejected. Click on a prescription to see details, verification date, and expiry date. Approved prescriptions can be used for ordering.",
+    "category": "Prescriptions",
+    "tags": ["prescription", "status", "track"]
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "sys-feature-1",
+    "title": "User Account & Authentication",
+    "category": "Core Features",
+    "content": "Online24 provides secure user registration and login. Users can create accounts with email and phone verification. Password reset, profile management, and account settings are available. Multi-language support for English and Bengali. Profile includes personal details, delivery addresses, and preferences. Sessions are secured with JWT tokens."
+  },
+  {
+    "id": "sys-feature-2",
+    "title": "Product Catalog & Search",
+    "category": "Shopping",
+    "content": "Browse 5000+ medicines and healthcare products across multiple categories (Surgical Supplies, Antiseptics, Pain Relief, Antibiotics, etc.). Advanced search with filters for price, prescription requirement, availability, and ratings. Product details include name, category, price in BDT, DGDA registration, prescription requirement flag, reviews, and stock status. Real-time inventory updates."
+  },
+  {
+    "id": "sys-feature-3",
+    "title": "Shopping Cart",
+    "category": "Shopping",
+    "content": "Add/remove products with quantity control. Cart displays item prices, total cost, and estimated delivery charges. Persistent cart saves items when logged in. Apply coupon codes for discounts. Review order summary before checkout. Cart updates in real-time as prices or stock change."
+  },
+  {
+    "id": "sys-feature-4",
+    "title": "Prescription Upload & Verification",
+    "category": "Prescription Management",
+    "content": "Users upload prescriptions as JPEG, PNG, or PDF (max 5MB). Prescriptions must be dated within 6 months and include all required information (patient name, doctor name with registration, medicines, dosage, signature). Our pharmacists verify within 24 hours. Status shows: Pending, Approved, or Rejected. Verified prescriptions unlock purchase of Schedule H, X, G medicines."
+  },
+  {
+    "id": "sys-feature-5",
+    "title": "Smart Prescription Reorder",
+    "category": "Prescription Management",
+    "content": "Users can view their previously approved prescriptions with expiry dates (default 6 months). One-click reorder pre-fills cart with previous medicines. Shows expiry countdown and reorder status. Ability to set 3-day reminder before expiry. Choose to upload new prescription or use existing one. Streamlines chronic medication management."
+  },
+  {
+    "id": "sys-feature-6",
+    "title": "Payment Methods",
+    "category": "Checkout",
+    "content": "Multiple payment options: Cash on Delivery (COD), bKash, Nagad, and Credit/Debit Cards. SSL-encrypted payment gateway with PCI-DSS compliance. No payment details stored on server. Instant payment confirmation and SMS receipt. Failed payment has retry option. Secure tokenization for card payments."
+  },
+  {
+    "id": "sys-feature-7",
+    "title": "Delivery & Tracking",
+    "category": "Logistics",
+    "content": "Free delivery throughout Dhaka (2-24 hours depending on location and order time). Orders placed by 8 PM qualify for same-day dispatch. Delivery zones clearly defined at checkout. Real-time order tracking shows status: Confirmed, Packed, Out for Delivery, Delivered. SMS/Email updates at each milestone. Delivery agents accessible via phone during transit. Address change allowed before packing."
+  },
+  {
+    "id": "sys-feature-8",
+    "title": "Returns & Refunds",
+    "category": "Customer Service",
+    "content": "7-day return window for sealed OTC medicines in original packaging. Non-returnable items: surgical products, used/opened medicines, prescription medicines. Damaged items replaced free of cost. Refunds processed within 5-7 business days to original payment method. For COD, refund as store credit or bank transfer. Clear policy displayed at checkout."
+  },
+  {
+    "id": "sys-feature-9",
+    "title": "Reviews & Ratings",
+    "category": "Community",
+    "content": "Verified purchase reviews from delivered orders. 5-star rating system with comment section. Reviews include quality, effectiveness, packaging, and delivery feedback. Helpful/unhelpful voting. Moderation to filter spam/inappropriate content. Average rating displayed on product listings. Top reviews featured prominently."
+  },
+  {
+    "id": "sys-feature-10",
+    "title": "Wishlist & Favorites",
+    "category": "Shopping",
+    "content": "Save products to wishlist for later purchase. Track price changes and stock updates on wishlist items. Receive notifications when wishlist items go on sale. Share wishlist with family or healthcare provider. One-click add-to-cart from wishlist. Persistent across sessions when logged in."
+  },
+  {
+    "id": "sys-feature-11",
+    "title": "Order Management",
+    "category": "Account",
+    "content": "View all past and current orders with dates, items, amounts, and status. Modify orders in 'Confirmed' status (before packing). Cancel orders for full refund. Download invoice/receipt. Reorder from history with one click. Order search by ID or date. Filter by status (processing, delivered, returned)."
+  },
+  {
+    "id": "sys-feature-12",
+    "title": "Promotions & Coupons",
+    "category": "Marketing",
+    "content": "Seasonal and ongoing promotional offers. Coupon codes with specific terms (minimum order, validity, eligible items). Flash sales and limited-time discounts. Newsletter signup for exclusive deals. First-purchase discount for new users. Loyalty rewards program for regular customers. Apply coupon at checkout with instant discount."
+  },
+  {
+    "id": "sys-feature-13",
+    "title": "AI Chatbot Assistant",
+    "category": "Customer Service",
+    "content": "24/7 AI chatbot answering medicine questions, drug interactions, side effects, storage, usage. DGDA guidelines and regulatory information. Account help and order assistance. Smart Reorder and prescription guidance. Multilingual support (English/Bengali). Safety disclaimers for all medical queries. Escalation to pharmacist for complex issues. Powered by retrieval-augmented generation (RAG) with verified sources."
+  },
+  {
+    "id": "sys-feature-14",
+    "title": "Multilingual Interface",
+    "category": "Accessibility",
+    "content": "Full support for English and Bengali language. Toggle language in header for instant switching. All content, forms, emails, and support in both languages. Bengali character support for special characters. Localized content for Bangladesh-specific features. Currency shown in BDT. Local payment methods (bKash, Nagad) prominently featured."
+  },
+  {
+    "id": "sys-feature-15",
+    "title": "Mobile-Friendly Design",
+    "category": "User Experience",
+    "content": "Fully responsive design optimized for phones, tablets, and desktops. Fast-loading pages with image optimization. Touch-friendly buttons and navigation. PWA (Progressive Web App) capability for offline browsing. Native-like experience with app-like feel. Bottom navigation for easy mobile access. One-tap ordering on mobile devices."
+  },
+  {
+    "id": "sys-feature-16",
+    "title": "Privacy & Data Security",
+    "category": "Security",
+    "content": "SSL encryption for all data transmission. PCI-DSS compliant payment processing. GDPR-aligned privacy policy. User data used only for orders and support. Never shared with third parties without consent. Two-factor authentication option available. Secure password hashing. Regular security audits and vulnerability assessments. Transparent data handling."
+  },
+  {
+    "id": "sys-feature-17",
+    "title": "Customer Support",
+    "category": "Support",
+    "content": "Multiple support channels: Phone, Email, Live Chat, WhatsApp. Operating hours: 9 AM - 9 PM, 7 days a week. 24/7 emergency support for critical issues. Average response time: 2 hours. Knowledgeable pharmacist team. FAQ section with searchable database. Community forum for peer support. Ticket tracking for email inquiries."
+  },
+  {
+    "id": "sys-feature-18",
+    "title": "DGDA Compliance",
+    "category": "Regulatory",
+    "content": "Licensed e-pharmacy with DGDA registration. All medicines sold have DGDA approval. Prescription requirement enforced for Schedule H, X, G drugs. Qualified pharmacist supervision. Proper storage (temperature-controlled) for sensitive items. Updated product labeling with DGDA registration numbers. Adherence to pharmaceutical regulations and guidelines."
+  },
+  {
+    "id": "sys-feature-19",
+    "title": "Analytics & Insights",
+    "category": "Admin Features",
+    "content": "Admin dashboard with real-time order, sales, and inventory analytics. Customer segmentation and behavior analysis. Product performance metrics. Prescription trends and popular items. Delivery efficiency reports. Revenue and profitability tracking. Customer satisfaction metrics. Export reports for business planning."
+  },
+  {
+    "id": "sys-feature-20",
+    "title": "Subscription & Auto-Refill",
+    "category": "Subscription",
+    "content": "Auto-refill service for chronic medications (diabetes, hypertension, etc.). Choose frequency: weekly, bi-weekly, or monthly. Automatic order placement and payment at selected intervals. Flexible pause/resume/cancel options. Price lock on subscription. Reminder notifications before auto-refill. Convenient for continuity of care."
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "seoTitle": "Online24 Pharmacy - Your Trusted Healthcare Partner",
+  "seoDescription": "Get medicines delivered to your doorstep. Licensed pharmacy with fast delivery.",
+  "hero": {
+    "title": "Your Health, Our Priority",
+    "subtitle": "Get your medicines and healthcare products delivered to your doorstep",
+    "shopNow": "Shop Now",
+    "uploadPrescription": "Upload Prescription"
+  },
+  "featured": {
+    "title": "Featured Products",
+    "subtitle": "Popular medicines and healthcare products"
+  },
+  "categories": {
+    "title": "Shop by Category",
+    "subtitle": "Find all your healthcare needs in one place"
+  },
+  "whyChooseUs": {
+    "title": "Why Choose Us?",
+    "licensed": "DGDA Licensed",
+    "delivery": "Fast Delivery",
+    "support": "24/7 Support",
+    "verified": "Pharmacist Verified"
+  }
+}
