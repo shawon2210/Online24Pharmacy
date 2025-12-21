@@ -114,6 +114,94 @@ function PrescriptionHero({ onUploadClick, t }) {
   );
 }
 
+        {/* Shine Effect */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%)",
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative p-5 sm:p-8 md:p-10 lg:p-14 xl:p-16 flex flex-col justify-center text-white min-h-[280px] sm:min-h-[320px] md:min-h-[360px]">
+          {/* Decorative Top Badge */}
+          <div className="mb-4 sm:mb-6">
+            <div className="inline-flex items-center gap-3 px-5 sm:px-6 py-2.5 sm:py-3 bg-white/15 backdrop-blur-xl rounded-2xl border-2 border-white/30 hover:border-emerald-300/50 transition-all duration-300 shadow-2xl">
+              <span className="text-2xl sm:text-3xl animate-pulse">💊</span>
+              <span className="text-sm sm:text-base font-black text-white tracking-wide">
+                {t("prescriptionsPage.badge")}
+              </span>
+            </div>
+          </div>
+
+          {/* Main Title */}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 sm:mb-6 drop-shadow-2xl leading-tight tracking-tight">
+            <span className="bg-gradient-to-r from-white via-emerald-100 to-white bg-clip-text text-transparent">
+              {t("prescriptionsPage.title")}
+            </span>
+          </h2>
+
+          {/* Description */}
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-10 drop-shadow-xl max-w-4xl leading-relaxed text-white/95 font-medium">
+            {t("prescriptionsPage.description")}
+          </p>
+
+          {/* Benefits Grid */}
+          <div className="mb-8 sm:mb-10 lg:mb-12 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 max-w-4xl">
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-white text-xl font-black">✓</span>
+              </div>
+              <span className="text-sm sm:text-base font-bold">{t("prescriptionsPage.benefit1")}</span>
+            </div>
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-white text-xl font-black">✓</span>
+              </div>
+              <span className="text-sm sm:text-base font-bold">{t("prescriptionsPage.benefit2")}</span>
+            </div>
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-white text-xl font-black">✓</span>
+              </div>
+              <span className="text-sm sm:text-base font-bold">{t("prescriptionsPage.benefit3")}</span>
+            </div>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5">
+            <HeroButton
+              onClick={onUploadClick}
+              variant="solid"
+              className="group/btn transform hover:scale-105 transition-all duration-300 shadow-2xl"
+            >
+              <span className="text-base sm:text-lg font-black">{t("prescriptionsPage.uploadButton")}</span>
+              <ArrowRightIcon className="w-5 sm:w-6 h-5 sm:h-6 group-hover/btn:translate-x-1 transition-transform duration-300" />
+            </HeroButton>
+
+            <HeroButton
+              href="/my-prescriptions"
+              variant="outline"
+              className="transform hover:scale-105 transition-all duration-300"
+            >
+              <span className="text-base sm:text-lg font-black">📄 My Prescriptions</span>
+            </HeroButton>
+
+            <HeroButton
+              href="/my-prescriptions"
+              variant="outline"
+              className="w-full justify-center"
+            >
+              <span className="font-bold">📄 My Prescriptions</span>
+            </HeroButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Main prescriptions page component
  * Handles prescription upload, history, and reorder functionality

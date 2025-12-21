@@ -41,7 +41,7 @@ export default function HeroAIGlassPremium() {
       <div className="absolute inset-0">
         {images.map((img, i) => (
           <div key={img} className={`absolute inset-0 transition-opacity duration-1000 ${i === imageIndex ? "opacity-100" : "opacity-0"}`}>
-            <img src={img} alt={`Healthcare ${i + 1}`} className="w-full h-full object-cover object-center" loading={i === 0 ? "eager" : "lazy"} />
+            <img src={img} alt={`Healthcare ${i + 1}`} className="w-full h-full object-cover object-[75%_center] sm:object-center" loading={i === 0 ? "eager" : "lazy"} />
           </div>
         ))}
       </div>
@@ -71,17 +71,12 @@ export default function HeroAIGlassPremium() {
               </span>
             </h1>
 
-            {/* Subheading - Responsive */}
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 mb-6 sm:mb-8 leading-relaxed">
-              Get quality medicines delivered to your doorstep with expert care.
-            </p>
-
             {/* CTA Buttons - Mobile Optimized */}
             <div className="mb-6 sm:mb-10">
               <Link to="/Category/Buy-Surgical-Product-Online-in-Dhaka">
-                <button className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-bold text-base rounded-xl shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105">
+                <button className="group inline-flex items-center justify-center gap-1.5 sm:gap-2 px-5 sm:px-8 py-2.5 sm:py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105">
                   Get Started
-                  <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
             </div>

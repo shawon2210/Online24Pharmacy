@@ -42,9 +42,8 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
           {item.product?.name}
         </h3>
         <p className="text-xs sm:text-sm text-gray-600 mb-2">
-          {t("cartPage.unitPrice")}:{" "}
-          <span className="font-bold text-emerald-600">
-            ৳{item.product?.price.toFixed(2)}
+          {t("cartPage.unitPrice")}: <span className="font-bold text-emerald-600">
+            ৳{(typeof item.product?.price === 'number' && !isNaN(item.product.price) ? item.product.price : 0).toFixed(2)}
           </span>
         </p>
         {item.product?.requiresPrescription && (
@@ -78,7 +77,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
       {/* Total Price */}
       <div className="flex-shrink-0 text-right">
         <p className="font-black text-emerald-600 text-base sm:text-lg">
-          ৳{(item.product.price * item.quantity).toFixed(2)}
+          ৳{((typeof item.product?.price === 'number' && !isNaN(item.product.price) ? item.product.price : 0) * item.quantity).toFixed(2)}
         </p>
         <p className="text-xs text-gray-500 mt-1">{t("cartPage.total")}</p>
       </div>

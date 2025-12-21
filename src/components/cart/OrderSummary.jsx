@@ -1,29 +1,37 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCartIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { ROUTES, DELIVERY } from "../../utils/constants";
 
 /**
  * Order summary sidebar component
  * Displays pricing breakdown and checkout button
  */
-export default function OrderSummary({ subtotal = 0, delivery = 0, total = 0, canCheckout, headerOffset }) {
+export default function OrderSummary({
+  subtotal = 0,
+  delivery = 0,
+  total = 0,
+  canCheckout,
+  headerOffset,
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
     if (!canCheckout) {
-      toast.error('Please upload prescriptions for required items');
+      toast.error("Please upload prescriptions for required items");
       return;
     }
     navigate(ROUTES.CHECKOUT);
   };
 
   // Ensure values are numbers
-  const safeSubtotal = Number(subtotal) || 0;
-  const safeDelivery = Number(delivery) || 0;
-  const safeTotal = Number(total) || 0;
+  const safeSubtotal =
+    typeof subtotal === "number" && !isNaN(subtotal) ? subtotal : 0;
+  const safeDelivery =
+    typeof delivery === "number" && !isNaN(delivery) ? delivery : 0;
+  const safeTotal = typeof total === "number" && !isNaN(total) ? total : 0;
 
   return (
     <div
@@ -44,19 +52,24 @@ export default function OrderSummary({ subtotal = 0, delivery = 0, total = 0, ca
           <span className="text-sm sm:text-base text-gray-600">
             {t("cartPage.subtotal")}
           </span>
-          <span className="font-bold text-gray-900">৳{safeSubtotal.toFixed(2)}</span>
+          <span className="font-bold text-gray-900">
+            ৳{safeSubtotal.toFixed(2)}
+          </span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm sm:text-base text-gray-600">
             {t("cartPage.deliveryFee")}
           </span>
           <span className="font-bold text-emerald-600">
-            {safeDelivery === 0 ? t("cartPage.free") : `৳${safeDelivery.toFixed(2)}`}
+            {safeDelivery === 0
+              ? t("cartPage.free")
+              : `৳${safeDelivery.toFixed(2)}`}
           </span>
         </div>
         {safeSubtotal < DELIVERY.FREE_SHIPPING_THRESHOLD && (
           <div className="text-xs text-gray-500">
-            Add ৳{(DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(2)} more for free shipping
+            Add ৳{(DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(2)}{" "}
+            more for free shipping
           </div>
         )}
         <div className="border-t-2 border-gray-200 pt-3 sm:pt-4 flex justify-between items-center">

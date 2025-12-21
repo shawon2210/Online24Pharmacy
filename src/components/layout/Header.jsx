@@ -90,11 +90,11 @@ export default function Header() {
         <div className="w-full px-6 xl:px-8 py-3">
           <div className="flex items-center justify-between gap-4 max-w-[1920px] mx-auto">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
-              <div className="relative w-14 h-14">
-                <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-100 to-teal-100 rounded-2xl shadow-2xl group-hover:scale-110 transition-all duration-300 animate-pulse"></div>
-                <div className="relative w-full h-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-all duration-300 border-2 border-white/40">
-                  <span className="text-white text-2xl font-black tracking-tighter drop-shadow-lg">O24</span>
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 flex-shrink-0 group">
+              <div className="relative w-10 h-10 sm:w-14 sm:h-14">
+                <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-100 to-teal-100 rounded-xl sm:rounded-2xl shadow-2xl group-hover:scale-110 transition-all duration-300 animate-pulse"></div>
+                <div className="relative w-full h-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-all duration-300 border-2 border-white/40">
+                  <span className="text-white text-base sm:text-2xl font-black tracking-tighter drop-shadow-lg">O24</span>
                 </div>
               </div>
               <div className="hidden sm:block">
@@ -124,16 +124,16 @@ export default function Header() {
             </form>
 
             {/* Actions */}
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5 sm:gap-2.5">
               {/* Theme Toggle */}
               <button 
                 onClick={() => setIsDark(!isDark)} 
-                className="group relative flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
+                className="group relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
                 aria-label="Toggle theme"
               >
                 {isDark ? 
-                  <SunIcon className="w-5 h-5 text-yellow-300 drop-shadow-lg" /> : 
-                  <MoonIcon className="w-5 h-5 text-blue-100 drop-shadow-lg" />
+                  <SunIcon className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 drop-shadow-lg" /> : 
+                  <MoonIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-100 drop-shadow-lg" />
                 }
                 <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
                   {isDark ? 'Light Mode' : 'Dark Mode'}
@@ -143,32 +143,32 @@ export default function Header() {
               {/* Wishlist */}
               <Link 
                 to="/wishlist" 
-                className="hidden sm:flex group relative items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
+                className="hidden sm:flex group relative items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
               >
-                <HeartIcon className="w-5 h-5 text-white drop-shadow-lg" />
+                <HeartIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg" />
                 <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">Wishlist</span>
               </Link>
               
               {/* Cart */}
               <Link 
                 to="/cart" 
-                className="group relative flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
+                className="group relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
               >
-                <ShoppingCartIcon className="w-5 h-5 text-white drop-shadow-lg" />
-                <span className="absolute -top-2 -right-2 min-w-[22px] h-[22px] px-1.5 bg-gradient-to-br from-red-500 via-red-600 to-pink-600 text-white text-[11px] rounded-full flex items-center justify-center font-bold shadow-xl ring-2 ring-white/40 animate-pulse">0</span>
+                <ShoppingCartIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg" />
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] sm:min-w-[22px] h-[18px] sm:h-[22px] px-1 sm:px-1.5 bg-gradient-to-br from-red-500 via-red-600 to-pink-600 text-white text-[9px] sm:text-[11px] rounded-full flex items-center justify-center font-bold shadow-xl ring-2 ring-white/40 animate-pulse">0</span>
                 <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">Cart</span>
               </Link>
               {user ? (
                 <div className="hidden lg:block relative group">
-                  <button className="flex items-center gap-3 h-11 px-5 rounded-2xl bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-white/30 shadow-xl">
+                  <button className="flex items-center gap-1.5 sm:gap-3 h-9 sm:h-11 px-2 sm:px-5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-white/30 shadow-xl">
                     <div className="relative">
-                      <div className="absolute inset-0 w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-full blur-sm"></div>
-                      <div className="relative w-8 h-8 rounded-full bg-gradient-to-br from-white via-emerald-50 to-teal-50 flex items-center justify-center text-emerald-700 font-black text-sm shadow-lg ring-2 ring-white/50">
+                      <div className="absolute inset-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-full blur-sm"></div>
+                      <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-white via-emerald-50 to-teal-50 flex items-center justify-center text-emerald-700 font-black text-xs sm:text-sm shadow-lg ring-2 ring-white/50">
                         {user.name?.charAt(0).toUpperCase()}
                       </div>
                     </div>
-                    <span className="text-sm font-bold text-white drop-shadow-lg">{user.name}</span>
-                    <svg className="w-4 h-4 text-white/90 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                    <span className="text-xs sm:text-sm font-bold text-white drop-shadow-lg hidden xl:inline">{user.name}</span>
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white/90 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
                   </button>
                   <div className="absolute right-0 top-full mt-3 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
                     <div className="py-2">
@@ -203,10 +203,10 @@ export default function Header() {
               ) : (
                 <Link 
                   to="/auth/login" 
-                  className="hidden lg:flex items-center gap-2.5 h-11 px-6 rounded-2xl bg-gradient-to-r from-white to-emerald-50 text-emerald-600 hover:from-emerald-50 hover:to-white transition-all duration-300 font-black text-sm shadow-2xl hover:shadow-emerald-500/50 hover:scale-105 active:scale-95 border-2 border-white/50"
+                  className="hidden lg:flex items-center gap-1.5 sm:gap-2.5 h-9 sm:h-11 px-3 sm:px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-white to-emerald-50 text-emerald-600 hover:from-emerald-50 hover:to-white transition-all duration-300 font-black text-xs sm:text-sm shadow-2xl hover:shadow-emerald-500/50 hover:scale-105 active:scale-95 border-2 border-white/50"
                 >
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-                    <UserIcon className="w-3 h-3 text-white" />
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                    <UserIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
                   </div>
                   Login
                 </Link>
@@ -215,24 +215,24 @@ export default function Header() {
               {/* Mobile Menu Toggle */}
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)} 
-                className="lg:hidden flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
+                className="lg:hidden flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg"
                 aria-label="Toggle menu"
               >
-                {isMenuOpen ? <XMarkIcon className="w-6 h-6 text-white drop-shadow-lg" /> : <Bars3Icon className="w-6 h-6 text-white drop-shadow-lg" />}
+                {isMenuOpen ? <XMarkIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-lg" /> : <Bars3Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-lg" />}
               </button>
             </div>
           </div>
 
           {/* Mobile Search */}
-          <form onSubmit={handleSearch} className="md:hidden px-6 pb-3">
+          <form onSubmit={handleSearch} className="md:hidden mt-2">
             <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+              <MagnifyingGlassIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-emerald-600/70 z-10" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search medicines..."
-                className="w-full h-11 pl-12 pr-4 rounded-xl bg-white shadow-lg border-2 border-white/50 text-gray-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 dark:bg-gray-800 dark:border-gray-700"
+                placeholder="Search..."
+                className="w-full h-7 pl-7 pr-2 rounded-lg bg-white/20 backdrop-blur-md border border-white/30 text-white text-[11px] font-medium focus:outline-none focus:bg-white/30 focus:border-white/50 placeholder:text-white/70 transition-all shadow-sm"
               />
             </div>
           </form>
@@ -293,36 +293,117 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-          <div className="max-w-7xl mx-auto px-4 py-4 space-y-1">
-            <Link to="/" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">Home</Link>
-            <Link to="/products" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">Products</Link>
-            <Link to="/prescriptions" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">Prescription</Link>
-            <Link to="/my-orders" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">My Orders</Link>
-            <Link to="/track-order" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">Track Order</Link>
-            <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">About</Link>
-            <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
-              <p className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Categories</p>
-              {categories.map((cat) => (
-                <Link key={cat.id} to={`/category/${cat.slug}`} onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">
-                  <span className="text-xl">{cat.icon}</span>
-                  {cat.name}
-                </Link>
-              ))}
-            </div>
+        <div className="lg:hidden fixed inset-0 top-[72px] z-40 bg-black/50 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}>
+          <div className="bg-white dark:bg-gray-900 h-full overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            {/* User Section */}
             {user ? (
-              <div className="pt-2 border-t border-gray-200 dark:border-gray-800 space-y-1">
-                <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">My Profile</Link>
-                <Link to="/my-orders" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">My Orders</Link>
-                <Link to="/my-prescriptions" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">My Prescriptions</Link>
-                <Link to="/addresses" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">Addresses</Link>
-                <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">Wishlist</Link>
-                <Link to="/settings" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md">Settings</Link>
-                <button onClick={() => { logout(); setIsMenuOpen(false); }} className="w-full text-left px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md">Logout</button>
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-emerald-600 font-black text-lg shadow-lg">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-base">{user.name}</p>
+                    <p className="text-emerald-100 text-xs">{user.email}</p>
+                  </div>
+                </div>
               </div>
             ) : (
-              <Link to="/auth/login" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-md text-center mt-2">Login</Link>
+              <div className="p-4 bg-gradient-to-r from-emerald-600 to-teal-600">
+                <Link to="/auth/login" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center gap-2 bg-white text-emerald-600 font-bold py-3 rounded-xl hover:bg-emerald-50 transition-all">
+                  <UserIcon className="w-5 h-5" />
+                  Login / Register
+                </Link>
+              </div>
             )}
+
+            <div className="p-4 space-y-1">
+              {/* Main Navigation */}
+              <div className="space-y-1">
+                <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                  <span className="font-medium">Home</span>
+                </Link>
+                <Link to="/products" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                  <span className="font-medium">Products</span>
+                </Link>
+                <Link to="/prescription" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  <span className="font-medium">Prescription</span>
+                </Link>
+                <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                  <HeartIcon className="w-5 h-5" />
+                  <span className="font-medium">Wishlist</span>
+                </Link>
+              </div>
+
+              {/* Categories */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <p className="px-4 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Categories</p>
+                <div className="space-y-1">
+                  {categories.map((cat) => (
+                    <Link key={cat.id} to={`/category/${cat.slug}`} onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                      <span className="text-2xl">{cat.icon}</span>
+                      <span className="font-medium">{cat.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* User Menu */}
+              {user && (
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <p className="px-4 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">My Account</p>
+                  <div className="space-y-1">
+                    <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                      <UserIcon className="w-5 h-5" />
+                      <span className="font-medium">My Profile</span>
+                    </Link>
+                    <Link to="/my-orders" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                      <ShoppingCartIcon className="w-5 h-5" />
+                      <span className="font-medium">My Orders</span>
+                    </Link>
+                    <Link to="/my-prescriptions" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                      <span className="font-medium">My Prescriptions</span>
+                    </Link>
+                    <Link to="/addresses" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                      <span className="font-medium">Addresses</span>
+                    </Link>
+                    <Link to="/settings" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                      <span className="font-medium">Settings</span>
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Other Links */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="space-y-1">
+                  <Link to="/track-order" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
+                    <span className="font-medium">Track Order</span>
+                  </Link>
+                  <Link to="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span className="font-medium">About Us</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Logout */}
+              {user && (
+                <div className="pt-4">
+                  <button onClick={() => { logout(); setIsMenuOpen(false); }} className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 rounded-xl transition-all font-bold">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
