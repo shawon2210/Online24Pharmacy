@@ -189,14 +189,12 @@ function PrescriptionHero({ onUploadClick, t }) {
             </HeroButton>
 
             <HeroButton
-              href="#features"
+              href="/my-prescriptions"
               variant="outline"
-              className="hidden sm:inline-flex"
+              className="w-full justify-center"
             >
-              <span>{t("prescriptionsPage.learnMore")}</span>
+              <span className="font-bold">📄 My Prescriptions</span>
             </HeroButton>
-
-            <HeroButton
           </div>
         </div>
       </div>
