@@ -197,12 +197,6 @@ function PrescriptionHero({ onUploadClick, t }) {
             </HeroButton>
 
             <HeroButton
-              href="#features"
-              variant="outline"
-              className="hidden sm:inline-flex"
-            >
-              <span>{t("prescriptionsPage.learnMore")}</span>
-            </HeroButton>
           </div>
         </div>
       </div>
