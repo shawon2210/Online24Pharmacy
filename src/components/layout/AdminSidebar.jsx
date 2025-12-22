@@ -10,11 +10,13 @@ import {
   ClipboardDocumentCheckIcon,
   ArrowRightOnRectangleIcon,
   ChevronDoubleLeftIcon,
+  Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: HomeIcon },
   { name: "Products", href: "/admin/products", icon: ShoppingBagIcon },
+  { name: "Categories", href: "/admin/categories", icon: Squares2X2Icon },
   { name: "Orders", href: "/admin/orders", icon: ClipboardDocumentListIcon },
   { name: "Prescriptions", href: "/admin/prescriptions", icon: DocumentTextIcon },
   { name: "Customers", href: "/admin/customers", icon: UsersIcon },

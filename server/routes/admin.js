@@ -301,4 +301,64 @@ router.delete('/products/:id', async (req, res) => {
   }
 });
 
+// Category Management
+router.get('/categories', authenticateToken, adminAuth, async (req, res) => {
+  try {
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const filePath = path.resolve(process.cwd(), 'server', 'data', 'categories.json');
+    const data = await fs.readFile(filePath, 'utf8').catch(() => '[]');
+    res.json({ categories: JSON.parse(data) });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+});
+
+router.post('/categories', authenticateToken, adminAuth, async (req, res) => {
+  try {
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const filePath = path.resolve(process.cwd(), 'server', 'data', 'categories.json');
+    const data = await fs.readFile(filePath, 'utf8').catch(() => '[]');
+    const categories = JSON.parse(data);
+    const newCategory = { id: Date.now().toString(), ...req.body, createdAt: new Date() };
+    categories.push(newCategory);
+    await fs.writeFile(filePath, JSON.stringify(categories, null, 2));
+    res.status(201).json(newCategory);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create category' });
+  }
+});
+
+router.put('/categories/:id', authenticateToken, adminAuth, async (req, res) => {
+  try {
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const filePath = path.resolve(process.cwd(), 'server', 'data', 'categories.json');
+    const data = await fs.readFile(filePath, 'utf8').catch(() => '[]');
+    const categories = JSON.parse(data);
+    const index = categories.findIndex(c => c.id === req.params.id);
+    if (index === -1) return res.status(404).json({ error: 'Category not found' });
+    categories[index] = { ...categories[index], ...req.body, updatedAt: new Date() };
+    await fs.writeFile(filePath, JSON.stringify(categories, null, 2));
+    res.json(categories[index]);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update category' });
+  }
+});
+
+router.delete('/categories/:id', authenticateToken, adminAuth, async (req, res) => {
+  try {
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const filePath = path.resolve(process.cwd(), 'server', 'data', 'categories.json');
+    const data = await fs.readFile(filePath, 'utf8').catch(() => '[]');
+    const categories = JSON.parse(data).filter(c => c.id !== req.params.id);
+    await fs.writeFile(filePath, JSON.stringify(categories, null, 2));
+    res.json({ message: 'Category deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete category' });
+  }
+});
+
 export default router;

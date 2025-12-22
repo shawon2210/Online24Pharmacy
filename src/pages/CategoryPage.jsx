@@ -1,307 +1,242 @@
-/* eslint-disable no-unused-vars */
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import SEOHead from "../components/common/SEOHead";
 import ProductGrid from "../components/product/ProductGrid";
-import { fetchProducts } from "../utils/api";
-import { normalizeProduct } from "../utils/normalizeProduct";
-import {
-  AdjustmentsHorizontalIcon,
-  ChevronDownIcon,
-  ArrowsPointingOutIcon,
-} from "@heroicons/react/24/outline";
+import { FunnelIcon, XMarkIcon, CheckCircleIcon, FireIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
-const productTypes = [
-  { value: "Surgical Instruments", key: "surgicalInstruments" },
-  { value: "PPE Equipment", key: "ppeEquipment" },
-  { value: "Wound Care", key: "woundCare" },
-  { value: "Diagnostics", key: "diagnostics" },
-  { value: "Hospital Supplies", key: "hospitalSupplies" },
-];
-
-const brands = [
-  "Medline",
-  "3M Healthcare",
-  "Johnson & Johnson",
-  "BD Medical",
-  "Covidien",
-];
-
-export default function CategoryPage() {
+function CategoryPage() {
   const { t } = useTranslation();
   const { slug } = useParams();
-  const [headerOffset, setHeaderOffset] = useState(0);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("featured");
   const [filters, setFilters] = useState({
-    productType: [],
-    priceRange: [0, 50000],
-    brand: [],
     availability: "all",
     prescriptionRequired: "all",
+    priceRange: [0, 1000],
+    brands: [],
+    types: [],
   });
-  const [sortBy, setSortBy] = useState("newest");
-  const [showFilters, setShowFilters] = useState(false);
-  const [fullScreen, setFullScreen] = useState(false);
 
-  const { data: productsData, isLoading } = useQuery({
-    queryKey: ["products", { category: slug, ...filters, sortBy }],
+  const { data, isLoading } = useQuery({
+    queryKey: ["products", slug],
     queryFn: async () => {
-      try {
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-        const response = await fetch(`${API_URL}/api/products`);
-        const data = await response.json();
-        return {
-          products: data.products.map((p) => normalizeProduct(p)),
-          pagination: { total: data.products.length, pages: 1, page: 1 },
-        };
-      } catch (error) {
-        return { products: [], pagination: { total: 0, pages: 0, page: 1 } };
-      }
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const response = await fetch(`${API_URL}/api/products?limit=100`);
+      const result = await response.json();
+      return result.products || [];
     },
   });
 
-  // Compute header height dynamically
-  useLayoutEffect(() => {
-    const el = document.querySelector("header");
-    if (!el) return;
-    const compute = () => {
-      const h = Math.ceil(el.getBoundingClientRect().height);
-      setHeaderOffset(h);
-    };
-    compute();
-    window.addEventListener("resize", compute, { passive: true });
-    return () => window.removeEventListener("resize", compute);
-  }, []);
-
-  const handleFilterChange = (filterType, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [filterType]: value,
-    }));
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const clearFilters = () => {
-    setFilters({
-      productType: [],
-      priceRange: [0, 5000],
-      brand: [],
-      availability: "all",
-      prescriptionRequired: "all",
-    });
+  const removeFilter = (key) => {
+    if (key === "brands" || key === "types") {
+      setFilters((prev) => ({ ...prev, [key]: [] }));
+    } else {
+      setFilters((prev) => ({ ...prev, [key]: "all" }));
+    }
   };
 
-  const formattedSlug = slug?.replace(/-/g, " ") || "";
-  const slugKeyMap = {
-    "wound-care": "woundCare",
-    "hospital-supplies": "hospitalSupplies",
-    diagnostics: "diagnostics",
-    surgical: "surgical",
-    medicines: "medicines",
-    ppe: "ppe",
-  };
-  const i18nKey = slug ? slugKeyMap[slug] || slug : "";
-  // Get category label from the categories object
-  const categoryLabel =
-    slug && i18nKey ? t(`categories.${i18nKey}`) : formattedSlug;
+  let filteredProducts = (data || []).filter((p) => {
+    const matchesCategory =
+      p.category?.toLowerCase().includes(slug?.toLowerCase()) ||
+      p.tags?.some((tag) => tag.toLowerCase().includes(slug?.toLowerCase()));
+    const matchesAvailability =
+      filters.availability === "all" ||
+      (filters.availability === "inStock" && p.stock > 0);
+    const matchesPrescription =
+      filters.prescriptionRequired === "all" ||
+      (filters.prescriptionRequired === "required" && p.prescriptionRequired);
+    return matchesCategory && matchesAvailability && matchesPrescription;
+  });
+
+  // Sorting
+  if (sortBy === "priceLow")
+    filteredProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
+  if (sortBy === "priceHigh")
+    filteredProducts.sort((a, b) => (b.price || 0) - (a.price || 0));
+  if (sortBy === "name")
+    filteredProducts.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+  const activeFiltersCount = Object.entries(filters).filter(
+    ([k, v]) =>
+      (Array.isArray(v) && v.length > 0) ||
+      (typeof v === "string" && v !== "all")
+  ).length;
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-white via-emerald-50/20 to-cyan-50/20 pb-8 sm:pb-12 md:pb-16 lg:pb-20 relative overflow-hidden"
-      style={{ paddingTop: `${headerOffset}px` }}
-    >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 right-10 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+      <SEOHead title={`${slug} - ${t("categoryPage.title")}`} />
+
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+        <div className="container mx-auto px-4 py-4">
+          {/* Professional Breadcrumbs */}
+          <nav className="mb-3" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-1 text-sm text-gray-500">
+              <li>
+                <Link to="/" className="hover:text-emerald-600 font-medium">
+                  Home
+                </Link>
+              </li>
+              <li className="px-1 text-gray-400">/</li>
+              <li>
+                <Link
+                  to="/categories"
+                  className="hover:text-emerald-600 font-medium"
+                >
+                  Categories
+                </Link>
+              </li>
+              <li className="px-1 text-gray-400">/</li>
+              <li
+                className="text-gray-900 font-bold capitalize cursor-default"
+                aria-current="page"
+              >
+                {slug
+                  ? slug
+                      .replace(/-/g, " ")
+                      .replace(/\b\w/g, (c) => c.toUpperCase())
+                  : ""}
+              </li>
+            </ol>
+          </nav>
+
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl md:text-3xl font-black capitalize bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+              {slug?.replace("-", " ")}
+            </h1>
+            <div className="flex items-center gap-3">
+              {/* Sort Dropdown */}
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="appearance-none bg-white border-2 border-gray-200 rounded-lg px-4 py-2 pr-10 text-sm font-medium hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                  aria-label="Sort products"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="priceLow">Price: Low to High</option>
+                  <option value="priceHigh">Price: High to Low</option>
+                  <option value="name">Name: A-Z</option>
+                </select>
+                <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" />
+              </div>
+
+              {/* Mobile Filter Button */}
+              <button
+                onClick={() => setMobileFiltersOpen(true)}
+                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
+                aria-label="Open filters"
+              >
+                <FunnelIcon className="w-5 h-5" />
+                {activeFiltersCount > 0 && (
+                  <span className="bg-white text-emerald-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Active Filters Chips */}
+          {activeFiltersCount > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {filters.availability !== "all" && (
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
+                  {filters.availability}
+                  <button
+                    onClick={() => removeFilter("availability")}
+                    className="hover:bg-emerald-200 rounded-full p-0.5"
+                  >
+                    <XMarkIcon className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              {filters.prescriptionRequired !== "all" && (
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                  Prescription Required
+                  <button
+                    onClick={() => removeFilter("prescriptionRequired")}
+                    className="hover:bg-blue-200 rounded-full p-0.5"
+                  >
+                    <XMarkIcon className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div
-        className={`w-full h-full ${
-          fullScreen ? "px-0" : "px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12"
-        }`}
-      >
-        {/* Breadcrumbs */}
-        <nav className="mb-6 sm:mb-8 md:mb-10 lg:mb-12 pt-4 sm:pt-6 md:pt-8 lg:pt-10">
-          <ol className="flex items-center space-x-2 text-sm sm:text-base text-gray-600 font-medium">
-            <li>
-              <a
-                href="/"
-                className="hover:text-emerald-600 transition-colors duration-300"
-              >
-                {t("home")}
-              </a>
-            </li>
-            <li className="text-gray-400">›</li>
-            <li>
-              <a
-                href="/categories"
-                className="hover:text-emerald-600 transition-colors duration-300"
-              >
-                {t("nav.categories")}
-              </a>
-            </li>
-            <li className="text-gray-400">›</li>
-            <li className="text-emerald-600 font-bold capitalize">
-              {categoryLabel}
-            </li>
-          </ol>
-        </nav>
-
-        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12">
-          {/* Filters Sidebar */}
-          <div
-            className={`w-full lg:w-64 xl:w-72 flex-shrink-0 ${
-              fullScreen ? "hidden" : ""
-            }`}
-          >
-            <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-gray-200 shadow-sm p-4 sm:p-6 sticky top-20 hover:shadow-md transition-shadow duration-300">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-black text-gray-900 flex items-center gap-2">
-                  <span className="text-2xl">🔍</span>
-                  <span>{t("categoryPage.filters.title")}</span>
-                </h3>
-                <button
-                  onClick={clearFilters}
-                  className="text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors duration-300 px-2 py-1 rounded-lg hover:bg-emerald-50"
-                >
-                  {t("categoryPage.filters.clearAll")}
-                </button>
-              </div>
-
-              {/* Product Type */}
-              <div className="mb-6">
-                <h4 className="font-medium text-gray-900 mb-3">
-                  {t("categoryPage.filters.productType")}
-                </h4>
-                <div className="space-y-2">
-                  {productTypes.map((type) => (
-                    <label key={type.value} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={filters.productType.includes(type.value)}
-                        onChange={(e) => {
-                          const newTypes = e.target.checked
-                            ? [...filters.productType, type.value]
-                            : filters.productType.filter(
-                                (t) => t !== type.value
-                              );
-                          handleFilterChange("productType", newTypes);
-                        }}
-                        className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">
-                        {t(
-                          `categoryPage.filters.productTypeOptions.${type.key}`
-                        )}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div className="mb-6">
-                <h4 className="font-medium text-gray-900 mb-3">
-                  {t("categoryPage.filters.priceRange")}
-                </h4>
-                <div className="space-y-2">
-                  <input
-                    type="range"
-                    min="0"
-                    max="50000"
-                    value={filters.priceRange[1]}
-                    onChange={(e) =>
-                      handleFilterChange("priceRange", [
-                        0,
-                        parseInt(e.target.value),
-                      ])
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          {/* Desktop Filters Sidebar */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
+            <div className="sticky top-32 bg-white rounded-xl shadow-lg p-6 space-y-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  <FunnelIcon className="w-5 h-5 text-emerald-600" />
+                  Filters
+                </h2>
+                {activeFiltersCount > 0 && (
+                  <button
+                    onClick={() =>
+                      setFilters({
+                        availability: "all",
+                        prescriptionRequired: "all",
+                        priceRange: [0, 1000],
+                        brands: [],
+                        types: [],
+                      })
                     }
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>৳0</span>
-                    <span>৳{filters.priceRange[1].toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Brand */}
-              <div className="mb-6">
-                <h4 className="font-medium text-gray-900 mb-3">
-                  {t("categoryPage.filters.brand")}
-                </h4>
-                <div className="space-y-2">
-                  {brands.map((brand) => (
-                    <label key={brand} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={filters.brand.includes(brand)}
-                        onChange={(e) => {
-                          const newBrands = e.target.checked
-                            ? [...filters.brand, brand]
-                            : filters.brand.filter((b) => b !== brand);
-                          handleFilterChange("brand", newBrands);
-                        }}
-                        className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">
-                        {brand}
-                      </span>
-                    </label>
-                  ))}
-                </div>
+                    className="text-sm text-emerald-600 hover:underline"
+                  >
+                    Clear All
+                  </button>
+                )}
               </div>
 
               {/* Availability */}
-              <div className="mb-6">
-                <h4 className="font-medium text-gray-900 mb-3">
-                  {t("categoryPage.filters.availability")}
-                </h4>
-                <div className="space-y-2">
-                  {[
-                    {
-                      value: "all",
-                      label: t("categoryPage.filters.availabilityOptions.all"),
-                    },
-                    {
-                      value: "inStock",
-                      label: t(
-                        "categoryPage.filters.availabilityOptions.inStock"
-                      ),
-                    },
-                    {
-                      value: "preOrder",
-                      label: t(
-                        "categoryPage.filters.availabilityOptions.preOrder"
-                      ),
-                    },
-                  ].map((option) => (
-                    <label key={option.value} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="availability"
-                        value={option.value}
-                        checked={filters.availability === option.value}
-                        onChange={(e) =>
-                          handleFilterChange("availability", e.target.value)
-                        }
-                        className="border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">
-                        {option.label}
-                      </span>
-                    </label>
-                  ))}
-                </div>
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <CheckCircleIcon className="w-5 h-5 text-green-500" />
+                  Availability
+                </h3>
+                {["all", "inStock", "preOrder"].map((opt) => (
+                  <label
+                    key={opt}
+                    className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
+                  >
+                    <input
+                      type="radio"
+                      name="availability"
+                      value={opt}
+                      checked={filters.availability === opt}
+                      onChange={(e) =>
+                        handleFilterChange("availability", e.target.value)
+                      }
+                      className="text-emerald-600 focus:ring-emerald-500"
+                    />
+                    <span className="text-sm capitalize">
+                      {opt.replace(/([A-Z])/g, " $1")}
+                    </span>
+                  </label>
+                ))}
               </div>
 
-              {/* Prescription Required */}
+              {/* Prescription */}
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">
-                  {t("categoryPage.filters.prescription")}
-                </h4>
-                <label className="flex items-center">
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <FireIcon className="w-5 h-5 text-red-500" />
+                  Prescription
+                </h3>
+                <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
                   <input
                     type="checkbox"
                     checked={filters.prescriptionRequired === "required"}
@@ -311,98 +246,144 @@ export default function CategoryPage() {
                         e.target.checked ? "required" : "all"
                       )
                     }
-                    className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                    className="rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="ml-2 text-sm text-gray-700">
-                    {t("categoryPage.filters.prescriptionOnly")}
-                  </span>
+                  <span className="text-sm">Prescription Required Only</span>
                 </label>
               </div>
             </div>
-          </div>
+          </aside>
+
+          {/* Mobile Filters Drawer */}
+          {mobileFiltersOpen && (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <div
+                className="absolute inset-0 bg-black/50"
+                onClick={() => setMobileFiltersOpen(false)}
+              />
+              <div className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-white shadow-2xl overflow-y-auto animate-slide-in-right">
+                <div className="p-6 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold">Filters</h2>
+                    <button
+                      onClick={() => setMobileFiltersOpen(false)}
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
+                      <XMarkIcon className="w-6 h-6" />
+                    </button>
+                  </div>
+
+                  {/* Same filters as desktop */}
+                  <div>
+                    <h3 className="font-semibold mb-3">Availability</h3>
+                    {["all", "inStock", "preOrder"].map((opt) => (
+                      <label
+                        key={opt}
+                        className="flex items-center gap-2 mb-2 p-2"
+                      >
+                        <input
+                          type="radio"
+                          name="availability"
+                          value={opt}
+                          checked={filters.availability === opt}
+                          onChange={(e) =>
+                            handleFilterChange("availability", e.target.value)
+                          }
+                          className="text-emerald-600"
+                        />
+                        <span className="text-sm capitalize">
+                          {opt.replace(/([A-Z])/g, " $1")}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold mb-3">Prescription</h3>
+                    <label className="flex items-center gap-2 p-2">
+                      <input
+                        type="checkbox"
+                        checked={filters.prescriptionRequired === "required"}
+                        onChange={(e) =>
+                          handleFilterChange(
+                            "prescriptionRequired",
+                            e.target.checked ? "required" : "all"
+                          )
+                        }
+                        className="rounded text-emerald-600"
+                      />
+                      <span className="text-sm">
+                        Prescription Required Only
+                      </span>
+                    </label>
+                  </div>
+
+                  <button
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full py-3 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Products Grid */}
-          <div className="flex-1 w-full">
-            {/* Sort & Results Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
-              <div className="animate-fade-in-up">
-                <h1 className="font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent capitalize mb-1 text-lg sm:text-2xl md:text-3xl">
-                  {t("categoryPage.title", { category: categoryLabel })}
-                </h1>
-                <p className="text-gray-600 text-lg font-medium flex items-center gap-2">
-                  <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-emerald-100 to-cyan-100 border-2 border-emerald-200 rounded-full text-emerald-700 font-bold text-sm">
-                    {t("categoryPage.resultsFound", {
-                      count: productsData?.pagination?.total || 0,
-                    })}
-                  </span>
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setFullScreen(!fullScreen)}
-                  className="text-sm font-bold text-emerald-600 hover:text-emerald-700 transition-colors duration-300 px-2 py-1 rounded-lg hover:bg-emerald-50"
-                  title={fullScreen ? "Exit full screen" : "Enter full screen"}
-                >
-                  <ArrowsPointingOutIcon className="w-5 h-5" />
-                </button>
-                <label className="text-sm font-bold text-gray-700">
-                  {t("categoryPage.sort.label")}
-                </label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 hover:border-emerald-300 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
-                >
-                  <option value="newest">
-                    {t("categoryPage.sort.options.newest")}
-                  </option>
-                  <option value="price-low">
-                    {t("categoryPage.sort.options.priceLow")}
-                  </option>
-                  <option value="price-high">
-                    {t("categoryPage.sort.options.priceHigh")}
-                  </option>
-                  <option value="rating">
-                    {t("categoryPage.sort.options.rating")}
-                  </option>
-                </select>
-              </div>
+          <main className="flex-1">
+            <div className="mb-4 text-sm text-gray-600">
+              {isLoading
+                ? "Loading..."
+                : `${filteredProducts.length} products found`}
             </div>
 
-            {/* Products Grid */}
-            <ProductGrid
-              products={productsData?.products}
-              isLoading={isLoading}
-              skeletonCount={12}
-            />
-
-            {!isLoading && (
-              <>
-                {/* Pagination */}
-                {productsData?.pagination?.pages > 1 && (
-                  <div className="flex justify-center mt-8">
-                    <nav className="flex items-center space-x-2">
-                      {[...Array(productsData.pagination.pages)].map((_, i) => (
-                        <button
-                          key={i}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                            i + 1 === productsData.pagination.page
-                              ? "bg-emerald-600 text-white"
-                              : "bg-white text-gray-700 border border-gray-300 hover:bg-emerald-50"
-                          }`}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
-                    </nav>
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-white rounded-xl shadow-md p-4 animate-pulse"
+                  >
+                    <div className="bg-gray-200 h-48 rounded-lg mb-4" />
+                    <div className="bg-gray-200 h-4 rounded mb-2" />
+                    <div className="bg-gray-200 h-4 rounded w-2/3" />
                   </div>
-                )}
-              </>
+                ))}
+              </div>
+            ) : filteredProducts.length > 0 ? (
+              <div className="transition-all duration-300">
+                <ProductGrid products={filteredProducts} />
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  No products found
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Try adjusting your filters or browse other categories
+                </p>
+                <Link
+                  to="/categories"
+                  className="inline-block px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
+                >
+                  Browse All Categories
+                </Link>
+              </div>
             )}
-          </div>
+          </main>
         </div>
       </div>
+
+      <style>{`
+        @keyframes slide-in-right {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        .animate-slide-in-right { animation: slide-in-right 0.3s ease-out; }
+      `}</style>
     </div>
   );
 }
+
+export default CategoryPage;

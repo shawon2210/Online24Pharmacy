@@ -9,7 +9,6 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import { toast } from "react-hot-toast";
-import { useTranslation } from "react-i18next";
 import SEOHead from "../components/common/SEOHead";
 import {
   PlusIcon,
@@ -96,7 +95,6 @@ const KitItem = ({ item, onRemove }) => {
 };
 
 export default function CustomSurgicalKitBuilder() {
-  const { t: _t } = useTranslation();
   const { user, token } = useAuth();
   const { addItem, clearCart } = useCartStore();
   const [kitItems, setKitItems] = useState([]);
@@ -240,179 +238,215 @@ export default function CustomSurgicalKitBuilder() {
   const { isOver, setNodeRef } = useDroppable({ id: "kit-drop-zone" });
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
       <SEOHead
-        title="Custom Surgical Kit Builder"
-        description="Build your own surgical kit for home care."
+        title="Build Custom Kit - Online24 Pharmacy"
+        description="Build your own custom medical kit for your specific healthcare needs"
+        url="/build-kit"
       />
-      <div className="bg-gray-50 min-h-screen">
-        <div className="w-full mx-auto px-4 sm:px-6 md:max-w-4xl lg:max-w-6xl xl:max-w-7xl">
-          <div className="py-12">
-            <div className="text-center mb-12">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-                <span className="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
-                  Custom Surgical Kit Builder
-                </span>
+      
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+        <div className="container mx-auto px-4 py-4">
+          {/* Professional Breadcrumbs */}
+          <nav className="mb-3" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-1 text-sm text-gray-500">
+              <li>
+                <a href="/" className="hover:text-emerald-600 font-medium">
+                  Home
+                </a>
+              </li>
+              <li className="px-1 text-gray-400">/</li>
+              <li className="text-gray-900 font-bold" aria-current="page">
+                Build Custom Kit
+              </li>
+            </ol>
+          </nav>
+
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
+                Build Custom Kit
               </h1>
-              <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                Create a personalized kit for your specific healthcare needs.
+              <p className="text-sm text-gray-600">
+                Create personalized medical kits for your specific needs
               </p>
             </div>
-
-            <div className="mb-10">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                1. Start with a Template (Optional)
-              </h2>
-              <div className="flex flex-wrap gap-3">
-                {Object.keys(useCases).map((useCase) => (
-                  <button
-                    key={useCase}
-                    onClick={() => selectUseCase(useCase)}
-                    className="bg-white border-2 border-gray-200 text-gray-700 px-4 py-2 rounded-full font-semibold hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-800 transition-all duration-200 shadow-sm"
-                  >
-                    {useCase}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <DndContext
-              sensors={sensors}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Available Items */}
-                <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
-                  <h2 className="text-xl font-bold text-gray-800 mb-4">
-                    2. Available Items
-                  </h2>
-                  <div className="relative mb-4">
-                    <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Search for items..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
-                    />
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded-lg h-96 overflow-y-auto">
-                    {isLoading ? (
-                      <p>Loading...</p>
-                    ) : (
-                      filteredProducts.map((product) => (
-                        <ProductItem
-                          key={product.id}
-                          product={product}
-                          onAdd={addToKit}
-                        />
-                      ))
-                    )}
-                  </div>
-                </div>
-
-                {/* Your Custom Kit */}
-                <div
-                  ref={setNodeRef}
-                  className={`p-6 rounded-2xl shadow-lg border-2 transition-colors duration-300 ${
-                    isOver
-                      ? "border-emerald-500 bg-emerald-50"
-                      : "border-gray-200 bg-white"
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold text-gray-800">
-                      3. Your Custom Kit
-                    </h2>
-                    {kitItems.length > 0 && (
-                      <button
-                        onClick={clearKit}
-                        className="text-sm font-semibold text-red-500 hover:text-red-700 flex items-center gap-1"
-                      >
-                        <XMarkIcon className="w-4 h-4" /> Clear All
-                      </button>
-                    )}
-                  </div>
-                  <div
-                    className={`p-4 rounded-lg h-96 overflow-y-auto transition-colors ${
-                      isDragging ? "bg-emerald-50/50" : "bg-gray-50"
-                    }`}
-                  >
-                    {kitItems.length > 0 ? (
-                      kitItems.map((item) => (
-                        <KitItem
-                          key={item.instanceId}
-                          item={item}
-                          onRemove={removeFromKit}
-                        />
-                      ))
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-                        <ShoppingBagIcon className="w-16 h-16 text-gray-300 mb-4" />
-                        <p className="font-semibold">Your kit is empty</p>
-                        <p className="text-sm">
-                          Drag items here or use the '+' button to add them.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </DndContext>
-
-            {/* Finalize Kit Section */}
-            <div className="mt-10 bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                4. Finalize Your Kit
-              </h2>
-              <div className="flex flex-wrap items-center gap-4">
-                <input
-                  type="text"
-                  value={kitName}
-                  onChange={(e) => setKitName(e.target.value)}
-                  className="flex-1 min-w-[200px] border-2 border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
-                  placeholder="Enter a name for your kit"
-                />
-                <div className="flex items-center gap-6">
-                  <div className="text-center">
-                    <p className="text-xs text-gray-500">Total Items</p>
-                    <p className="text-lg font-bold text-gray-800">
-                      {kitItems.length}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-500">Total Price</p>
-                    <p className="text-lg font-bold text-emerald-600">
-                      ${totalPrice.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-3 ml-auto">
-                  <button
-                    onClick={addKitToCart}
-                    className="btn-primary flex items-center gap-2"
-                  >
-                    <ShoppingCartIcon className="w-5 h-5" /> Add to Cart
-                  </button>
-                  <button
-                    onClick={saveKit}
-                    className="btn-primary flex items-center gap-2"
-                  >
-                    <CheckCircleIcon className="w-5 h-5" /> Save
-                  </button>
-                  <button
-                    onClick={shareKit}
-                    className="btn-secondary flex items-center gap-2"
-                  >
-                    <ShareIcon className="w-5 h-5" /> Share
-                  </button>
-                </div>
-              </div>
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-100 to-cyan-100 border-2 border-emerald-200 text-emerald-700 rounded-full text-sm font-bold">
+              <ShoppingBagIcon className="w-5 h-5" />
+              <span>{kitItems.length} Items</span>
             </div>
           </div>
         </div>
       </div>
-    </>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Templates Section */}
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            Quick Start Templates
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {Object.keys(useCases).map((useCase) => (
+              <button
+                key={useCase}
+                onClick={() => selectUseCase(useCase)}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-emerald-100 hover:text-emerald-700 transition-colors"
+              >
+                {useCase}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Available Items */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                Available Items
+              </h2>
+              <div className="relative mb-4">
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search for items..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                />
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 h-96 overflow-y-auto">
+                {isLoading ? (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : (
+                  filteredProducts.map((product) => (
+                    <ProductItem
+                      key={product.id}
+                      product={product}
+                      onAdd={addToKit}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Your Custom Kit */}
+            <div
+              ref={setNodeRef}
+              className={`rounded-xl shadow-lg border-2 p-6 transition-all duration-300 ${
+                isOver
+                  ? "border-emerald-500 bg-emerald-50"
+                  : "border-gray-200 bg-white"
+              }`}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <ShoppingBagIcon className="w-5 h-5 text-emerald-600" />
+                  Your Custom Kit
+                </h2>
+                {kitItems.length > 0 && (
+                  <button
+                    onClick={clearKit}
+                    className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                  >
+                    <XMarkIcon className="w-4 h-4" /> Clear All
+                  </button>
+                )}
+              </div>
+              <div
+                className={`rounded-lg p-4 h-96 overflow-y-auto transition-colors ${
+                  isDragging ? "bg-emerald-50/50" : "bg-gray-50"
+                }`}
+              >
+                {kitItems.length > 0 ? (
+                  kitItems.map((item) => (
+                    <KitItem
+                      key={item.instanceId}
+                      item={item}
+                      onRemove={removeFromKit}
+                    />
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                    <ShoppingBagIcon className="w-16 h-16 text-gray-300 mb-4" />
+                    <p className="font-semibold">Your kit is empty</p>
+                    <p className="text-sm">
+                      Drag items here or use the '+' button to add them.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </DndContext>
+
+        {/* Finalize Kit Section */}
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mt-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <CheckCircleIcon className="w-5 h-5 text-green-600" />
+            Finalize Your Kit
+          </h2>
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+            <div className="flex-1">
+              <input
+                type="text"
+                value={kitName}
+                onChange={(e) => setKitName(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                placeholder="Enter a name for your kit"
+              />
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="text-center">
+                <p className="text-xs text-gray-500 font-medium">Items</p>
+                <p className="text-lg font-bold text-gray-900">
+                  {kitItems.length}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs text-gray-500 font-medium">Total</p>
+                <p className="text-lg font-bold text-emerald-600">
+                  ${totalPrice.toFixed(2)}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={addKitToCart}
+                className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center gap-2"
+              >
+                <ShoppingCartIcon className="w-5 h-5" /> Add to Cart
+              </button>
+              <button
+                onClick={saveKit}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <CheckCircleIcon className="w-5 h-5" /> Save Kit
+              </button>
+              <button
+                onClick={shareKit}
+                className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors flex items-center gap-2"
+              >
+                <ShareIcon className="w-5 h-5" /> Share
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

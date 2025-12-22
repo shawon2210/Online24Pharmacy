@@ -16,6 +16,7 @@ import CategoryPage from "./pages/CategoryPage";
 import CategoriesListPage from "./pages/CategoriesListPage";
 import ProductDisplayPage from "./pages/ProductDisplayPage";
 import AdminProductsPage from "./pages/admin/ProductsPage";
+import AdminCategories from "./pages/admin/AdminCategories";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -98,6 +99,16 @@ function App() {
                 <RequireAdmin>
                   <AdminLayout>
                     <AdminProductsPage />
+                  </AdminLayout>
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <RequireAdmin>
+                  <AdminLayout>
+                    <AdminCategories />
                   </AdminLayout>
                 </RequireAdmin>
               }

@@ -10,6 +10,7 @@ export default function ProductGrid({
   products = [],
   isLoading = false,
   skeletonCount = 8,
+  onQuickView,
 }) {
   if (isLoading) {
     return (
@@ -51,7 +52,35 @@ export default function ProductGrid({
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
       {products.map((product, index) => (
-        <ProductCard key={product.id || product.slug} product={product} size="s" />
+        <div key={product.id || product.slug} className="relative group">
+          <ProductCard product={product} size="s" />
+          {onQuickView && (
+            <button
+              className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 rounded-full p-2 shadow hover:bg-emerald-600 hover:text-white"
+              onClick={(e) => {
+                e.preventDefault();
+                onQuickView(product);
+              }}
+              aria-label="Quick view"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 12s3.75-7.5 9.75-7.5 9.75 7.5 9.75 7.5-3.75 7.5-9.75 7.5S2.25 12 2.25 12z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          )}
+        </div>
       ))}
     </div>
   );

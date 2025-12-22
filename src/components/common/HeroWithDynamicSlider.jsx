@@ -3,8 +3,18 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ArrowRightIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
 
-const keys = ["hero.dynamic.dgda", "hero.dynamic.surgical", "hero.dynamic.verified", "hero.dynamic.essentials"];
+const keys = [
+  "hero.dynamic.dgda",
+  "hero.dynamic.surgical",
+  "hero.dynamic.verified",
+  "hero.dynamic.essentials",
+];
 const images = ["/1.jpg", "/2.jpg", "/3.jpg", "/4.jpg", "/5.jpg", "/6.jpg"];
+// Preload the first image for instant display
+if (typeof window !== "undefined") {
+  const preloadImg = new window.Image();
+  preloadImg.src = images[0];
+}
 
 export default function HeroAIGlassPremium() {
   const { t } = useTranslation();
@@ -13,7 +23,10 @@ export default function HeroAIGlassPremium() {
   const [imageIndex, setImageIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => setImageIndex((p) => (p + 1) % images.length), 5000);
+    const interval = setInterval(
+      () => setImageIndex((p) => (p + 1) % images.length),
+      5000
+    );
     return () => clearInterval(interval);
   }, []);
 
@@ -40,8 +53,20 @@ export default function HeroAIGlassPremium() {
       {/* Image Slider */}
       <div className="absolute inset-0">
         {images.map((img, i) => (
-          <div key={img} className={`absolute inset-0 transition-opacity duration-1000 ${i === imageIndex ? "opacity-100" : "opacity-0"}`}>
-            <img src={img} alt={`Healthcare ${i + 1}`} className="w-full h-full object-cover object-[75%_center] sm:object-center" loading={i === 0 ? "eager" : "lazy"} />
+          <div
+            key={img}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              i === imageIndex ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <img
+              src={img}
+              alt={`Healthcare ${i + 1}`}
+              className="w-full h-full object-cover object-[75%_center] sm:object-center"
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+              fetchpriority={i === 0 ? "high" : "auto"}
+            />
           </div>
         ))}
       </div>
@@ -58,7 +83,9 @@ export default function HeroAIGlassPremium() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-4 sm:mb-6">
               <ShieldCheckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
-              <span className="text-emerald-300 text-xs sm:text-sm font-bold">Licensed & Verified</span>
+              <span className="text-emerald-300 text-xs sm:text-sm font-bold">
+                Licensed & Verified
+              </span>
             </div>
 
             {/* Heading - Responsive Sizes */}
@@ -90,7 +117,9 @@ export default function HeroAIGlassPremium() {
               <span className="text-white text-base sm:text-lg md:text-xl font-bold tracking-wide">
                 {displayText || "Loading..."}
               </span>
-              <span className="text-emerald-400 text-2xl sm:text-3xl font-light animate-pulse flex-shrink-0">|</span>
+              <span className="text-emerald-400 text-2xl sm:text-3xl font-light animate-pulse flex-shrink-0">
+                |
+              </span>
             </div>
           </div>
         </div>
