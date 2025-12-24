@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
           email: fileUser.email,
           firstName: fileUser.firstName,
           lastName: fileUser.lastName,
-          passwordHash: fileUser.passwordHash,
+          passwordHash: fileUser.passwordHash || fileUser.password,
           role: fileUser.role
         };
       }

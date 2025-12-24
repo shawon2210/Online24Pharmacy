@@ -393,17 +393,21 @@ export default function Header() {
                   </div>
                 </div>
               ) : (
-                <Link
-                  to="/auth/login"
-                  className="hidden lg:flex group relative items-center justify-center w-11 h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                  aria-label="Login or register"
-                  tabIndex={0}
-                >
-                  <UserIcon className="w-5 h-5 text-white drop-shadow-lg" />
-                  <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
+                <div className="hidden lg:flex items-center gap-2">
+                  <Link
+                    to="/login"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-all"
+                  >
+                    <UserIcon className="w-5 h-5" />
                     Login
-                  </span>
-                </Link>
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-emerald-600 font-bold hover:bg-emerald-50 transition-all shadow-lg"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               )}
 
               {/* Mobile Menu Toggle */}
@@ -588,18 +592,23 @@ export default function Header() {
               </div>
             ) : (
               <div className="p-4 bg-gradient-to-r from-emerald-600 to-teal-600">
-                <Link
-                  to="/auth/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 group relative"
-                  aria-label="Login or register"
-                  tabIndex={0}
-                >
-                  <UserIcon className="w-5 h-5 text-white drop-shadow-lg" />
-                  <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
+                <div className="flex gap-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-white text-emerald-600 font-bold py-3 rounded-xl hover:bg-emerald-50 transition-all"
+                  >
+                    <UserIcon className="w-5 h-5" />
                     Login
-                  </span>
-                </Link>
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-emerald-700 text-white font-bold py-3 rounded-xl hover:bg-emerald-800 transition-all"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               </div>
             )}
 

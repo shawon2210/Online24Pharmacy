@@ -140,6 +140,7 @@ export const login = async (req, res) => {
       }
     }
 
+    console.log('DEBUG: user object before bcrypt.compare:', user);
     if (!user || !await bcrypt.compare(password, user.passwordHash)) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }

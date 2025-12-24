@@ -18,40 +18,38 @@ export default {
     },
     extend: {
       colors: {
-        primary: '#10B981',      // Emerald Green - health, trust, growth
-        secondary: '#F59E0B',    // Amber - alerts, offers, "Rx Required" badges
-        background: '#FFFFFF',   // Pure white - clinic cleanliness
-        foreground: '#111827',   // Near-black - high readability (WCAG compliant)
-        sidebar: '#F9FAFB',      // Soft Gray-50 - clean, airy background
-        header: '#FFFFFF',       // Clean white for header
-        footer: '#1F2937',       // Dark Gray - visual anchor
-        accent: '#FBBF24',
-        neutral: '#F3F4F6',
-        success: '#22C55E',
-        error: '#EF4444',
-        brand: {
-          50: '#ECFDF5',
-          100: '#D1FAE5',
-          200: '#A7F3D0',
-          300: '#6EE7B7',
-          400: '#34D399',
-          500: '#10B981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065F46',
-          900: '#064E3B',
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
-        gray: {
-          50: '#F9FAFB',
-          100: '#F3F4F6',
-          200: '#E5E7EB',
-          300: '#D1D5DB',
-          400: '#9CA3AF',
-          500: '#6B7280',
-          600: '#4B5563',
-          700: '#374151',
-          800: '#1F2937',
-          900: '#111827',
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
       },
       fontFamily: {

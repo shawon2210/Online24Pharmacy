@@ -19,7 +19,9 @@ async function readUsersFile() {
 export const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
+    console.log('DEBUG: Incoming Authorization header:', authHeader);
     const token = authHeader && authHeader.split(' ')[1];
+    console.log('DEBUG: Extracted token:', token);
 
     if (!token) {
       return res.status(401).json({ error: 'Access token required' });

@@ -32,22 +32,22 @@ export default function AdminSidebar({ isCollapsed, setCollapsed }) {
 
   return (
     <div
-      className={`hidden lg:flex flex-col bg-gray-800 text-white transition-all duration-300 ease-in-out ${
-        isCollapsed ? "w-20" : "w-60"
+      className={`flex flex-col bg-card text-card-foreground transition-all duration-300 ease-in-out shadow-lg h-full ${
+        isCollapsed ? "w-20" : "w-64"
       }`}
     >
       {/* Logo */}
-      <div className="flex items-center h-16 px-4">
-        <div className={`flex items-center gap-2 ${isCollapsed ? 'justify-center' : ''}`}>
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-sm">⚕️</span>
+      <div className="flex items-center h-20 px-4">
+        <div className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : ''}`}>
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-primary-foreground font-bold text-xl">⚕️</span>
             </div>
-            {!isCollapsed && <span className="text-lg font-bold">Admin</span>}
+            {!isCollapsed && <span className="text-xl font-bold text-foreground">Admin Panel</span>}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-2 py-4 space-y-2">
+      <nav className="flex-1 px-3 py-4 space-y-2">
         {navigation.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
@@ -56,46 +56,48 @@ export default function AdminSidebar({ isCollapsed, setCollapsed }) {
               key={item.name}
               to={item.href}
               title={item.name}
-              className={`flex items-center p-2 rounded-lg transition-colors ${
-                active ? "bg-primary" : "hover:bg-gray-700"
+              className={`flex items-center p-3 rounded-lg transition-all duration-200 relative ${
+                active ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-muted"
               } ${isCollapsed ? "justify-center" : ""}`}
             >
-              <Icon className={`h-6 w-6 flex-shrink-0 ${!isCollapsed ? "mr-3" : ""}`} />
-              {!isCollapsed && <span>{item.name}</span>}
+              <Icon className={`h-6 w-6 flex-shrink-0 ${!isCollapsed ? "mr-4" : ""}`} />
+              {!isCollapsed && <span className="font-medium">{item.name}</span>}
+              {active && !isCollapsed && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary-foreground rounded-r-full"></div>}
             </Link>
           );
         })}
       </nav>
 
       {/* Collapse Button & User Info */}
-      <div className="p-2 border-t border-gray-700">
+      <div className="p-3 border-t border-border">
         <button
           onClick={() => setCollapsed(!isCollapsed)}
-          className="w-full flex items-center p-2 rounded-lg hover:bg-gray-700 mb-2"
+          className="w-full hidden lg:flex items-center p-3 rounded-lg hover:bg-muted mb-2 transition-all duration-200"
         >
           <ChevronDoubleLeftIcon
-            className={`h-6 w-6 text-gray-400 transition-transform duration-300 ${
+            className={`h-6 w-6 text-muted-foreground transition-transform duration-300 ${
               isCollapsed ? "rotate-180" : ""
-            } ${!isCollapsed ? "mr-3" : "mx-auto"}`}
+            } ${!isCollapsed ? "mr-4" : "mx-auto"}`}
           />
-          {!isCollapsed && <span className="text-gray-300">Collapse</span>}
+          {!isCollapsed && <span className="text-muted-foreground font-medium">Collapse</span>}
         </button>
-        <div className="flex items-center p-2">
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-sm font-medium">{user?.firstName?.[0]}</span>
+        <div className={`flex items-center p-3 rounded-lg ${isCollapsed ? 'justify-center' : ''}`}>
+            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-lg font-bold text-primary-foreground">{user?.firstName?.[0]}</span>
             </div>
             {!isCollapsed && (
                 <div className="ml-3">
-                    <p className="text-sm font-medium">{user?.firstName}</p>
+                    <p className="text-sm font-semibold text-foreground">{user?.firstName} {user?.lastName}</p>
+                    <p className="text-xs text-muted-foreground">{user?.role}</p>
                 </div>
             )}
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center p-2 rounded-lg hover:bg-gray-700 mt-2"
+          className="w-full flex items-center p-3 rounded-lg hover:bg-destructive hover:text-destructive-foreground mt-2 transition-all duration-200"
         >
-          <ArrowRightOnRectangleIcon className={`h-6 w-6 text-gray-400 ${!isCollapsed ? "mr-3" : "mx-auto"}`} />
-          {!isCollapsed && <span className="text-gray-300">Sign out</span>}
+          <ArrowRightOnRectangleIcon className={`h-6 w-6 text-muted-foreground ${!isCollapsed ? "mr-4" : "mx-auto"}`} />
+          {!isCollapsed && <span className="text-muted-foreground font-medium">Sign out</span>}
         </button>
       </div>
     </div>

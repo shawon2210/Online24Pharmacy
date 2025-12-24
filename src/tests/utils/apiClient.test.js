@@ -49,12 +49,15 @@ describe('apiClient', () => {
     });
 
     it('should throw error on failed request', async () => {
+      const originalError = console.error;
+      console.error = vi.fn(); // Suppress error log
       global.fetch.mockResolvedValueOnce({
         ok: false,
         json: async () => ({ error: 'Not found' })
       });
 
       await expect(apiRequest('/api/products/999')).rejects.toThrow('Not found');
+      console.error = originalError;
     });
   });
 
