@@ -43,7 +43,7 @@ export default function SEOHead({
         name: "Online24 Pharmacy",
         description: "24/7 online pharmacy service in Dhaka",
         url: siteUrl,
-        telephone: "+880-1234-567890",
+        telephone: "+88017XXXXXXXX",
         address: {
           "@type": "PostalAddress",
           addressLocality: "Dhaka",

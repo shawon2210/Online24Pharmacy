@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   PhoneIcon,
   EnvelopeIcon,
@@ -6,24 +7,28 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function Footer() {
+  const { t } = useTranslation();
   const footerLinks = {
     company: [
-      { label: "About Us", to: "/about" },
-      { label: "Careers", to: "/careers" },
-      { label: "Press", to: "/press" },
-      { label: "Blog", to: "/blog" },
+      { label: t("footer.aboutUs", "About Us"), to: "/about" },
+      { label: t("footer.careers", "Careers"), to: "/careers" },
+      { label: t("footer.press", "Press"), to: "/press" },
+      { label: t("footer.blog", "Blog"), to: "/blog" },
     ],
     support: [
-      { label: "Contact Us", to: "/contact" },
-      { label: "FAQs", to: "/faq" },
-      { label: "Shipping & Returns", to: "/shipping" },
-      { label: "Track Order", to: "/track-order" },
+      { label: t("footer.contactUs", "Contact Us"), to: "/contact" },
+      { label: t("footer.faqs", "FAQs"), to: "/faq" },
+      {
+        label: t("footer.shippingReturns", "Shipping & Returns"),
+        to: "/shipping",
+      },
+      { label: t("footer.trackOrder", "Track Order"), to: "/track-order" },
     ],
     legal: [
-      { label: "Privacy Policy", to: "/privacy" },
-      { label: "Terms of Service", to: "/terms" },
-      { label: "Refund Policy", to: "/refund" },
-      { label: "Cookie Policy", to: "/cookies" },
+      { label: t("footer.privacyPolicy", "Privacy Policy"), to: "/privacy" },
+      { label: t("footer.termsOfService", "Terms of Service"), to: "/terms" },
+      { label: t("footer.refundPolicy", "Refund Policy"), to: "/refund" },
+      { label: t("footer.cookiePolicy", "Cookie Policy"), to: "/cookies" },
     ],
   };
 
@@ -67,12 +72,17 @@ export default function Footer() {
                   />
                 </svg>
                 <h3 className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 tracking-tight">
-                  Subscribe to Our Newsletter
+                  {t(
+                    "footer.subscribeNewsletter",
+                    "Subscribe to Our Newsletter"
+                  )}
                 </h3>
               </div>
               <p className="text-sm text-gray-700 dark:text-gray-200 mb-2 md:mb-0 text-center md:text-left max-w-md">
-                Get exclusive deals, health tips, and updates delivered to your
-                inbox. Join our community and stay informed!
+                {t(
+                  "footer.newsletterDesc",
+                  "Get exclusive deals, health tips, and updates delivered to your inbox. Join our community and stay informed!"
+                )}
               </p>
             </div>
             <form
@@ -81,7 +91,10 @@ export default function Footer() {
             >
               <input
                 type="email"
-                placeholder="Enter your email address"
+                placeholder={t(
+                  "footer.emailPlaceholder",
+                  "Enter your email address"
+                )}
                 className="flex-1 min-w-[180px] sm:w-64 px-4 py-3 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all"
                 required
               />
@@ -89,7 +102,7 @@ export default function Footer() {
                 type="submit"
                 className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-base shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
               >
-                Subscribe
+                {t("footer.subscribe", "Subscribe")}
               </button>
             </form>
             <div className="absolute -top-8 -right-8 w-32 h-32 bg-emerald-100 dark:bg-emerald-900/30 rounded-full opacity-40 blur-2xl pointer-events-none"></div>
@@ -111,16 +124,18 @@ export default function Footer() {
               </div>
               <div>
                 <h2 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
-                  Online24 Pharmacy
+                  {t("footer.brandName", "Online24 Pharmacy")}
                 </h2>
                 <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
-                  Licensed & Certified
+                  {t("footer.licensedCertified", "Licensed & Certified")}
                 </p>
               </div>
             </Link>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-md leading-relaxed">
-              Your trusted online pharmacy providing quality medicines and
-              healthcare products with fast delivery across Bangladesh.
+              {t(
+                "footer.brandDesc",
+                "Your trusted online pharmacy providing quality medicines and healthcare products with fast delivery across Bangladesh."
+              )}
             </p>
             <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm mt-2">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -130,21 +145,21 @@ export default function Footer() {
                   clipRule="evenodd"
                 />
               </svg>
-              DGDA Certified
+              {t("footer.dgdaCertified", "DGDA Certified")}
             </div>
 
             <div className="mt-8 space-y-2">
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <PhoneIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>+880-1234-567890</span>
+                <span>{t("footer.phone", "+880-1234-567890")}</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <EnvelopeIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>support@online24pharmacy.com</span>
+                <span>{t("footer.email", "support@online24pharmacy.com")}</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <MapPinIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>Dhaka, Bangladesh</span>
+                <span>{t("footer.address", "Dhaka, Bangladesh")}</span>
               </div>
             </div>
           </div>
@@ -152,7 +167,7 @@ export default function Footer() {
           {/* Company Links */}
           <div className="flex flex-col gap-2">
             <h3 className="text-base font-extrabold text-gray-900 dark:text-white mb-4 tracking-wide uppercase">
-              Company
+              {t("footer.company", "Company")}
             </h3>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
@@ -171,7 +186,7 @@ export default function Footer() {
           {/* Support Links */}
           <div className="flex flex-col gap-2">
             <h3 className="text-base font-extrabold text-gray-900 dark:text-white mb-4 tracking-wide uppercase">
-              Support
+              {t("footer.support", "Support")}
             </h3>
             <ul className="space-y-2">
               {footerLinks.support.map((link) => (
@@ -190,7 +205,7 @@ export default function Footer() {
           {/* Legal Links */}
           <div className="flex flex-col gap-2">
             <h3 className="text-base font-extrabold text-gray-900 dark:text-white mb-4 tracking-wide uppercase">
-              Legal
+              {t("footer.legal", "Legal")}
             </h3>
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
@@ -214,17 +229,17 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-4">
             {/* Copyright */}
             <p className="text-sm text-gray-600 dark:text-gray-400 text-center md:text-left">
-              © {new Date().getFullYear()}{" "}
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                Online24 Pharmacy
-              </span>
-              . All rights reserved.
+              {t(
+                "footer.copyright",
+                "© {year} Online24 Pharmacy. All rights reserved.",
+                { year: new Date().getFullYear() }
+              )}
             </p>
 
             {/* Payment Methods */}
             <div className="flex flex-col items-center md:flex-row gap-2 md:gap-3">
               <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold tracking-wide">
-                We Accept:
+                {t("footer.weAccept", "We Accept:")}
               </span>
               <div className="flex items-center gap-2">
                 {paymentMethods.map((method) => (

@@ -18,6 +18,13 @@ if (typeof window !== "undefined") {
 
 export default function HeroAIGlassPremium() {
   const { t } = useTranslation();
+  const tf = (key, fallback) => {
+    try {
+      const res = t(key);
+      if (res && res !== key) return res;
+    } catch (e) {}
+    return typeof fallback !== "undefined" ? fallback : key;
+  };
   const [textIndex, setTextIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [imageIndex, setImageIndex] = useState(0);
@@ -31,7 +38,7 @@ export default function HeroAIGlassPremium() {
   }, []);
 
   useEffect(() => {
-    const text = t(keys[textIndex]) || "";
+    const text = tf(keys[textIndex], "") || "";
     let i = 0;
     const typing = setInterval(() => {
       if (i <= text.length) {
@@ -84,17 +91,17 @@ export default function HeroAIGlassPremium() {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-4 sm:mb-6">
               <ShieldCheckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
               <span className="text-emerald-300 text-xs sm:text-sm font-bold">
-                Licensed & Verified
+                {tf("hero.badge", "🎉 Special Offer")}
               </span>
             </div>
 
             {/* Heading - Responsive Sizes */}
             <h1 className="mb-4 sm:mb-6">
               <span className="block text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-2 sm:mb-3">
-                Your Trusted
+                {tf("hero.heading1", "Healthcare at your fingertips")}
               </span>
               <span className="block text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Online Pharmacy
+                {tf("hero.heading2", "Fast delivery, certified pharmacists")}
               </span>
             </h1>
 
@@ -102,7 +109,7 @@ export default function HeroAIGlassPremium() {
             <div className="mb-6 sm:mb-10">
               <Link to="/Category/Buy-Surgical-Product-Online-in-Dhaka">
                 <button className="group inline-flex items-center justify-center gap-1.5 sm:gap-2 px-5 sm:px-8 py-2.5 sm:py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105">
-                  Get Started
+                  {tf("hero.cta", "Shop Now")}
                   <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>

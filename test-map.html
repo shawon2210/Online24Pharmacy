@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Test</title>
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        console.log("Testing MapLibre GL initialization...");
+        try {
+            const map = new maplibregl.Map({
+                container: 'map',
+                style: 'https://demotiles.maplibre.org/style.json',
+                center: [90.4125, 23.8103],
+                zoom: 11
+            });
+
+            map.on('load', () => {
+                console.log("Map loaded successfully!");
+                document.body.innerHTML += '<div style="position:absolute;top:10px;left:10px;background:white;padding:10px;border-radius:5px;z-index:1000;">Map loaded successfully!</div>';
+            });
+
+            map.on('error', (e) => {
+                console.error("Map error:", e);
+                document.body.innerHTML += '<div style="position:absolute;top:10px;left:10px;background:red;color:white;padding:10px;border-radius:5px;z-index:1000;">Map error: ' + JSON.stringify(e) + '</div>';
+            });
+        } catch (error) {
+            console.error("Failed to initialize map:", error);
+            document.body.innerHTML += '<div style="position:absolute;top:10px;left:10px;background:red;color:white;padding:10px;border-radius:5px;z-index:1000;">Failed to initialize: ' + error.message + '</div>';
+        }
+    </script>
+</body>
+</html>

@@ -29,7 +29,7 @@ import MyPrescriptionsPage from "./pages/MyPrescriptionsPage";
 import OrderTrackingPage from "./pages/OrderTrackingPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import OrderConfirmationPage from "./pages/OrderConfirmationPage";
-import DeliveryMapPage from "./pages/DeliveryMapPage";
+import PickupMapPage from "./pages/PickupMapPage";
 import AboutPage from "./pages/AboutPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
@@ -44,6 +44,7 @@ import AdminTest from "./pages/admin/AdminTest";
 import AdminReviews from "./pages/admin/AdminReviews";
 import AdminAuditLog from "./pages/admin/AdminAuditLog";
 import CustomSurgicalKitBuilder from "./pages/CustomSurgicalKitBuilder";
+import AdminPickupLocations from "./pages/admin/AdminPickupLocations";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -211,6 +212,16 @@ function App() {
                 </RequireAdmin>
               }
             />
+            <Route
+              path="/admin/pickup-locations"
+              element={
+                <RequireAdmin>
+                  <AdminLayout>
+                    <AdminPickupLocations />
+                  </AdminLayout>
+                </RequireAdmin>
+              }
+            />
 
             <Route
               path="/*"
@@ -220,6 +231,10 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/products" element={<ProductDisplayPage />} />
                     <Route
+                      path="/products/:slug"
+                      element={<ProductDisplayPage />}
+                    />
+                    <Route
                       path="/categories"
                       element={<CategoriesListPage />}
                     />
@@ -227,13 +242,16 @@ function App() {
                       path="/categories/:slug"
                       element={<CategoryPage />}
                     />
-                    <Route path="/product/:slug" element={<ProductDisplayPage />} />
+                    <Route
+                      path="/product/:slug"
+                      element={<ProductDisplayPage />}
+                    />
                     <Route path="/about" element={<AboutPage />} />
                     <Route
                       path="/build-kit"
                       element={<CustomSurgicalKitBuilder />}
                     />
-                    <Route path="/delivery-map" element={<DeliveryMapPage />} />
+                    <Route path="/pickup-map" element={<PickupMapPage />} />
                     <Route path="/track-order" element={<TrackOrderPage />} />
                     <Route
                       path="/cart"

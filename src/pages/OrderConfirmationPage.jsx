@@ -22,14 +22,14 @@ export default function OrderConfirmationPage() {
         });
         setOrder(response.data);
       } catch (error) {
-        console.error("Failed to fetch order:", error);
+        console.error(t('orderConfirmationPage.fetchOrderError'), error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrder();
-  }, [orderId]);
+  }, [orderId, t]);
 
   if (loading)
     return (
@@ -46,7 +46,7 @@ export default function OrderConfirmationPage() {
 
   return (
     <>
-      <SEOHead title="Order Confirmation - Online24 Pharma" />
+      <SEOHead title={t("orderConfirmationPage.seoTitle")} />
       <div className="max-w-2xl mx-auto px-4 py-12 text-center">
         <CheckCircleIcon className="w-20 h-20 text-green-600 mx-auto mb-6" />
         <h1 className="text-3xl font-bold mb-4">

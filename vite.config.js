@@ -4,6 +4,19 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
   css: { postcss: true },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+    fs: {
+      // Allow serving files from one level up to the project root
+      allow: ['..']
+    }
+  },
   test: {
     globals: true,
     environment: 'jsdom',
@@ -12,6 +25,8 @@ export default defineConfig(({ mode }) => ({
   build: {
     chunkSizeWarningLimit: 1500,
     minify: 'esbuild',
+    sourcemap: false, // Disable sourcemaps for production builds to avoid warnings
+    reportCompressedSize: false, // Disable compressed size reporting to reduce output
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -25,10 +40,42 @@ export default defineConfig(({ mode }) => ({
             return 'vendor'
           }
         }
+      },
+      // Suppress rollup warnings
+      onwarn(warning, warn) {
+        // Suppress sourcemap warnings
+        if (warning.code === 'SOURCEMAP_ERROR') return
+        warn(warning)
       }
     }
   },
   esbuild: {
     drop: mode === 'production' ? ['console', 'debugger'] : [],
+    // Reduce memory usage and processing
+    target: 'es2020',
+    minify: false,
+    sourcemap: false, // Disable sourcemaps completely to avoid warnings
+    logLevel: 'silent', // Reduce esbuild logging
   },
+  optimizeDeps: {
+    // Pre-bundle fewer dependencies to reduce memory usage
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tanstack/react-query',
+      'axios',
+      'maplibre-gl'
+    ],
+    exclude: ['@vite/client', '@vite/env']
+  },
+  // Reduce file watching to prevent overwhelming the system
+  watch: {
+    ignored: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.git/**',
+      '**/coverage/**'
+    ]
+  }
 }))

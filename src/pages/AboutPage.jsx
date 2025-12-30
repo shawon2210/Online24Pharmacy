@@ -68,13 +68,11 @@ export default function AboutPage() {
           {/* Introduction Section */}
           <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-6 sm:p-8 lg:p-10 mb-6 sm:mb-8">
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-              Online24 Pharmacy is Bangladesh's leading digital healthcare
-              platform, providing{" "}
-              <span className="font-bold text-emerald-600">24/7 access</span> to
-              surgical instruments, medical supplies, and pharmaceutical
-              products across Dhaka and surrounding areas. We combine
-              cutting-edge technology with compassionate care to deliver
-              healthcare solutions right to your doorstep.
+              {t("aboutPage.intro1")}
+              <span className="font-bold text-emerald-600">
+                {t("aboutPage.intro2")}
+              </span>
+              {t("aboutPage.intro3")}
             </p>
           </div>
 
@@ -86,12 +84,10 @@ export default function AboutPage() {
                 <UserGroupIcon className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-3 sm:mb-4">
-                Our Mission
+                {t("aboutPage.missionTitle")}
               </h2>
               <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                To make healthcare accessible and affordable for everyone in
-                Bangladesh through innovative technology and reliable service
-                delivery. We believe every person deserves quality healthcare.
+                {t("aboutPage.missionText")}
               </p>
             </div>
 
@@ -101,12 +97,10 @@ export default function AboutPage() {
                 <ShieldCheckIcon className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-3 sm:mb-4">
-                DGDA Compliance
+                {t("aboutPage.dgdaTitle")}
               </h2>
               <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                We are fully licensed by the Directorate General of Drug
-                Administration (DGDA) and maintain strict quality standards for
-                all medical products. Your safety is our priority.
+                {t("aboutPage.dgdaText")}
               </p>
             </div>
           </div>
@@ -115,10 +109,10 @@ export default function AboutPage() {
           <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-6 sm:p-8 lg:p-10 mb-6 sm:mb-8">
             <div className="text-center mb-0">
               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2 sm:mb-3">
-                Why Choose Us?
+                {t("aboutPage.whyChooseUsTitle")}
               </h2>
               <p className="text-sm sm:text-base text-gray-600">
-                Discover what makes us Bangladesh's most trusted pharmacy
+                {t("aboutPage.whyChooseUsSubtitle")}
               </p>
             </div>
 
@@ -130,10 +124,10 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
-                    DGDA Licensed
+                    {t("aboutPage.dgdaLicensed")}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    Verified & certified
+                    {t("aboutPage.verifiedCertified")}
                   </p>
                 </div>
               </div>
@@ -145,10 +139,10 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
-                    24/7 Support
+                    {t("aboutPage.support247")}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    Always here for you
+                    {t("aboutPage.alwaysHere")}
                   </p>
                 </div>
               </div>
@@ -160,10 +154,10 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
-                    Same-day Delivery
+                    {t("aboutPage.sameDayDelivery")}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    Fast & reliable
+                    {t("aboutPage.fastReliable")}
                   </p>
                 </div>
               </div>
@@ -175,10 +169,10 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
-                    Verified Pharmacists
+                    {t("aboutPage.verifiedPharmacists")}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    Expert healthcare team
+                    {t("aboutPage.expertTeam")}
                   </p>
                 </div>
               </div>
@@ -190,10 +184,10 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
-                    Secure Payment
+                    {t("aboutPage.securePayment")}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    Safe & encrypted
+                    {t("aboutPage.safeEncrypted")}
                   </p>
                 </div>
               </div>
@@ -205,10 +199,10 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
-                    Prescription Verified
+                    {t("aboutPage.prescriptionVerified")}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    Quality assured
+                    {t("aboutPage.qualityAssured")}
                   </p>
                 </div>
               </div>
@@ -219,10 +213,10 @@ export default function AboutPage() {
           <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border-2 border-gray-200 p-6 sm:p-8 lg:p-10">
             <div className="text-center mb-0">
               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2 sm:mb-3">
-                Get In Touch
+                {t("aboutPage.getInTouch")}
               </h2>
               <p className="text-sm sm:text-base text-gray-600">
-                Have questions? We're here to help!
+                {t("aboutPage.haveQuestions")}
               </p>
             </div>
 
@@ -235,10 +229,10 @@ export default function AboutPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">
-                      Address
+                      {t("aboutPage.address")}
                     </h3>
                     <p className="text-sm sm:text-base text-gray-700">
-                      Dhanmondi, Dhaka-1205, Bangladesh
+                      {t("aboutPage.addressValue")}
                     </p>
                   </div>
                 </div>
@@ -252,7 +246,7 @@ export default function AboutPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">
-                      Phone
+                      {t("aboutPage.phone")}
                     </h3>
                     <a
                       href="tel:+8801766998555"
@@ -272,7 +266,7 @@ export default function AboutPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">
-                      Email
+                      {t("aboutPage.email")}
                     </h3>
                     <a
                       href="mailto:support@online24pharmacy.com"
@@ -292,7 +286,7 @@ export default function AboutPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">
-                      License
+                      {t("aboutPage.license")}
                     </h3>
                     <p className="text-sm sm:text-base text-gray-700 font-mono">
                       DGDA/SL/04/2024
@@ -307,7 +301,7 @@ export default function AboutPage() {
               <div className="flex items-center justify-center gap-3 text-emerald-600">
                 <CheckCircleIcon className="w-6 sm:w-8 h-6 sm:h-8" />
                 <p className="text-sm sm:text-base lg:text-lg font-bold">
-                  Trusted by thousands of customers across Bangladesh
+                  {t("aboutPage.trustedByThousands")}
                 </p>
               </div>
             </div>

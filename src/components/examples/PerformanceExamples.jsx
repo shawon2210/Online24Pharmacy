@@ -1,4 +1,5 @@
 import { memo, useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import usePagination from '../../hooks/usePagination';
 import useDebounce from '../../hooks/useDebounce';
 import Pagination from '../common/Pagination';
@@ -8,24 +9,19 @@ import SearchBar from '../common/SearchBar';
 /**
  * Example 1: Paginated List
  */
-export function PaginatedListExample() {
   const [items] = useState(Array.from({ length: 100 }, (_, i) => ({ id: i, name: `Item ${i}` })));
   const { page, limit, totalPages, setTotal, nextPage, prevPage, goToPage, hasNext, hasPrev } = usePagination(1, 10);
-
-  // Set total on mount
+  const { t } = useTranslation();
   React.useEffect(() => {
     setTotal(items.length);
   }, [items.length, setTotal]);
-
-  // Get current page items
   const currentItems = useMemo(() => {
     const start = (page - 1) * limit;
     return items.slice(start, start + limit);
   }, [items, page, limit]);
-
   return (
     <div>
-      <h2>Paginated List ({items.length} items)</h2>
+      <h2>{t('paginatedList', 'Paginated List')} ({items.length} {t('items', 'items')})</h2>
       <ul>
         {currentItems.map(item => (
           <li key={item.id}>{item.name}</li>
@@ -45,22 +41,20 @@ export function PaginatedListExample() {
 /**
  * Example 2: Debounced Search
  */
-export function DebouncedSearchExample() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const debouncedQuery = useDebounce(query, 500);
-
+  const { t } = useTranslation();
   React.useEffect(() => {
     if (debouncedQuery) {
       // Simulate API call
-      console.log('Searching for:', debouncedQuery);
-      setResults([`Result for "${debouncedQuery}"`]);
+      console.log(t('searchingFor', 'Searching for:'), debouncedQuery);
+      setResults([`${t('resultFor', 'Result for')} "${debouncedQuery}"`]);
     }
-  }, [debouncedQuery]);
-
+  }, [debouncedQuery, t]);
   return (
     <div>
-      <SearchBar onSearch={setQuery} placeholder="Search products..." />
+      <SearchBar onSearch={setQuery} placeholder={t('searchProducts', 'Search products...')} />
       <ul>
         {results.map((result, i) => (
           <li key={i}>{result}</li>
@@ -118,25 +112,20 @@ export function OptimizedImagesExample() {
 /**
  * Example 5: Callback Optimization
  */
-export function CallbackOptimizationExample() {
   const [count, setCount] = useState(0);
   const [items, setItems] = useState([]);
-
-  // Memoized callback
+  const { t } = useTranslation();
   const handleAddItem = useCallback(() => {
-    setItems(prev => [...prev, `Item ${prev.length + 1}`]);
-  }, []);
-
-  // Memoized callback with dependency
+    setItems(prev => [...prev, `${t('item', 'Item')} ${prev.length + 1}`]);
+  }, [t]);
   const handleIncrement = useCallback(() => {
     setCount(c => c + 1);
   }, []);
-
   return (
     <div>
-      <p>Count: {count}</p>
-      <button onClick={handleIncrement}>Increment</button>
-      <button onClick={handleAddItem}>Add Item</button>
+      <p>{t('count', 'Count')}: {count}</p>
+      <button onClick={handleIncrement}>{t('increment', 'Increment')}</button>
+      <button onClick={handleAddItem}>{t('addItem', 'Add Item')}</button>
       <MemoizedList items={items} />
     </div>
   );

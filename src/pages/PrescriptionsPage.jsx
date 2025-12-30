@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import SEOHead from "../components/common/SEOHead";
 import { useAuth } from "../contexts/AuthContext";
+import useTranslation from "../hooks/useTranslation";
 import {
   CloudArrowUpIcon,
   DocumentIcon,
@@ -10,6 +11,7 @@ import {
 
 export default function PrescriptionsPage() {
   const { user } = useAuth();
+  const { t } = useTranslation("prescriptionsPage");
   const uploadFormRef = useRef(null);
   const [formData, setFormData] = useState({
     patientName: "",
@@ -62,7 +64,7 @@ export default function PrescriptionsPage() {
         toast.error(`${file.name}: File too large (max 5MB)`);
         return false;
       }
-      if (!['image/jpeg', 'image/png', 'application/pdf'].includes(file.type)) {
+      if (!["image/jpeg", "image/png", "application/pdf"].includes(file.type)) {
         toast.error(`${file.name}: Invalid file type`);
         return false;
       }
@@ -77,13 +79,20 @@ export default function PrescriptionsPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.patientName || !formData.patientAge || !formData.patientPhone || !formData.patientAddress || !formData.doctorName || !formData.prescriptionDate) {
-      toast.error("Please fill all required fields");
+    if (
+      !formData.patientName ||
+      !formData.patientAge ||
+      !formData.patientPhone ||
+      !formData.patientAddress ||
+      !formData.doctorName ||
+      !formData.prescriptionDate
+    ) {
+      toast.error(t("prescriptionsPage.errors.fillRequiredFields"));
       return;
     }
     setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setReferenceNumber(`RX-${Date.now()}`);
       setSubmitted(true);
       setFormData({
@@ -96,9 +105,9 @@ export default function PrescriptionsPage() {
         prescriptionDate: "",
       });
       setFiles([]);
-      toast.success("Prescription uploaded successfully!");
+      toast.success(t("prescriptionsPage.success.uploaded"));
     } catch (error) {
-      toast.error("Failed to submit prescription");
+      toast.error(t("prescriptionsPage.errors.submitFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -109,30 +118,39 @@ export default function PrescriptionsPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
         <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
           <div className="container mx-auto px-4 py-4">
-            <nav className="mb-3" aria-label="Breadcrumb">
+            <nav className="mb-3" aria-label={t("breadcrumb")}>
               <ol className="flex items-center gap-1 text-sm text-gray-500">
-                <li><a href="/" className="hover:text-emerald-600 font-medium">Home</a></li>
+                <li>
+                  <a href="/" className="hover:text-emerald-600 font-medium">
+                    {t("home")}
+                  </a>
+                </li>
                 <li className="px-1 text-gray-400">/</li>
-                <li className="text-gray-900 font-bold">Prescriptions</li>
+                <li className="text-gray-900 font-bold">
+                  {t("prescriptionsPage.prescriptions")}
+                </li>
               </ol>
             </nav>
-            <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
-              Upload Prescription
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+              {t("prescriptionsPage.uploadPrescription")}
             </h1>
           </div>
         </div>
-        
+
         <div className="container mx-auto px-4 py-20">
           <div className="text-center max-w-md mx-auto">
             <div className="text-6xl mb-6">🔒</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-3">
-              Sign In Required
+              {t("prescriptionsPage.signInRequired")}
             </h2>
             <p className="text-gray-600 mb-8">
-              Please sign in to upload and manage your prescriptions.
+              {t("prescriptionsPage.signInRequiredDesc")}
             </p>
-            <a href="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors">
-              Sign In
+            <a
+              href="/login"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
+            >
+              {t("prescriptionsPage.signIn")}
             </a>
           </div>
         </div>
@@ -143,69 +161,90 @@ export default function PrescriptionsPage() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
-        <SEOHead title="Prescription Uploaded Successfully" />
-        
+        <SEOHead title={t("prescriptionsPage.successTitle")} />
+
         <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
           <div className="container mx-auto px-4 py-4">
             <nav className="mb-3" aria-label="Breadcrumb">
               <ol className="flex items-center gap-1 text-sm text-gray-500">
-                <li><a href="/" className="hover:text-emerald-600 font-medium">Home</a></li>
+                <li>
+                  <a href="/" className="hover:text-emerald-600 font-medium">
+                    {t("home")}
+                  </a>
+                </li>
                 <li className="px-1 text-gray-400">/</li>
-                <li><a href="/prescriptions" className="hover:text-emerald-600 font-medium">Prescriptions</a></li>
+                <li>
+                  <a
+                    href="/prescriptions"
+                    className="hover:text-emerald-600 font-medium"
+                  >
+                    {t("prescriptionsPage.prescriptions")}
+                  </a>
+                </li>
                 <li className="px-1 text-gray-400">/</li>
-                <li className="text-gray-900 font-bold">Success</li>
+                <li className="text-gray-900 font-bold">
+                  {t("prescriptionsPage.success")}
+                </li>
               </ol>
             </nav>
-            <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
-              Upload Successful
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+              {t("prescriptionsPage.uploadSuccessful")}
             </h1>
           </div>
         </div>
-        
+
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
               <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-6" />
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Prescription Uploaded Successfully!
+                {t("prescriptionsPage.prescriptionUploadedSuccessfully")}
               </h2>
-              
+
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
                 <p className="text-green-700 mb-2 font-medium text-sm">
-                  Reference Number
+                  {t("prescriptionsPage.referenceNumberLabel")}
                 </p>
-                <p className="text-2xl font-bold text-green-900 font-mono">
-                  {referenceNumber || "LOADING..."}
+                <p className="text-3xl sm:text-4xl font-bold text-green-900 tracking-wider font-mono break-all">
+                  {referenceNumber || t("prescriptionsPage.loadingText")}
                 </p>
                 <p className="text-xs text-green-600 mt-2">
-                  💾 Save this number for your records
+                  💾 {t("prescriptionsPage.saveReferenceNumber")}
                 </p>
               </div>
-              
+
               <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
-                <h3 className="font-bold text-gray-900 mb-4 text-lg flex items-center gap-2">
-                  📍 Next Steps
+                <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-lg flex items-center gap-2">
+                  📍 {t("prescriptionsPage.nextStepsLabel")}
                 </h3>
                 <div className="space-y-3 text-sm text-gray-700">
                   <div className="flex gap-3">
-                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
-                    <span>Our pharmacist will review your prescription within 2-4 hours</span>
+                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                      1
+                    </span>
+                    <span>{t("prescriptionsPage.nextStep1")}</span>
                   </div>
                   <div className="flex gap-3">
-                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
-                    <span>You'll receive SMS/email notification once approved</span>
+                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                      2
+                    </span>
+                    <span>{t("prescriptionsPage.nextStep2")}</span>
                   </div>
                   <div className="flex gap-3">
-                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
-                    <span>Browse and add medicines to your cart</span>
+                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                      3
+                    </span>
+                    <span>{t("prescriptionsPage.nextStep3")}</span>
                   </div>
                   <div className="flex gap-3">
-                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
-                    <span>Complete checkout and get medicines delivered</span>
+                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                      4
+                    </span>
+                    <span>{t("prescriptionsPage.nextStep4")}</span>
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => {
@@ -214,13 +253,13 @@ export default function PrescriptionsPage() {
                   }}
                   className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
-                  📤 Upload Another
+                  📤 {t("prescriptionsPage.uploadAnotherBtn")}
                 </button>
                 <a
                   href="http://localhost:5173/my-prescriptions"
                   className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition-colors text-center"
                 >
-                  📋 View My Prescriptions
+                  📋 {t("prescriptionsPage.viewMyPrescriptions")}
                 </a>
               </div>
             </div>
@@ -233,51 +272,60 @@ export default function PrescriptionsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
       <SEOHead
-        title="Upload Prescription - Online24 Pharmacy"
-        description="Upload your prescription for medicine verification and ordering"
+        title={t("prescriptionsPage.seoTitle")}
+        description={t("prescriptionsPage.seoDescription")}
         url="/prescriptions"
       />
-      
+
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-4">
           <nav className="mb-3" aria-label="Breadcrumb">
             <ol className="flex items-center gap-1 text-sm text-gray-500">
-              <li><a href="/" className="hover:text-emerald-600 font-medium">Home</a></li>
+              <li>
+                <a href="/" className="hover:text-emerald-600 font-medium">
+                  {t("home")}
+                </a>
+              </li>
               <li className="px-1 text-gray-400">/</li>
-              <li className="text-gray-900 font-bold">Upload Prescription</li>
+              <li className="text-gray-900 font-bold">
+                {t("prescriptionsPage.uploadPrescription")}
+              </li>
             </ol>
           </nav>
-          
+
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
-                Upload Prescription
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
+                {t("prescriptionsPage.uploadPrescription")}
               </h1>
-              <p className="text-sm text-gray-600">
-                DGDA Compliant • Secure Upload • Fast Processing
+              <p className="text-sm sm:text-base text-gray-600">
+                {t("prescriptionsPage.uploadDescription")}
               </p>
             </div>
             <a
-              href="http://localhost:5173/my-prescriptions"
+              href="/my-prescriptions"
               className="bg-gray-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors"
             >
-              📋 My Prescriptions
+              📋 {t("prescriptionsPage.myPrescriptions")}
             </a>
           </div>
         </div>
       </div>
-      
+
       <div className="container mx-auto px-4 py-8">
-        <div ref={uploadFormRef} className="max-w-7xl mx-auto mt-6">
+        <div
+          ref={uploadFormRef}
+          className="max-w-full sm:max-w-4xl lg:max-w-7xl mx-auto mt-6"
+        >
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-emerald-50 to-cyan-50 px-6 lg:px-8 py-6 border-b border-gray-200">
               <div className="text-center">
-                <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                  Fill in the patient and doctor details below, then upload your prescription files for secure verification by our licensed pharmacists
+                <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                  {t("prescriptionsPage.formIntro")}
                 </p>
               </div>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6 lg:p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-8">
@@ -286,14 +334,14 @@ export default function PrescriptionsPage() {
                       <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
                         <span className="text-white text-lg">👤</span>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900">
-                        Patient Information
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+                        {t("prescriptionsPage.patientInfo")}
                       </h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
-                          Patient Name *
+                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
+                          {t("prescriptionsPage.patientName")}
                         </label>
                         <input
                           type="text"
@@ -302,12 +350,14 @@ export default function PrescriptionsPage() {
                           value={formData.patientName}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder="Enter full name"
+                          placeholder={t(
+                            "prescriptionsPage.patientNamePlaceholder"
+                          )}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
-                          Age *
+                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
+                          {t("prescriptionsPage.patientAge")}
                         </label>
                         <input
                           type="number"
@@ -318,12 +368,12 @@ export default function PrescriptionsPage() {
                           value={formData.patientAge}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder="Enter age"
+                          placeholder={t("prescriptionsPage.agePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
-                          Phone Number *
+                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
+                          {t("prescriptionsPage.patientPhone")}
                         </label>
                         <input
                           type="tel"
@@ -332,12 +382,12 @@ export default function PrescriptionsPage() {
                           value={formData.patientPhone}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder="01XXXXXXXXX"
+                          placeholder={t("prescriptionsPage.phonePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
-                          Address *
+                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
+                          {t("prescriptionsPage.patientAddress")}
                         </label>
                         <input
                           type="text"
@@ -346,7 +396,9 @@ export default function PrescriptionsPage() {
                           value={formData.patientAddress}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder="Enter full address"
+                          placeholder={t(
+                            "prescriptionsPage.addressPlaceholder"
+                          )}
                         />
                       </div>
                     </div>
@@ -357,14 +409,14 @@ export default function PrescriptionsPage() {
                       <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                         <span className="text-white text-lg">👨⚕️</span>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900">
-                        Doctor Information
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+                        {t("prescriptionsPage.doctorInfo")}
                       </h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
-                          Doctor Name *
+                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
+                          {t("prescriptionsPage.doctorName")}
                         </label>
                         <input
                           type="text"
@@ -373,12 +425,14 @@ export default function PrescriptionsPage() {
                           value={formData.doctorName}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
-                          placeholder="Dr. Full Name"
+                          placeholder={t(
+                            "prescriptionsPage.doctorNamePlaceholder"
+                          )}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
-                          Hospital/Clinic
+                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
+                          {t("prescriptionsPage.hospitalClinic")}
                         </label>
                         <input
                           type="text"
@@ -386,12 +440,14 @@ export default function PrescriptionsPage() {
                           value={formData.hospitalClinic}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
-                          placeholder="Hospital or clinic name"
+                          placeholder={t(
+                            "prescriptionsPage.hospitalPlaceholder"
+                          )}
                         />
                       </div>
                       <div className="sm:col-span-2 space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
-                          Prescription Date *
+                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
+                          {t("prescriptionsPage.prescriptionDate")}
                         </label>
                         <input
                           type="date"
@@ -412,8 +468,8 @@ export default function PrescriptionsPage() {
                       <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
                         <span className="text-white text-lg">📎</span>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900">
-                        Prescription Files
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+                        {t("prescriptionsPage.prescriptionFiles")}
                       </h3>
                     </div>
                     <div
@@ -428,12 +484,12 @@ export default function PrescriptionsPage() {
                       onDrop={handleDrop}
                     >
                       <div className="flex flex-col items-center">
-                        <CloudArrowUpIcon className="w-16 h-16 text-gray-400 mb-4" />
-                        <p className="text-lg font-semibold text-gray-900 mb-2">
-                          Drag and drop files here
+                        <CloudArrowUpIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mb-4" />
+                        <p className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                          {t("prescriptionsPage.dragAndDrop")}
                         </p>
-                        <p className="text-gray-600 text-sm mb-6">
-                          or click to browse
+                        <p className="text-xs sm:text-sm text-gray-600 mb-6">
+                          {t("prescriptionsPage.orClickToBrowse")}
                         </p>
                         <input
                           type="file"
@@ -445,23 +501,25 @@ export default function PrescriptionsPage() {
                         />
                         <label
                           htmlFor="file-upload"
-                          className="inline-flex items-center gap-2 bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors cursor-pointer shadow-md hover:shadow-lg"
+                          className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors cursor-pointer shadow-md hover:shadow-lg"
                         >
                           <span>📁</span>
-                          Choose Files
+                          <span className="whitespace-normal text-sm sm:text-base">
+                            {t("prescriptionsPage.chooseFiles")}
+                          </span>
                         </label>
-                        <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-500">
+                        <div className="mt-4 flex flex-wrap gap-4 text-xs sm:text-sm text-gray-500">
                           <span className="flex items-center gap-1">
                             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                            JPG, PNG, PDF
+                            {t("prescriptionsPage.fileTypes")}
                           </span>
                           <span className="flex items-center gap-1">
                             <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                            Max 5MB each
+                            {t("prescriptionsPage.maxSizeEach")}
                           </span>
                           <span className="flex items-center gap-1">
                             <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                            Multiple files allowed
+                            {t("prescriptionsPage.multipleFilesAllowed")}
                           </span>
                         </div>
                       </div>
@@ -470,9 +528,12 @@ export default function PrescriptionsPage() {
                     {files.length > 0 && (
                       <div className="mt-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <span className="text-green-600 font-semibold">✓</span>
-                          <h4 className="font-semibold text-gray-900">
-                            Uploaded Files ({files.length})
+                          <span className="text-green-600 font-semibold">
+                            ✓
+                          </span>
+                          <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
+                            {t("prescriptionsPage.uploadedFiles")} (
+                            {files.length})
                           </h4>
                         </div>
                         <div className="space-y-3">
@@ -523,25 +584,35 @@ export default function PrescriptionsPage() {
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-3">
                       <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Uploading Prescription...</span>
+                      <span className="text-sm sm:text-base">
+                        {t("prescriptionsPage.uploading")}
+                      </span>
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-3">
                       <span>🚀</span>
-                      <span>Submit Prescription</span>
+                      <span className="text-sm sm:text-base">
+                        {t("prescriptionsPage.submitPrescription")}
+                      </span>
                     </span>
                   )}
                 </button>
 
                 <div className="mt-4 text-center">
-                  <p className="text-xs text-gray-500">
-                    By submitting, you agree to our{" "}
-                    <a href="/terms" className="text-emerald-600 hover:underline">
-                      terms of service
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    {t("prescriptionsPage.bySubmitting")}
+                    <a
+                      href="/terms"
+                      className="text-emerald-600 hover:underline"
+                    >
+                      {t("prescriptionsPage.termsOfService")}
                     </a>{" "}
-                    and{" "}
-                    <a href="/privacy" className="text-emerald-600 hover:underline">
-                      privacy policy
+                    {t("prescriptionsPage.and")}{" "}
+                    <a
+                      href="/privacy"
+                      className="text-emerald-600 hover:underline"
+                    >
+                      {t("prescriptionsPage.privacyPolicy")}
                     </a>
                   </p>
                 </div>

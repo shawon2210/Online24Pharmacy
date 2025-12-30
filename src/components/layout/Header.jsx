@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCartIcon,
@@ -12,6 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useCartStore } from "../../stores/cartStore";
 import { useAuth } from "../../hooks/useAuth";
+import LanguageSwitcher from "../common/LanguageSwitcher";
 
 const categories = [
   { id: 1, name: "Medicines", slug: "medicines", icon: "💊" },
@@ -32,13 +34,15 @@ export default function Header() {
       (!localStorage.getItem("theme") &&
         window.matchMedia("(prefers-color-scheme: dark)").matches)
   );
-  const [lang, setLang] = useState(() => localStorage.getItem("lang") || "en");
-  // Language toggle handler
-  const handleLangToggle = () => {
-    const nextLang = lang === "en" ? "bn" : "en";
-    setLang(nextLang);
-    localStorage.setItem("lang", nextLang);
-    // Optionally: trigger i18n change here
+  const { t } = useTranslation();
+  const tf = (key, fallback) => {
+    try {
+      const res = t(key);
+      if (res && res !== key) return res;
+    } catch (e) {
+      // swallow
+    }
+    return typeof fallback !== "undefined" ? fallback : key;
   };
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -74,7 +78,7 @@ export default function Header() {
           isScrolled ? "shadow-2xl" : ""
         }`}
         role="banner"
-        aria-label="Main site header"
+        aria-label={tf("mainSiteHeader", "Online24 Pharmacy")}
       >
         {/* Top Info Bar */}
         <div className="hidden lg:block border-b border-white/10 bg-emerald-700/20">
@@ -84,7 +88,7 @@ export default function Header() {
                 <a
                   href="tel:+8801234567890"
                   className="flex items-center gap-2 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
-                  aria-label="Call support"
+                  aria-label={tf("callSupport", "Call support")}
                   tabIndex={0}
                 >
                   <svg
@@ -95,13 +99,13 @@ export default function Header() {
                     <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                   </svg>
                   <span className="underline decoration-dotted underline-offset-2">
-                    +880 1234-567890
+                    {tf("footer.phone", "+8801766998555")}
                   </span>
                 </a>
                 <a
                   href="mailto:support@online24pharmacy.com"
                   className="flex items-center gap-2 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
-                  aria-label="Email support"
+                  aria-label={tf("emailSupport", "Email support")}
                   tabIndex={0}
                 >
                   <svg
@@ -113,7 +117,7 @@ export default function Header() {
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                   </svg>
                   <span className="underline decoration-dotted underline-offset-2">
-                    support@online24pharmacy.com
+                    {tf("footer.email", "support@online24pharmacy.com")}
                   </span>
                 </a>
               </div>
@@ -130,11 +134,15 @@ export default function Header() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="sr-only">Location:</span>Dhaka, Bangladesh
+                  <span className="sr-only">{tf("location", "Location")}</span>
+                  {tf("footer.address", "Dhaka, Bangladesh")}
                 </span>
                 <span className="flex items-center gap-2 font-semibold">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
-                  <span className="sr-only">Availability:</span>24/7 Available
+                  <span className="sr-only">
+                    {tf("availability", "Availability")}
+                  </span>
+                  {tf("availability247", "Open 24/7")}
                 </span>
               </div>
             </div>
@@ -148,7 +156,7 @@ export default function Header() {
             <Link
               to="/"
               className="flex items-center gap-2 sm:gap-3 flex-shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-              aria-label="Go to homepage"
+              aria-label={tf("goToHomepage", "Go to homepage")}
             >
               <div className="relative w-8 h-8 sm:w-10 sm:h-10">
                 <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-100 to-teal-100 rounded-lg sm:rounded-xl shadow-2xl group-hover:scale-110 group-focus-visible:scale-110 transition-all duration-300 animate-pulse"></div>
@@ -160,7 +168,7 @@ export default function Header() {
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-base sm:text-xl font-black text-white drop-shadow-lg tracking-tight bg-gradient-to-r from-white to-emerald-100 bg-clip-text text-transparent">
-                  Online24 Pharmacy
+                  {tf("footer.brandName", "Online24 Pharmacy")}
                 </h1>
                 <div className="flex items-center gap-2 mt-0.5">
                   <div className="relative">
@@ -168,7 +176,7 @@ export default function Header() {
                     <div className="w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></div>
                   </div>
                   <p className="text-[10px] sm:text-xs text-white/95 font-bold tracking-wide">
-                    Licensed & Certified
+                    {tf("footer.licensedCertified", "Licensed & Certified")}
                   </p>
                 </div>
               </div>
@@ -179,7 +187,7 @@ export default function Header() {
               onSubmit={handleSearch}
               className="hidden md:flex flex-1 max-w-3xl mx-8"
               role="search"
-              aria-label="Site search"
+              aria-label={tf("siteSearch", "Search the site")}
             >
               <div className="relative w-full group">
                 <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors z-10" />
@@ -187,9 +195,15 @@ export default function Header() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search medicines, health products, prescriptions..."
+                  placeholder={tf(
+                    "searchPlaceholder",
+                    "Search for medicines, health products..."
+                  )}
                   className="w-full h-12 pl-12 pr-4 rounded-2xl bg-white shadow-lg border-2 border-white/50 text-gray-700 placeholder-gray-400 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all"
-                  aria-label="Search medicines, health products, prescriptions"
+                  aria-label={tf(
+                    "searchPlaceholder",
+                    "Search for medicines, health products..."
+                  )}
                 />
               </div>
             </form>
@@ -197,29 +211,15 @@ export default function Header() {
             {/* Actions */}
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Language Toggle */}
-              <button
-                onClick={handleLangToggle}
-                className={`group relative flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-                  lang === "bn" ? "ring-2 ring-emerald-400" : ""
-                }`}
-                aria-label={
-                  lang === "en" ? "Switch to Bengali" : "Switch to English"
-                }
-                tabIndex={0}
-              >
-                <span className="text-base font-bold text-white drop-shadow-lg select-none">
-                  {lang === "en" ? "EN" : "BN"}
-                </span>
-                <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
-                  {lang === "en" ? "বাংলা দেখুন" : "View in English"}
-                </span>
-              </button>
+              <LanguageSwitcher />
               {/* Theme Toggle */}
               <button
                 onClick={() => setIsDark(!isDark)}
                 className="group relative flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 aria-label={
-                  isDark ? "Switch to light mode" : "Switch to dark mode"
+                  isDark
+                    ? tf("switchToLight", "Switch to Light")
+                    : tf("switchToDark", "Switch to Dark")
                 }
                 tabIndex={0}
               >
@@ -229,7 +229,9 @@ export default function Header() {
                   <MoonIcon className="w-5 h-5 text-blue-100 drop-shadow-lg" />
                 )}
                 <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
-                  {isDark ? "Light Mode" : "Dark Mode"}
+                  {isDark
+                    ? tf("lightMode", "Light Mode")
+                    : tf("darkMode", "Dark Mode")}
                 </span>
               </button>
 
@@ -237,12 +239,12 @@ export default function Header() {
               <Link
                 to="/wishlist"
                 className="hidden sm:flex group relative items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                aria-label="View wishlist"
+                aria-label={tf("viewWishlist", "View wishlist")}
                 tabIndex={0}
               >
                 <HeartIcon className="w-5 h-5 text-white drop-shadow-lg" />
                 <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
-                  Wishlist
+                  {tf("wishlist", "Wishlist")}
                 </span>
               </Link>
 
@@ -250,7 +252,7 @@ export default function Header() {
               <Link
                 to="/cart"
                 className="group relative flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                aria-label="View cart"
+                aria-label={tf("viewCart", "View cart")}
                 tabIndex={0}
               >
                 <ShoppingCartIcon className="w-5 h-5 text-white drop-shadow-lg" />
@@ -260,7 +262,7 @@ export default function Header() {
                   </span>
                 )}
                 <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
-                  Cart
+                  {tf("cart", "Cart")}
                 </span>
               </Link>
               {user ? (
@@ -269,7 +271,7 @@ export default function Header() {
                     className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full hover:ring-2 hover:ring-white/30 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 active:scale-95"
                     aria-haspopup="true"
                     aria-expanded="false"
-                    aria-label="Open user menu"
+                    aria-label={t("openUserMenu")}
                     tabIndex={0}
                   >
                     {user.profilePicture ? (
@@ -291,14 +293,14 @@ export default function Header() {
                         className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors"
                       >
                         <UserIcon className="w-4 h-4" />
-                        My Profile
+                        {t("profile")}
                       </Link>
                       <Link
                         to="/my-orders"
                         className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors"
                       >
                         <ShoppingCartIcon className="w-4 h-4" />
-                        My Orders
+                        {t("orders")}
                       </Link>
                       <Link
                         to="/my-prescriptions"
@@ -317,7 +319,7 @@ export default function Header() {
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                           />
                         </svg>
-                        My Prescriptions
+                        {t("prescriptions")}
                       </Link>
                       <Link
                         to="/addresses"
@@ -342,7 +344,7 @@ export default function Header() {
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        Addresses
+                        {t("addresses", "Addresses")}
                       </Link>
                       <Link
                         to="/settings"
@@ -367,7 +369,7 @@ export default function Header() {
                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        Settings
+                        {t("settings", "Settings")}
                       </Link>
                       <hr className="my-2 border-gray-200 dark:border-gray-700" />
                       <button
@@ -387,7 +389,7 @@ export default function Header() {
                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                           />
                         </svg>
-                        Logout
+                        {t("logout")}
                       </button>
                     </div>
                   </div>
@@ -399,13 +401,13 @@ export default function Header() {
                     className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-all"
                   >
                     <UserIcon className="w-5 h-5" />
-                    Login
+                    {t("login")}
                   </Link>
                   <Link
                     to="/signup"
                     className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-emerald-600 font-bold hover:bg-emerald-50 transition-all shadow-lg"
                   >
-                    Sign Up
+                    {t("register", "Sign Up")}
                   </Link>
                 </div>
               )}
@@ -414,7 +416,7 @@ export default function Header() {
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="lg:hidden flex items-center justify-center w-11 h-11 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
                 aria-expanded={isMenuOpen}
                 aria-controls="mobile-menu"
                 tabIndex={0}
@@ -436,7 +438,7 @@ export default function Header() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search..."
+                placeholder={t("search")}
                 className="w-full h-7 pl-7 pr-2 rounded-lg bg-white/20 backdrop-blur-md border border-white/30 text-white text-[11px] font-medium focus:outline-none focus:bg-white/30 focus:border-white/50 placeholder:text-white/70 transition-all shadow-sm"
               />
             </div>
@@ -452,14 +454,14 @@ export default function Header() {
               to="/"
               className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
             >
-              <span className="relative z-10">Home</span>
+              <span className="relative z-10">{t("home", "Home")}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <Link
               to="/products"
               className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
             >
-              <span className="relative z-10">Products</span>
+              <span className="relative z-10">{t("products")}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <div className="relative group">
@@ -467,7 +469,7 @@ export default function Header() {
                 to="/categories"
                 className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
               >
-                <span className="relative z-10">Categories</span>
+                <span className="relative z-10">{t("categories")}</span>
                 <svg
                   className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300"
                   fill="none"
@@ -495,7 +497,7 @@ export default function Header() {
                         {cat.icon}
                       </span>
                       <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover/item:text-emerald-600 dark:group-hover/item:text-emerald-400">
-                        {cat.name}
+                        {t(cat.name)}
                       </span>
                     </Link>
                   ))}
@@ -506,7 +508,9 @@ export default function Header() {
               to="/prescription"
               className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
             >
-              <span className="relative z-10">Prescription</span>
+              <span className="relative z-10">
+                {t("prescriptions", "Prescription")}
+              </span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <Link
@@ -527,29 +531,54 @@ export default function Header() {
                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                   />
                 </svg>
-                Build Kit
+                {t("buildKit", "Build Kit")}
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </Link>
+            <Link
+              to="/pickup-map"
+              className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                  />
+                </svg>
+                {t("pickupMap", "Pickup Map")}
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <Link
               to="/my-orders"
               className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
             >
-              <span className="relative z-10">My Orders</span>
+              <span className="relative z-10">{t("orders", "My Orders")}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <Link
               to="/track-order"
               className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
             >
-              <span className="relative z-10">Track Order</span>
+              <span className="relative z-10">
+                {t("trackOrder", "Track Order")}
+              </span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             <Link
               to="/about"
               className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
             >
-              <span className="relative z-10">About</span>
+              <span className="relative z-10">{t("about", "About")}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
           </div>
@@ -599,14 +628,14 @@ export default function Header() {
                     className="flex-1 flex items-center justify-center gap-2 bg-white text-emerald-600 font-bold py-3 rounded-xl hover:bg-emerald-50 transition-all"
                   >
                     <UserIcon className="w-5 h-5" />
-                    Login
+                    {t("login")}
                   </Link>
                   <Link
                     to="/signup"
                     onClick={() => setIsMenuOpen(false)}
                     className="flex-1 flex items-center justify-center gap-2 bg-emerald-700 text-white font-bold py-3 rounded-xl hover:bg-emerald-800 transition-all"
                   >
-                    Sign Up
+                    {t("signUp")}
                   </Link>
                 </div>
               </div>
@@ -633,7 +662,7 @@ export default function Header() {
                       d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                     />
                   </svg>
-                  <span className="font-medium">Home</span>
+                  <span className="font-medium">{t("home", "Home")}</span>
                 </Link>
                 <Link
                   to="/products"
@@ -653,7 +682,7 @@ export default function Header() {
                       d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                     />
                   </svg>
-                  <span className="font-medium">Products</span>
+                  <span className="font-medium">{t("products")}</span>
                 </Link>
                 <Link
                   to="/prescription"
@@ -673,7 +702,9 @@ export default function Header() {
                       d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     />
                   </svg>
-                  <span className="font-medium">Prescription</span>
+                  <span className="font-medium">
+                    {t("prescriptions", "Prescription")}
+                  </span>
                 </Link>
                 <Link
                   to="/wishlist"
@@ -681,14 +712,14 @@ export default function Header() {
                   className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all"
                 >
                   <HeartIcon className="w-5 h-5" />
-                  <span className="font-medium">Wishlist</span>
+                  <span className="font-medium">{t("wishlist")}</span>
                 </Link>
               </div>
 
               {/* Categories */}
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <p className="px-4 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Categories
+                  {t("categories")}
                 </p>
                 <div className="space-y-1">
                   {categories.map((cat) => (
@@ -699,7 +730,7 @@ export default function Header() {
                       className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all"
                     >
                       <span className="text-2xl">{cat.icon}</span>
-                      <span className="font-medium">{cat.name}</span>
+                      <span className="font-medium">{t(cat.name)}</span>
                     </Link>
                   ))}
                 </div>
@@ -709,7 +740,7 @@ export default function Header() {
               {user && (
                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                   <p className="px-4 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    My Account
+                    {t("myAccount", "My Account")}
                   </p>
                   <div className="space-y-1">
                     <Link
@@ -718,7 +749,7 @@ export default function Header() {
                       className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all"
                     >
                       <UserIcon className="w-5 h-5" />
-                      <span className="font-medium">My Profile</span>
+                      <span className="font-medium">{t("profile")}</span>
                     </Link>
                     <Link
                       to="/my-orders"
@@ -726,7 +757,7 @@ export default function Header() {
                       className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-gray-800 rounded-xl transition-all"
                     >
                       <ShoppingCartIcon className="w-5 h-5" />
-                      <span className="font-medium">My Orders</span>
+                      <span className="font-medium">{t("orders")}</span>
                     </Link>
                     <Link
                       to="/my-prescriptions"
@@ -746,7 +777,7 @@ export default function Header() {
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                       </svg>
-                      <span className="font-medium">My Prescriptions</span>
+                      <span className="font-medium">{t("prescriptions")}</span>
                     </Link>
                     <Link
                       to="/addresses"
@@ -772,7 +803,9 @@ export default function Header() {
                           d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                         />
                       </svg>
-                      <span className="font-medium">Addresses</span>
+                      <span className="font-medium">
+                        {t("addresses", "Addresses")}
+                      </span>
                     </Link>
                     <Link
                       to="/settings"
@@ -798,7 +831,9 @@ export default function Header() {
                           d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                         />
                       </svg>
-                      <span className="font-medium">Settings</span>
+                      <span className="font-medium">
+                        {t("settings", "Settings")}
+                      </span>
                     </Link>
                   </div>
                 </div>
@@ -825,7 +860,9 @@ export default function Header() {
                         d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
                       />
                     </svg>
-                    <span className="font-medium">Track Order</span>
+                    <span className="font-medium">
+                      {t("trackOrder", "Track Order")}
+                    </span>
                   </Link>
                   <Link
                     to="/about"
@@ -845,7 +882,9 @@ export default function Header() {
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <span className="font-medium">About Us</span>
+                    <span className="font-medium">
+                      {t("aboutUs", "About Us")}
+                    </span>
                   </Link>
                 </div>
               </div>
@@ -873,7 +912,7 @@ export default function Header() {
                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                       />
                     </svg>
-                    Logout
+                    {t("logout")}
                   </button>
                 </div>
               )}

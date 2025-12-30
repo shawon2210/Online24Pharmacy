@@ -53,14 +53,14 @@ export default function LiveChat({ language = "en" }) {
       {/* Live Chat FAB */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-[9999] w-14 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-full shadow-md flex items-center justify-center transition-all duration-300"
+        className="fixed bottom-20 right-6 z-[9999] w-14 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-full shadow-md flex items-center justify-center transition-all duration-300"
       >
         <PhoneIcon className="w-6 h-6 text-white" />
       </button>
 
       {/* Live Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-[9999] w-80 max-w-[calc(100vw-3rem)] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col">
+        <div className="fixed bottom-28 right-6 z-[9999] w-80 max-w-[calc(100vw-3rem)] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-emerald-600 text-white rounded-t-2xl">
             <div>

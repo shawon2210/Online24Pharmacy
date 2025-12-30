@@ -205,9 +205,28 @@ model Product {
   @@map("products")
 }
 
+model PickupLocation {
+    id        String    @id @default(cuid())
+    name      String    @unique
+    address   String
+    lat       Float
+    lng       Float
+    open_hours String
+    is_active Boolean   @default(true)
+    inventory Inventory[]
+
+    @@map("pickup_locations")
+}
+
 model Inventory {
   id           String    @id @default(cuid())
   productId    String
+  locationId   String
+  stock_quantity Int      @default(0)
+  updated_at     DateTime @updatedAt
+
+  product  Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  location PickupLocation @relation(fields: [locationId], references: [id], onDelete: Cascade)
   batchNumber  String?
   expiryDate   DateTime?
   quantity     Int
@@ -215,11 +234,10 @@ model Inventory {
   supplierId   String?
   receivedDate DateTime  @default(now())
   createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
 
-  product  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   supplier Supplier? @relation(fields: [supplierId], references: [id])
 
+  @@unique([productId, locationId])
   @@index([productId])
   @@index([expiryDate])
   @@map("inventory")

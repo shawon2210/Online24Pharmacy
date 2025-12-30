@@ -76,10 +76,8 @@ export default function OrderTrackingPage() {
   return (
     <>
       <SEOHead
-        title={order ? `Order #${order.orderNumber}` : "Order Tracking"}
-        description={`Track your order ${
-          order ? `#${order.orderNumber}` : ""
-        } with Online24 Pharmacy.`}
+        title={order ? t('orderTrackingPage.seoTitleWithNumber', { orderNumber: order.orderNumber }) : t('orderTrackingPage.seoTitle')}
+        description={t('orderTrackingPage.seoDescription', { orderNumber: order ? order.orderNumber : '' })}
         url={`/orders/${orderId}`}
       />
       <div className="min-h-screen bg-gray-50 py-6 md:py-10">
@@ -222,7 +220,7 @@ export default function OrderTrackingPage() {
                     <div className="text-right">
                       <p className="font-medium">৳{item.totalPrice}</p>
                       <p className="text-sm text-gray-600">
-                        ৳{item.unitPrice} each
+                        ৳{item.unitPrice} {t("orderTrackingPage.each")}
                       </p>
                     </div>
                   </div>

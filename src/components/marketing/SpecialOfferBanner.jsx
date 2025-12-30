@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { SparklesIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 
 export default function SpecialOfferBanner() {
+  const { t } = useTranslation();
   return (
     <section className="w-full relative overflow-hidden min-h-[100px] sm:min-h-[110px] md:min-h-[120px] bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 shadow-xl">
       {/* Enhanced Background Pattern */}
@@ -35,15 +37,17 @@ export default function SpecialOfferBanner() {
             <div className="h-7 sm:h-9 w-px bg-white/50"></div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
               <h3 className="font-bold text-lg sm:text-xl md:text-2xl text-white">
-                Special Offer - Save{" "}
-                <span className="text-yellow-200 font-black">20%</span>
+                {t("specialOffer.title", "Special Offer - Save")}{" "}
+                <span className="text-yellow-200 font-black">
+                  {t("specialOffer.percent", "20%")}
+                </span>
               </h3>
               <p className="text-white/95 text-sm sm:text-base md:text-lg">
-                Use code{" "}
+                {t("specialOffer.useCode", "Use code")}{" "}
                 <span className="bg-white/25 backdrop-blur-sm px-3 sm:px-4 py-1.5 rounded-lg font-bold text-white border border-white/40 shadow-md text-xs sm:text-sm md:text-base">
-                  SAVE20
+                  {t("specialOffer.code", "SAVE20")}
                 </span>{" "}
-                on your first order
+                {t("specialOffer.onFirstOrder", "on your first order")}
               </p>
             </div>
             <div className="h-7 sm:h-9 w-px bg-white/50 hidden sm:block"></div>
@@ -53,7 +57,9 @@ export default function SpecialOfferBanner() {
           {/* Enhanced Limited time indicator */}
           <div className="flex items-center justify-center gap-2 text-white/90 text-xs sm:text-sm">
             <div className="w-8 h-px bg-white/70"></div>
-            <span className="font-semibold">⏰ Limited Time Only</span>
+            <span className="font-semibold">
+              ⏰ {t("specialOffer.limitedTime", "Limited Time Only")}
+            </span>
             <div className="w-8 h-px bg-white/70"></div>
           </div>
         </div>

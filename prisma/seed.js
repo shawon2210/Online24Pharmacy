@@ -169,6 +169,49 @@ async function main() {
   });
 
   console.log('Created products');
+
+  // 6. Create Pickup Locations
+  const dhanmondiLocation = await prisma.pickupLocation.upsert({
+    where: { name: 'Online24 Pharma - Dhanmondi' },
+    update: {},
+    create: {
+      name: 'Online24 Pharma - Dhanmondi',
+      address: 'House 12, Road 27, Dhanmondi, Dhaka',
+      lat: 23.78,
+      lng: 90.4,
+      open_hours: '9:00 AM – 9:00 PM',
+      is_active: true,
+    },
+  });
+
+  const gulshanLocation = await prisma.pickupLocation.upsert({
+    where: { name: 'Online24 Pharma - Gulshan' },
+    update: {},
+    create: {
+      name: 'Online24 Pharma - Gulshan',
+      address: 'Gulshan Avenue, Dhaka',
+      lat: 23.7925,
+      lng: 90.4078,
+      open_hours: '8:00 AM – 10:00 PM',
+      is_active: true,
+    },
+  });
+
+  const uttaraLocation = await prisma.pickupLocation.upsert({
+    where: { name: 'Online24 Pharma - Uttara' },
+    update: {},
+    create: {
+      name: 'Online24 Pharma - Uttara',
+      address: 'Sector 7, Uttara, Dhaka',
+      lat: 23.8679,
+      lng: 90.4003,
+      open_hours: '10:00 AM – 8:00 PM',
+      is_active: true,
+    },
+  });
+
+  console.log('Created pickup locations');
+
   console.log('Seeding finished.');
 }
 

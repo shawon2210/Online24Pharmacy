@@ -15,9 +15,22 @@ import { useAuthStore } from "../stores/authStore";
 import { useCartStore } from "../stores/cartStore";
 import { useTranslation } from "react-i18next";
 import AnimatedButton from "../components/common/AnimatedButton";
+import i18next from "i18next";
+
+// Generic tf helper using i18next directly for modules that don't define tf
+const tf = (key, options, fallback) => {
+  try {
+    const translated = i18next.t(key, options);
+    if (!translated || translated === key) return fallback || translated || key;
+    return translated;
+  } catch (e) {
+    return typeof fallback !== "undefined" ? fallback : key;
+  }
+};
 
 // --- Component for Product List View ---
 function ProductList() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const limit = 12;
 
@@ -38,11 +51,12 @@ function ProductList() {
 
   const totalPages = Math.ceil((data?.total || 0) / limit);
 
+  // const { t } = useTranslation();
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
       <SEOHead
-        title="All Products - Online24 Pharmacy"
-        description="Browse our complete catalog of medicines and healthcare products"
+        title={t("productPage.allProductsTitle")}
+        description={t("productPage.allProductsDesc")}
         url="/products"
       />
 
@@ -50,16 +64,16 @@ function ProductList() {
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
-          <nav className="mb-3" aria-label="Breadcrumb">
+          <nav className="mb-3" aria-label={t("breadcrumb")}>
             <ol className="flex items-center gap-1 text-sm text-gray-500">
               <li>
                 <Link to="/" className="hover:text-emerald-600 font-medium">
-                  Home
+                  {t("home")}
                 </Link>
               </li>
               <li className="px-1 text-gray-400">/</li>
               <li className="text-gray-900 font-bold" aria-current="page">
-                All Products
+                {t("productPage.allProducts")}
               </li>
             </ol>
           </nav>
@@ -68,10 +82,10 @@ function ProductList() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
-                All Products
+                {t("productPage.allProducts")}
               </h1>
               <p className="text-sm text-gray-600">
-                Browse our complete catalog of medicines and healthcare products
+                {t("productPage.allProductsDesc")}
               </p>
             </div>
           </div>
@@ -80,13 +94,18 @@ function ProductList() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-4 text-sm text-gray-600">
-          {isLoading ? "Loading..." : `${data?.total || 0} products found`}
+          {isLoading
+            ? t("loading")
+            : t("productPage.productsFound", { count: data?.total || 0 })}
         </div>
 
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-lg p-4 animate-pulse border border-gray-200">
+              <div
+                key={i}
+                className="bg-white rounded-lg p-4 animate-pulse border border-gray-200"
+              >
                 <div className="w-full h-48 bg-gray-200 rounded mb-4" />
                 <div className="h-4 bg-gray-200 rounded mb-2" />
                 <div className="h-4 bg-gray-200 rounded w-2/3" />
@@ -108,17 +127,17 @@ function ProductList() {
                   disabled={page === 1}
                   className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
-                  Previous
+                  {t("previous")}
                 </button>
                 <span className="px-4 py-2 text-sm text-gray-600">
-                  Page {page} of {totalPages}
+                  {t("productPage.pageOf", { page, totalPages })}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
                   className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
-                  Next
+                  {t("next")}
                 </button>
               </div>
             )}
@@ -132,6 +151,13 @@ function ProductList() {
 // --- Component for Single Product Detail View ---
 function ProductDetail({ slug }) {
   const { t } = useTranslation();
+  // Helper for translation fallback
+  const tf = (key, options, fallback) => {
+    const translated = t(key, options);
+    // If translation key is missing, t() returns the key itself
+    if (translated === key) return fallback || translated;
+    return translated;
+  };
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -215,11 +241,11 @@ function ProductDetail({ slug }) {
         }
       }
     } catch (error) {
-      console.error("Failed to fetch product:", error);
+      console.error(t("productPage.fetchProductError"), error);
     } finally {
       setLoading(false);
     }
-  }, [slug]);
+  }, [slug, t]);
 
   useEffect(() => {
     fetchProduct();
@@ -247,7 +273,10 @@ function ProductDetail({ slug }) {
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
       </svg>
-      <span class="font-semibold">Added ${quantity} ${product.name} to cart!</span>
+      <span class="font-semibold">${t("productPage.addedToCart", {
+        quantity,
+        name: product.name,
+      })}</span>
     `;
     document.body.appendChild(notification);
     setTimeout(() => {
@@ -300,7 +329,7 @@ function ProductDetail({ slug }) {
         const toast = document.createElement("div");
         toast.className =
           "fixed bottom-6 right-6 bg-amber-500 text-white px-5 py-3 rounded-lg shadow-md text-sm font-semibold animate-fade-in";
-        toast.textContent = "Review submitted for moderation";
+        toast.textContent = t("productPage.reviewSubmitted");
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3500);
       }
@@ -308,7 +337,7 @@ function ProductDetail({ slug }) {
       const toast = document.createElement("div");
       toast.className =
         "fixed bottom-6 right-6 bg-red-600 text-white px-5 py-3 rounded-lg shadow-md text-sm font-semibold animate-fade-in";
-      toast.textContent = "Failed to submit review";
+      toast.textContent = t("productPage.submitReviewFailed");
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 3500);
     } finally {
@@ -358,7 +387,7 @@ function ProductDetail({ slug }) {
             <div className="h-8 bg-gray-200 rounded w-1/2 animate-pulse" />
           </div>
         </div>
-        
+
         <div className="container mx-auto px-4 py-8">
           <div className="bg-white rounded-xl shadow-lg p-6 animate-pulse">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -383,33 +412,46 @@ function ProductDetail({ slug }) {
         {/* Header */}
         <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
           <div className="container mx-auto px-4 py-4">
-            <nav className="mb-3" aria-label="Breadcrumb">
+            <nav className="mb-3" aria-label={t("breadcrumb")}>
               <ol className="flex items-center gap-1 text-sm text-gray-500">
-                <li><Link to="/" className="hover:text-emerald-600 font-medium">Home</Link></li>
+                <li>
+                  <Link to="/" className="hover:text-emerald-600 font-medium">
+                    {t("home")}
+                  </Link>
+                </li>
                 <li className="px-1 text-gray-400">/</li>
-                <li><Link to="/categories" className="hover:text-emerald-600 font-medium">Categories</Link></li>
+                <li>
+                  <Link
+                    to="/categories"
+                    className="hover:text-emerald-600 font-medium"
+                  >
+                    {t("categories")}
+                  </Link>
+                </li>
                 <li className="px-1 text-gray-400">/</li>
-                <li className="text-gray-900 font-bold">Product Not Found</li>
+                <li className="text-gray-900 font-bold">
+                  {t("productPage.productNotFound")}
+                </li>
               </ol>
             </nav>
           </div>
         </div>
-        
+
         <div className="container mx-auto px-4 py-20">
           <div className="text-center max-w-md mx-auto">
             <div className="text-6xl mb-6">🔍</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-3">
-              Product Not Found
+              {t("productPage.productNotFound")}
             </h2>
             <p className="text-gray-600 mb-8">
-              The product you're looking for doesn't exist or has been removed.
+              {t("productPage.productNotFoundDesc")}
             </p>
             <Link
               to="/categories"
               className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
             >
               <ArrowLeftIcon className="w-5 h-5" />
-              Browse Categories
+              {t("productPage.browseCategories")}
             </Link>
           </div>
         </div>
@@ -420,7 +462,9 @@ function ProductDetail({ slug }) {
   return (
     <>
       <SEOHead
-        title={`${product.name} - Online24 Pharmacy`}
+        title={t("productPage.seoTitleWithProductName", {
+          productName: product.name,
+        })}
         description={product.description}
       />
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
@@ -428,35 +472,42 @@ function ProductDetail({ slug }) {
         <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
           <div className="container mx-auto px-4 py-4">
             {/* Professional Breadcrumbs */}
-            <nav className="mb-3" aria-label="Breadcrumb">
+            <nav className="mb-3" aria-label={t("breadcrumb")}>
               <ol className="flex items-center gap-1 text-sm text-gray-500">
                 <li>
                   <Link to="/" className="hover:text-emerald-600 font-medium">
-                    Home
-                  </Link>
-                </li>
-                <li className="px-1 text-gray-400">/</li>
-                <li>
-                  <Link to="/categories" className="hover:text-emerald-600 font-medium">
-                    Categories
+                    {t("home")}
                   </Link>
                 </li>
                 <li className="px-1 text-gray-400">/</li>
                 <li>
                   <Link
-                    to={`/categories/${product.category?.toLowerCase().replace(/\s+/g, "-")}`}
+                    to="/categories"
+                    className="hover:text-emerald-600 font-medium"
+                  >
+                    {t("categories")}
+                  </Link>
+                </li>
+                <li className="px-1 text-gray-400">/</li>
+                <li>
+                  <Link
+                    to={`/categories/${product.category
+                      ?.toLowerCase()
+                      .replace(/\s+/g, "-")}`}
                     className="hover:text-emerald-600 font-medium capitalize"
                   >
                     {product.category}
                   </Link>
                 </li>
                 <li className="px-1 text-gray-400">/</li>
-                <li className="text-gray-900 font-bold truncate max-w-xs" aria-current="page">
+                <li
+                  className="text-gray-900 font-bold truncate max-w-xs"
+                  aria-current="page"
+                >
                   {product.name}
                 </li>
               </ol>
             </nav>
-            
             {/* Header */}
             <div className="flex items-center justify-between">
               <h1 className="text-xl md:text-2xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent truncate">
@@ -466,21 +517,19 @@ function ProductDetail({ slug }) {
                 {product.stockQuantity > 0 ? (
                   <span className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
                     <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    In Stock
+                    {t("productPage.inStock")}
                   </span>
                 ) : (
                   <span className="flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
                     <div className="w-2 h-2 bg-red-500 rounded-full" />
-                    Out of Stock
+                    {t("productPage.outOfStock")}
                   </span>
                 )}
               </div>
             </div>
           </div>
         </div>
-        
         <div className="container mx-auto px-4 py-8">
-
           <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 border border-gray-200">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="relative">
@@ -490,26 +539,28 @@ function ProductDetail({ slug }) {
                     alt={product.name}
                     className="w-full aspect-square object-contain rounded-lg hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
-                      e.target.src = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&h=600&fit=crop&q=80";
+                      e.target.src =
+                        "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&h=600&fit=crop&q=80";
                     }}
                   />
-                  
                   {/* Badges */}
                   <div className="absolute top-3 left-3 flex flex-col gap-2">
                     {product.requiresPrescription && (
                       <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                        ℞ Prescription Required
+                        ℞ {t("productPage.prescriptionRequired")}
                       </span>
                     )}
-                    {product.stockQuantity > 0 && product.stockQuantity < 10 && (
-                      <span className="bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                        Only {product.stockQuantity} left
-                      </span>
-                    )}
+                    {product.stockQuantity > 0 &&
+                      product.stockQuantity < 10 && (
+                        <span className="bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          {t("productPage.onlyLeft", {
+                            count: product.stockQuantity,
+                          })}
+                        </span>
+                      )}
                   </div>
                 </div>
               </div>
-
               <div className="flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
@@ -526,11 +577,9 @@ function ProductDetail({ slug }) {
                     )}
                   </button>
                 </div>
-
                 <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 leading-tight">
                   {product.name}
                 </h2>
-
                 <div className="flex items-center gap-3 mb-5">
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
@@ -545,67 +594,57 @@ function ProductDetail({ slug }) {
                     ))}
                   </div>
                   <span className="text-sm text-gray-600 font-medium">
-                    {averageRating.toFixed(1)} ({totalReviews} reviews)
+                    {averageRating.toFixed(1)} ({totalReviews}{" "}
+                    {t("productPage.reviews")})
                   </span>
                 </div>
-
                 <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-gray-900">
                       ৳{product.price}
                     </span>
-                    <span className="text-gray-500">/unit</span>
-                  </div>
-                  {product.originalPrice && product.originalPrice > product.price && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="text-gray-500 line-through">
-                        ৳{product.originalPrice}
-                      </span>
-                      <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">
-                        {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="mb-6 p-4 bg-white rounded-lg border border-gray-200">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      📦 Availability:
+                    <span className="text-gray-500">
+                      / {t("productPage.unit")}
                     </span>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-2 h-2 rounded-full ${
-                        product.stockQuantity > 0 ? "bg-green-500" : "bg-red-500"
-                      }`} />
-                      <span className={`text-sm font-medium ${
-                        product.stockQuantity > 0 ? "text-green-600" : "text-red-600"
-                      }`}>
-                        {product.stockQuantity > 0
-                          ? product.stockQuantity > 10
-                            ? "In Stock"
-                            : `Only ${product.stockQuantity} left`
-                          : "Out of Stock"
-                        }
-                      </span>
-                    </div>
                   </div>
+                  {product.originalPrice &&
+                    product.originalPrice > product.price && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-gray-500 line-through">
+                          ৳{product.originalPrice}
+                        </span>
+                        <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">
+                          {Math.round(
+                            ((product.originalPrice - product.price) /
+                              product.originalPrice) *
+                              100
+                          )}
+                          % {t("productPage.off")}
+                        </span>
+                      </div>
+                    )}
                 </div>
-
-                {(product.brand || product.manufacturer || product.requiresPrescription) && (
+                {(product.brand ||
+                  product.manufacturer ||
+                  product.requiresPrescription) && (
                   <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      🛡️ Product Information
+                      🛡️ {t("productPage.productInfo")}
                     </h3>
                     <div className="space-y-2 text-sm text-gray-700">
                       {product.brand && (
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">Brand:</span>
+                          <span className="font-medium">
+                            {t("productPage.brand")}:
+                          </span>
                           <span>{product.brand}</span>
                         </div>
                       )}
                       {product.manufacturer && (
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">Manufacturer:</span>
+                          <span className="font-medium">
+                            {t("productPage.manufacturer")}:
+                          </span>
                           <span>{product.manufacturer}</span>
                         </div>
                       )}
@@ -614,17 +653,18 @@ function ProductDetail({ slug }) {
                           <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">
                             ℞
                           </span>
-                          <span>Prescription required for this product</span>
+                          <span>
+                            {t("productPage.prescriptionRequiredForProduct")}
+                          </span>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
-
                 {product.stockQuantity > 0 && (
                   <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Quantity:
+                      {t("productPage.quantity")}:
                     </label>
                     <div className="flex flex-col sm:flex-row gap-3">
                       <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
@@ -639,7 +679,11 @@ function ProductDetail({ slug }) {
                           {quantity}
                         </span>
                         <button
-                          onClick={() => setQuantity(Math.min(product.stockQuantity, quantity + 1))}
+                          onClick={() =>
+                            setQuantity(
+                              Math.min(product.stockQuantity, quantity + 1)
+                            )
+                          }
                           className="px-4 py-2 hover:bg-gray-50 font-medium text-lg transition-colors"
                           disabled={quantity >= product.stockQuantity}
                         >
@@ -652,56 +696,53 @@ function ProductDetail({ slug }) {
                           className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
                         >
                           <ShoppingCartIcon className="w-5 h-5" />
-                          Add to Cart
+                          {t("productPage.addToCart")}
                         </button>
                         <button
                           onClick={handleBuyNow}
                           className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
                         >
-                          Buy Now
+                          {t("productPage.buyNow")}
                         </button>
                       </div>
                     </div>
                   </div>
                 )}
-
                 {product.description && (
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      📝 Description
+                      📝 {t("productPage.description")}
                     </h3>
                     <p className="text-gray-700 leading-relaxed text-sm">
                       {product.description}
                     </p>
                   </div>
                 )}
-
                 <div className="mt-6 grid grid-cols-2 gap-3">
                   <div className="p-3 bg-white rounded-lg border border-gray-200 text-center">
                     <div className="text-xl mb-1">✨</div>
                     <div className="text-xs font-medium text-gray-900">
-                      Genuine Products
+                      {t("productPage.genuineProducts")}
                     </div>
                   </div>
                   <div className="p-3 bg-white rounded-lg border border-gray-200 text-center">
                     <div className="text-xl mb-1">🚚</div>
                     <div className="text-xs font-medium text-gray-900">
-                      Fast Delivery
+                      {t("productPage.fastDelivery")}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           {relatedProducts.length > 0 && (
             <div className="mt-12">
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-2">
-                  Related Products
+                  {t("productPage.relatedProducts")}
                 </h2>
                 <p className="text-sm text-gray-600">
-                  Customers who viewed this also checked out these products
+                  {t("productPage.customersAlsoChecked")}
                 </p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -717,33 +758,39 @@ function ProductDetail({ slug }) {
           <div className="mt-12">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-xl font-bold text-gray-900">
-                Customer Reviews
+                {t("productPage.customerReviews")}
               </h2>
               <span className="text-sm text-gray-600">
-                {averageRating.toFixed(1)} ★ • {totalReviews} reviews
+                {averageRating.toFixed(1)} ★ • {totalReviews}{" "}
+                {t("productPage.reviews")}
               </span>
             </div>
             {reviews.length === 0 && (
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-600">
-                No reviews yet. Be the first to review this product!
+                {t("productPage.noReviews")}
               </div>
             )}
             <div className="space-y-4">
               {reviews.map((r) => (
-                <div key={r.id} className="p-4 bg-white rounded-lg border border-gray-200">
+                <div
+                  key={r.id}
+                  className="p-4 bg-white rounded-lg border border-gray-200"
+                >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       {[...Array(5)].map((_, i) => (
                         <StarIcon
                           key={i}
                           className={`w-4 h-4 ${
-                            i < r.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                            i < r.rating
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-300"
                           }`}
                         />
                       ))}
                       {r.isVerified && (
                         <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">
-                          Verified
+                          {t("productPage.verified")}
                         </span>
                       )}
                     </div>
@@ -765,7 +812,8 @@ function ProductDetail({ slug }) {
             {isAuthenticated && (
               <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                  📝 Write a Review
+                  📝{" "}
+                  {tf("productPage.writeReview", undefined, "Write a Review")}
                 </h3>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center gap-1">
@@ -776,7 +824,11 @@ function ProductDetail({ slug }) {
                         className={`w-6 h-6 flex items-center justify-center rounded transition ${
                           i < reviewRating ? "text-yellow-400" : "text-gray-300"
                         }`}
-                        aria-label={`Set rating ${i + 1}`}
+                        aria-label={tf(
+                          "productPage.setRating",
+                          { rating: i + 1 },
+                          `Set rating to ${i + 1} star(s)`
+                        )}
                       >
                         ★
                       </button>
@@ -789,7 +841,11 @@ function ProductDetail({ slug }) {
                 <textarea
                   value={reviewComment}
                   onChange={(e) => setReviewComment(e.target.value)}
-                  placeholder="Share your experience (optional)"
+                  placeholder={tf(
+                    "productPage.shareExperience",
+                    undefined,
+                    "Share your experience with this product (optional)"
+                  )}
                   className="w-full border border-gray-300 rounded-lg p-3 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   rows={4}
                 />
@@ -798,20 +854,41 @@ function ProductDetail({ slug }) {
                   disabled={reviewSubmitting}
                   className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
-                  {reviewSubmitting ? "Submitting..." : "Submit Review"}
+                  {reviewSubmitting
+                    ? tf(
+                        "productPage.submitting",
+                        undefined,
+                        "Submitting your review..."
+                      )
+                    : tf(
+                        "productPage.submitReview",
+                        undefined,
+                        "Submit Review"
+                      )}
                 </button>
                 <p className="text-xs text-gray-500 mt-3">
-                  Reviews are moderated. Only verified purchases show the Verified badge.
+                  {tf(
+                    "productPage.reviewsModerated",
+                    undefined,
+                    "All reviews are moderated. Only verified purchases are marked as 'Verified Purchase'."
+                  )}
                 </p>
               </div>
             )}
             {!isAuthenticated && (
               <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
-                Please{" "}
-                <Link to="/login" className="text-emerald-600 font-medium hover:underline">
-                  login
+                {tf("productPage.pleaseLogin", undefined, "Please")}{" "}
+                <Link
+                  to="/login"
+                  className="text-emerald-600 font-medium hover:underline"
+                >
+                  {tf("login", undefined, "Login")}
                 </Link>{" "}
-                to submit a review.
+                {tf(
+                  "productPage.toSubmitReview",
+                  undefined,
+                  "log in to submit a review."
+                )}
               </div>
             )}
           </div>
@@ -821,7 +898,9 @@ function ProductDetail({ slug }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl p-6 w-[90%] max-w-md border-2 border-emerald-200 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-black">Upload Prescription</h3>
+              <h3 className="text-lg font-black">
+                {t("productPage.uploadPrescription")}
+              </h3>
               <button
                 onClick={() => setShowRxModal(false)}
                 className="text-gray-600 hover:text-gray-900"
@@ -830,7 +909,7 @@ function ProductDetail({ slug }) {
               </button>
             </div>
             <p className="text-sm text-gray-600 mb-3">
-              Accepted: JPG/PNG/PDF, max 5MB.
+              {t("productPage.acceptedFormats")}
             </p>
             <input
               type="file"
@@ -840,19 +919,21 @@ function ProductDetail({ slug }) {
             />
             <div className="mt-4 flex items-center gap-3">
               <button onClick={handleRxUpload} className="btn-primary">
-                Upload
+                {t("productPage.upload")}
               </button>
               {rxUploadStatus === "uploading" && (
-                <span className="text-sm text-gray-700">Uploading...</span>
+                <span className="text-sm text-gray-700">
+                  {t("productPage.uploading")}
+                </span>
               )}
               {rxUploadStatus === "under-review" && (
                 <span className="text-sm font-bold text-amber-600">
-                  Under Review
+                  {t("productPage.underReview")}
                 </span>
               )}
               {rxUploadStatus === "error" && (
                 <span className="text-sm font-bold text-red-600">
-                  Upload Failed
+                  {t("productPage.uploadFailed")}
                 </span>
               )}
             </div>
@@ -865,7 +946,7 @@ function ProductDetail({ slug }) {
             onClick={() => setShowRxModal(true)}
             className="px-5 py-3 bg-orange-500 text-white rounded-full font-black shadow-xl hover:shadow-2xl"
           >
-            Upload Prescription
+            {t("productPage.uploadPrescription")}
           </button>
         </div>
       )}

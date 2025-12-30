@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { TagIcon } from "@heroicons/react/24/outline";
 import { applyCoupon } from "../../utils/api";
 
 export default function CouponSystem({ cartTotal, onCouponApplied }) {
+  const { t } = useTranslation();
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
 
@@ -35,7 +37,9 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
     <div className="bg-gray-50 p-4 rounded-lg">
       <div className="flex items-center mb-3">
         <TagIcon className="w-5 h-5 text-gray-600 mr-2" />
-        <h3 className="font-medium text-gray-900">Promo Code</h3>
+        <h3 className="font-medium text-gray-900">
+          {t("promoCode", "Promo Code")}
+        </h3>
       </div>
 
       {!appliedCoupon ? (
@@ -44,7 +48,7 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
             type="text"
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-            placeholder="Enter coupon code"
+            placeholder={t("enterCoupon", "Enter coupon code")}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
           />
           <button
@@ -52,7 +56,9 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
             disabled={!couponCode.trim() || applyCouponMutation.isPending}
             className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:opacity-50 text-sm"
           >
-            {applyCouponMutation.isPending ? "Applying..." : "Apply"}
+            {applyCouponMutation.isPending
+              ? t("applying", "Applying...")
+              : t("apply", "Apply")}
           </button>
         </form>
       ) : (
@@ -69,7 +75,7 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
             onClick={removeCoupon}
             className="text-red-600 hover:text-red-800 text-sm"
           >
-            Remove
+            {t("remove", "Remove")}
           </button>
         </div>
       )}
@@ -77,13 +83,15 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
       {applyCouponMutation.isError && (
         <p className="text-red-600 text-sm mt-2">
           {applyCouponMutation.error?.response?.data?.error ||
-            "Invalid coupon code"}
+            t("invalidCoupon", "Invalid coupon code")}
         </p>
       )}
 
       {/* Popular Coupons */}
       <div className="mt-4">
-        <p className="text-sm text-gray-600 mb-2">Popular offers:</p>
+        <p className="text-sm text-gray-600 mb-2">
+          {t("popularOffers", "Popular offers:")}
+        </p>
         <div className="flex flex-wrap gap-2">
           {["FIRST10", "SAVE50", "HEALTH20"].map((code) => (
             <button

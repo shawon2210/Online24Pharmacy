@@ -9,6 +9,13 @@ export default function CategoryProductGrid({
   isLoading = false,
 }) {
   const { t } = useTranslation();
+  const tf = (key, fallback) => {
+    try {
+      const res = t(key);
+      if (res && res !== key) return res;
+    } catch (e) {}
+    return typeof fallback !== "undefined" ? fallback : key;
+  };
   if (isLoading) {
     return (
       <div className="space-y-12">
@@ -47,7 +54,7 @@ export default function CategoryProductGrid({
                 to={`/categories/${category.toLowerCase()}`}
                 className="text-sm font-semibold text-primary hover:underline"
               >
-                {t("homePage.viewAll")}
+                {tf("homePage.viewAll", "View all")}
               </Link>
             </div>
             <ProductCarousel products={categoryProducts} />

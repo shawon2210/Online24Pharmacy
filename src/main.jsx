@@ -2,8 +2,27 @@ import { StrictMode, Component } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import "./utils/i18n";
+import "./i18n";
 import ThemeInit from "./components/common/ThemeInit";
+import i18next from "i18next";
+
+// Expose a global tf helper for legacy references that expect `tf` in scope.
+// This ensures files that call `tf(...)` without importing it don't crash at runtime.
+if (typeof window !== "undefined") {
+  // keep idempotent
+  if (!window.tf) {
+    window.tf = (key, options, fallback) => {
+      try {
+        const translated = i18next.t(key, options);
+        if (!translated || translated === key)
+          return typeof fallback !== "undefined" ? fallback : key;
+        return translated;
+      } catch (e) {
+        return typeof fallback !== "undefined" ? fallback : key;
+      }
+    };
+  }
+}
 
 // Error Boundary Component
 class ErrorBoundary extends Component {

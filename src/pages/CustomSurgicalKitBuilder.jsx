@@ -24,6 +24,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useCartStore } from "../stores/cartStore";
 import axios from "axios";
 import { CSS } from "@dnd-kit/utilities";
+import { useTranslation } from "react-i18next";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -95,10 +96,11 @@ const KitItem = ({ item, onRemove }) => {
 };
 
 export default function CustomSurgicalKitBuilder() {
+  const { t } = useTranslation();
   const { user, token } = useAuth();
   const { addItem, clearCart } = useCartStore();
   const [kitItems, setKitItems] = useState([]);
-  const [kitName, setKitName] = useState("My Custom Kit");
+  const [kitName, setKitName] = useState(t('customKitBuilder.myCustomKit'));
   const [searchTerm, setSearchTerm] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
@@ -106,7 +108,7 @@ export default function CustomSurgicalKitBuilder() {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch(`${API_URL}/api/products`);
-      if (!response.ok) throw new Error("Failed to fetch products");
+      if (!response.ok) throw new Error(t('customKitBuilder.fetchProductsError'));
       const data = await response.json();
       return data.products || [];
     },
@@ -127,7 +129,7 @@ export default function CustomSurgicalKitBuilder() {
         { ...product, instanceId: `${product.id}-${Date.now()}` },
       ]);
     } else {
-      toast.error("This item is already in your kit.");
+      toast.error(t('customKitBuilder.itemAlreadyInKit'));
     }
   };
 
@@ -170,11 +172,11 @@ export default function CustomSurgicalKitBuilder() {
 
   const saveKit = async () => {
     if (!user) {
-      toast.error("You must be logged in to save a kit.");
+      toast.error(t('customKitBuilder.loginToSave'));
       return;
     }
     if (kitItems.length === 0) {
-      toast.error("Your kit is empty.");
+      toast.error(t('customKitBuilder.kitEmpty'));
       return;
     }
 
@@ -192,28 +194,28 @@ export default function CustomSurgicalKitBuilder() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 201) {
-        toast.success("Kit saved successfully!");
+        toast.success(t('customKitBuilder.kitSaved'));
       }
     } catch (error) {
-      toast.error("Failed to save kit.");
+      toast.error(t('customKitBuilder.saveKitError'));
       console.error(error);
     }
   };
 
   const shareKit = () => {
     if (kitItems.length === 0) {
-      toast.error("Cannot share an empty kit.");
+      toast.error(t('customKitBuilder.shareEmptyKitError'));
       return;
     }
     const itemIds = kitItems.map((item) => item.id).join(",");
     const url = `${window.location.origin}/build-a-kit?items=${itemIds}`;
     navigator.clipboard.writeText(url);
-    toast.success("Share link copied to clipboard!");
+    toast.success(t('customKitBuilder.shareLinkCopied'));
   };
 
   const addKitToCart = () => {
     if (kitItems.length === 0) {
-      toast.error("Your kit is empty. Add items first.");
+      toast.error(t('customKitBuilder.addEmptyKitError'));
       return;
     }
 
@@ -232,7 +234,7 @@ export default function CustomSurgicalKitBuilder() {
       addItem(product, 1);
     });
 
-    toast.success(`${kitName} (${kitItems.length} items) added to cart!`);
+    toast.success(t('customKitBuilder.kitAddedToCart', { kitName, count: kitItems.length }));
   };
 
   const { isOver, setNodeRef } = useDroppable({ id: "kit-drop-zone" });
@@ -240,8 +242,8 @@ export default function CustomSurgicalKitBuilder() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
       <SEOHead
-        title="Build Custom Kit - Online24 Pharmacy"
-        description="Build your own custom medical kit for your specific healthcare needs"
+        title={t('customKitBuilder.seoTitle')}
+        description={t('customKitBuilder.seoDescription')}
         url="/build-kit"
       />
       
@@ -249,16 +251,16 @@ export default function CustomSurgicalKitBuilder() {
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
-          <nav className="mb-3" aria-label="Breadcrumb">
+          <nav className="mb-3" aria-label={t('breadcrumb')}>
             <ol className="flex items-center gap-1 text-sm text-gray-500">
               <li>
                 <a href="/" className="hover:text-emerald-600 font-medium">
-                  Home
+                  {t('home')}
                 </a>
               </li>
               <li className="px-1 text-gray-400">/</li>
               <li className="text-gray-900 font-bold" aria-current="page">
-                Build Custom Kit
+                {t('customKitBuilder.title')}
               </li>
             </ol>
           </nav>
@@ -267,15 +269,15 @@ export default function CustomSurgicalKitBuilder() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
-                Build Custom Kit
+                {t('customKitBuilder.title')}
               </h1>
               <p className="text-sm text-gray-600">
-                Create personalized medical kits for your specific needs
+                {t('customKitBuilder.subtitle')}
               </p>
             </div>
             <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-100 to-cyan-100 border-2 border-emerald-200 text-emerald-700 rounded-full text-sm font-bold">
               <ShoppingBagIcon className="w-5 h-5" />
-              <span>{kitItems.length} Items</span>
+              <span>{kitItems.length} {t('items')}</span>
             </div>
           </div>
         </div>
@@ -288,7 +290,7 @@ export default function CustomSurgicalKitBuilder() {
             <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
-            Quick Start Templates
+            {t('customKitBuilder.quickStartTemplates')}
           </h2>
           <div className="flex flex-wrap gap-3">
             {Object.keys(useCases).map((useCase) => (
@@ -297,7 +299,7 @@ export default function CustomSurgicalKitBuilder() {
                 onClick={() => selectUseCase(useCase)}
                 className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-emerald-100 hover:text-emerald-700 transition-colors"
               >
-                {useCase}
+                {t(`customKitBuilder.useCases.${useCase.replace(/\s+/g, '')}`)}
               </button>
             ))}
           </div>
@@ -315,13 +317,13 @@ export default function CustomSurgicalKitBuilder() {
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                Available Items
+                {t('customKitBuilder.availableItems')}
               </h2>
               <div className="relative mb-4">
                 <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search for items..."
+                  placeholder={t('customKitBuilder.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
@@ -356,14 +358,14 @@ export default function CustomSurgicalKitBuilder() {
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <ShoppingBagIcon className="w-5 h-5 text-emerald-600" />
-                  Your Custom Kit
+                  {t('customKitBuilder.yourCustomKit')}
                 </h2>
                 {kitItems.length > 0 && (
                   <button
                     onClick={clearKit}
                     className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
                   >
-                    <XMarkIcon className="w-4 h-4" /> Clear All
+                    <XMarkIcon className="w-4 h-4" /> {t('clearAll')}
                   </button>
                 )}
               </div>
@@ -383,9 +385,9 @@ export default function CustomSurgicalKitBuilder() {
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
                     <ShoppingBagIcon className="w-16 h-16 text-gray-300 mb-4" />
-                    <p className="font-semibold">Your kit is empty</p>
+                    <p className="font-semibold">{t('customKitBuilder.kitEmpty')}</p>
                     <p className="text-sm">
-                      Drag items here or use the '+' button to add them.
+                      {t('customKitBuilder.dragAndDrop')}
                     </p>
                   </div>
                 )}
@@ -398,7 +400,7 @@ export default function CustomSurgicalKitBuilder() {
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mt-6">
           <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
             <CheckCircleIcon className="w-5 h-5 text-green-600" />
-            Finalize Your Kit
+            {t('customKitBuilder.finalizeKit')}
           </h2>
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
             <div className="flex-1">
@@ -407,18 +409,18 @@ export default function CustomSurgicalKitBuilder() {
                 value={kitName}
                 onChange={(e) => setKitName(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
-                placeholder="Enter a name for your kit"
+                placeholder={t('customKitBuilder.kitNamePlaceholder')}
               />
             </div>
             <div className="flex items-center gap-6">
               <div className="text-center">
-                <p className="text-xs text-gray-500 font-medium">Items</p>
+                <p className="text-xs text-gray-500 font-medium">{t('items')}</p>
                 <p className="text-lg font-bold text-gray-900">
                   {kitItems.length}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-xs text-gray-500 font-medium">Total</p>
+                <p className="text-xs text-gray-500 font-medium">{t('total')}</p>
                 <p className="text-lg font-bold text-emerald-600">
                   ${totalPrice.toFixed(2)}
                 </p>
@@ -429,19 +431,19 @@ export default function CustomSurgicalKitBuilder() {
                 onClick={addKitToCart}
                 className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center gap-2"
               >
-                <ShoppingCartIcon className="w-5 h-5" /> Add to Cart
+                <ShoppingCartIcon className="w-5 h-5" /> {t('addToCart')}
               </button>
               <button
                 onClick={saveKit}
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
               >
-                <CheckCircleIcon className="w-5 h-5" /> Save Kit
+                <CheckCircleIcon className="w-5 h-5" /> {t('customKitBuilder.saveKit')}
               </button>
               <button
                 onClick={shareKit}
                 className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors flex items-center gap-2"
               >
-                <ShareIcon className="w-5 h-5" /> Share
+                <ShareIcon className="w-5 h-5" /> {t('share')}
               </button>
             </div>
           </div>

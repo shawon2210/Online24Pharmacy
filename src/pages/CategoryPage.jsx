@@ -4,7 +4,13 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import SEOHead from "../components/common/SEOHead";
 import ProductGrid from "../components/product/ProductGrid";
-import { FunnelIcon, XMarkIcon, CheckCircleIcon, FireIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import {
+  FunnelIcon,
+  XMarkIcon,
+  CheckCircleIcon,
+  FireIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 
 function CategoryPage() {
   const { t } = useTranslation();
@@ -76,11 +82,11 @@ function CategoryPage() {
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
-          <nav className="mb-3" aria-label="Breadcrumb">
+          <nav className="mb-3" aria-label={t("breadcrumb")}>
             <ol className="flex items-center gap-1 text-sm text-gray-500">
               <li>
                 <Link to="/" className="hover:text-emerald-600 font-medium">
-                  Home
+                  {t("home")}
                 </Link>
               </li>
               <li className="px-1 text-gray-400">/</li>
@@ -89,7 +95,7 @@ function CategoryPage() {
                   to="/categories"
                   className="hover:text-emerald-600 font-medium"
                 >
-                  Categories
+                  {t("categories")}
                 </Link>
               </li>
               <li className="px-1 text-gray-400">/</li>
@@ -118,12 +124,14 @@ function CategoryPage() {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="appearance-none bg-white border-2 border-gray-200 rounded-lg px-4 py-2 pr-10 text-sm font-medium hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                  aria-label="Sort products"
+                  aria-label={t("categoryPage.sortProducts")}
                 >
-                  <option value="featured">Featured</option>
-                  <option value="priceLow">Price: Low to High</option>
-                  <option value="priceHigh">Price: High to Low</option>
-                  <option value="name">Name: A-Z</option>
+                  <option value="featured">{t("categoryPage.featured")}</option>
+                  <option value="priceLow">{t("categoryPage.priceLow")}</option>
+                  <option value="priceHigh">
+                    {t("categoryPage.priceHigh")}
+                  </option>
+                  <option value="name">{t("categoryPage.nameAZ")}</option>
                 </select>
                 <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" />
               </div>
@@ -132,7 +140,7 @@ function CategoryPage() {
               <button
                 onClick={() => setMobileFiltersOpen(true)}
                 className="lg:hidden flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
-                aria-label="Open filters"
+                aria-label={t("categoryPage.openFilters")}
               >
                 <FunnelIcon className="w-5 h-5" />
                 {activeFiltersCount > 0 && (
@@ -149,7 +157,7 @@ function CategoryPage() {
             <div className="flex flex-wrap gap-2 mt-3">
               {filters.availability !== "all" && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
-                  {filters.availability}
+                  {t(`categoryPage.${filters.availability}`)}
                   <button
                     onClick={() => removeFilter("availability")}
                     className="hover:bg-emerald-200 rounded-full p-0.5"
@@ -160,7 +168,7 @@ function CategoryPage() {
               )}
               {filters.prescriptionRequired !== "all" && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                  Prescription Required
+                  {t("categoryPage.prescriptionRequired")}
                   <button
                     onClick={() => removeFilter("prescriptionRequired")}
                     className="hover:bg-blue-200 rounded-full p-0.5"
@@ -182,7 +190,7 @@ function CategoryPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold flex items-center gap-2">
                   <FunnelIcon className="w-5 h-5 text-emerald-600" />
-                  Filters
+                  {t("categoryPage.filters")}
                 </h2>
                 {activeFiltersCount > 0 && (
                   <button
@@ -197,7 +205,7 @@ function CategoryPage() {
                     }
                     className="text-sm text-emerald-600 hover:underline"
                   >
-                    Clear All
+                    {t("categoryPage.clearAll")}
                   </button>
                 )}
               </div>
@@ -206,7 +214,7 @@ function CategoryPage() {
               <div>
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
                   <CheckCircleIcon className="w-5 h-5 text-green-500" />
-                  Availability
+                  {t("categoryPage.availability")}
                 </h3>
                 {["all", "inStock", "preOrder"].map((opt) => (
                   <label
@@ -224,7 +232,7 @@ function CategoryPage() {
                       className="text-emerald-600 focus:ring-emerald-500"
                     />
                     <span className="text-sm capitalize">
-                      {opt.replace(/([A-Z])/g, " $1")}
+                      {t(`categoryPage.${opt}`)}
                     </span>
                   </label>
                 ))}
@@ -234,7 +242,7 @@ function CategoryPage() {
               <div>
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
                   <FireIcon className="w-5 h-5 text-red-500" />
-                  Prescription
+                  {t("categoryPage.prescription")}
                 </h3>
                 <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
                   <input
@@ -248,7 +256,9 @@ function CategoryPage() {
                     }
                     className="rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="text-sm">Prescription Required Only</span>
+                  <span className="text-sm">
+                    {t("categoryPage.prescriptionRequiredOnly")}
+                  </span>
                 </label>
               </div>
             </div>
@@ -264,7 +274,9 @@ function CategoryPage() {
               <div className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-white shadow-2xl overflow-y-auto animate-slide-in-right">
                 <div className="p-6 space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold">Filters</h2>
+                    <h2 className="text-xl font-bold">
+                      {t("categoryPage.filters")}
+                    </h2>
                     <button
                       onClick={() => setMobileFiltersOpen(false)}
                       className="p-2 hover:bg-gray-100 rounded-lg"
@@ -275,7 +287,9 @@ function CategoryPage() {
 
                   {/* Same filters as desktop */}
                   <div>
-                    <h3 className="font-semibold mb-3">Availability</h3>
+                    <h3 className="font-semibold mb-3">
+                      {t("categoryPage.availability")}
+                    </h3>
                     {["all", "inStock", "preOrder"].map((opt) => (
                       <label
                         key={opt}
@@ -292,14 +306,16 @@ function CategoryPage() {
                           className="text-emerald-600"
                         />
                         <span className="text-sm capitalize">
-                          {opt.replace(/([A-Z])/g, " $1")}
+                          {t(`categoryPage.${opt}`)}
                         </span>
                       </label>
                     ))}
                   </div>
 
                   <div>
-                    <h3 className="font-semibold mb-3">Prescription</h3>
+                    <h3 className="font-semibold mb-3">
+                      {t("categoryPage.prescription")}
+                    </h3>
                     <label className="flex items-center gap-2 p-2">
                       <input
                         type="checkbox"
@@ -313,7 +329,7 @@ function CategoryPage() {
                         className="rounded text-emerald-600"
                       />
                       <span className="text-sm">
-                        Prescription Required Only
+                        {t("categoryPage.prescriptionRequiredOnly")}
                       </span>
                     </label>
                   </div>
@@ -322,7 +338,7 @@ function CategoryPage() {
                     onClick={() => setMobileFiltersOpen(false)}
                     className="w-full py-3 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors"
                   >
-                    Apply Filters
+                    {t("categoryPage.applyFilters")}
                   </button>
                 </div>
               </div>
@@ -333,8 +349,10 @@ function CategoryPage() {
           <main className="flex-1">
             <div className="mb-4 text-sm text-gray-600">
               {isLoading
-                ? "Loading..."
-                : `${filteredProducts.length} products found`}
+                ? t("categoryPage.loading")
+                : t("categoryPage.productsFound", {
+                    count: filteredProducts.length,
+                  })}
             </div>
 
             {isLoading ? (
@@ -358,16 +376,16 @@ function CategoryPage() {
               <div className="text-center py-20">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  No products found
+                  {t("categoryPage.noProductsFound")}
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Try adjusting your filters or browse other categories
+                  {t("categoryPage.tryAdjusting")}
                 </p>
                 <Link
                   to="/categories"
                   className="inline-block px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
                 >
-                  Browse All Categories
+                  {t("categoryPage.browseAllCategories")}
                 </Link>
               </div>
             )}

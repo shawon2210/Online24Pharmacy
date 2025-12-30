@@ -68,8 +68,7 @@ export default function OrderSummary({
         </div>
         {safeSubtotal < DELIVERY.FREE_SHIPPING_THRESHOLD && (
           <div className="text-xs text-gray-500">
-            Add ৳{(DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(2)}{" "}
-            more for free shipping
+            {t('cartPage.addMoreForFreeShipping', { amount: (DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(2) })}
           </div>
         )}
         <div className="border-t-2 border-gray-200 pt-3 sm:pt-4 flex justify-between items-center">

@@ -1,6 +1,4 @@
 import express from 'express';
-import cluster from 'cluster';
-import os from 'os';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -21,6 +19,7 @@ import deliveryRoutes from './routes/delivery.js';
 import usersRoutes from './routes/users.js';
 import chatbotRoutes from './routes/chatbot.js';
 import savedKitsRoutes from './routes/savedKits.js';
+import pickupRoutes from './routes/pickup.js';
 
 dotenv.config();
 
@@ -57,6 +56,7 @@ app.use('/api/delivery', deliveryRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/kits', savedKitsRoutes);
+app.use('/api', pickupRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

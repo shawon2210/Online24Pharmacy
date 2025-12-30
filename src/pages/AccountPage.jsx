@@ -11,8 +11,10 @@ import {
   CogIcon,
   HeartIcon,
 } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 
 export default function AccountPage() {
+  const { t } = useTranslation();
   const [headerOffset, setHeaderOffset] = useState(0);
   const contextAuth = useAuth();
   const storeAuth = useAuthStore();
@@ -33,7 +35,7 @@ export default function AccountPage() {
   if (!user) {
     return (
       <>
-        <SEOHead title="My Account - Online24 Pharmacy" />
+        <SEOHead title={t('accountPage.seoTitle')} />
         <div
           className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20"
           style={{ paddingTop: `${headerOffset}px` }}
@@ -41,13 +43,13 @@ export default function AccountPage() {
           <div className="max-w-md mx-auto text-center">
             <UserCircleIcon className="w-16 h-16 mx-auto text-gray-300 mb-4" />
             <p className="text-gray-600 mb-6">
-              Please log in to view your account.
+              {t('accountPage.loginPrompt')}
             </p>
             <Link
               to="/login"
               className="inline-block bg-gradient-to-r from-emerald-600 to-green-600 text-white px-6 py-3 rounded-xl font-bold hover:from-emerald-700 hover:to-green-700"
             >
-              Sign In
+              {t('signIn')}
             </Link>
           </div>
         </div>
@@ -57,43 +59,43 @@ export default function AccountPage() {
 
   const accountSections = [
     {
-      title: "My Profile",
-      description: "Manage your personal information",
+      title: t('accountPage.profileTitle'),
+      description: t('accountPage.profileDesc'),
       icon: UserCircleIcon,
       link: "/profile",
       color: "from-emerald-500 to-green-500",
     },
     {
-      title: "My Orders",
-      description: "Track and manage your orders",
+      title: t('accountPage.ordersTitle'),
+      description: t('accountPage.ordersDesc'),
       icon: ShoppingBagIcon,
       link: "/my-orders",
       color: "from-blue-500 to-cyan-500",
     },
     {
-      title: "My Prescriptions",
-      description: "View uploaded prescriptions",
+      title: t('accountPage.prescriptionsTitle'),
+      description: t('accountPage.prescriptionsDesc'),
       icon: DocumentTextIcon,
       link: "/my-prescriptions",
       color: "from-purple-500 to-pink-500",
     },
     {
-      title: "Addresses",
-      description: "Manage delivery addresses",
+      title: t('accountPage.addressesTitle'),
+      description: t('accountPage.addressesDesc'),
       icon: MapPinIcon,
       link: "/profile",
       color: "from-orange-500 to-red-500",
     },
     {
-      title: "Wishlist",
-      description: "Your saved items",
+      title: t('accountPage.wishlistTitle'),
+      description: t('accountPage.wishlistDesc'),
       icon: HeartIcon,
       link: "/wishlist",
       color: "from-rose-500 to-pink-500",
     },
     {
-      title: "Settings",
-      description: "Account preferences",
+      title: t('accountPage.settingsTitle'),
+      description: t('accountPage.settingsDesc'),
       icon: CogIcon,
       link: "/profile",
       color: "from-gray-500 to-slate-500",
@@ -102,7 +104,7 @@ export default function AccountPage() {
 
   return (
     <>
-      <SEOHead title="My Account - Online24 Pharmacy" />
+      <SEOHead title={t('accountPage.seoTitle')} />
       <div
         className="w-full bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 pb-12 sm:pb-16 lg:pb-20"
         style={{
@@ -117,16 +119,16 @@ export default function AccountPage() {
             <div className="inline-block mb-3 sm:mb-4">
               <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-100 to-cyan-100 border-2 border-emerald-200 text-emerald-700 rounded-full text-xs sm:text-sm font-bold shadow-lg">
                 <span className="text-lg sm:text-xl">👤</span>
-                <span>My Account</span>
+                <span>{t('accountPage.myAccount')}</span>
               </span>
             </div>
             <h1 className="font-black text-3xl sm:text-4xl lg:text-5xl text-gray-900 mb-2 sm:mb-3 tracking-tight">
               <span className="bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
-                Welcome back, {user.firstName}!
+                {t('accountPage.welcome', { name: user.firstName })}
               </span>
             </h1>
             <p className="text-sm sm:text-base lg:text-lg text-gray-600">
-              Manage your account and view your activity
+              {t('accountPage.manageAccount')}
             </p>
           </div>
 

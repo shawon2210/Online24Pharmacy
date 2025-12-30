@@ -4,6 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import { authenticateToken, requireAdmin } from '../middleware/roleAuth.js';
 import * as admin from '../controllers/adminController.js';
+import prisma from '../db/prisma.js';
 
 const router = express.Router();
 
@@ -104,6 +105,60 @@ router.get('/audit-log', admin.getAdminActions);
 
 // Analytics
 router.get('/analytics', admin.getAnalytics);
+
+// Pickup Locations
+router.get('/pickup-locations', async (req, res) => {
+  try {
+    const locations = await prisma.pickupLocation.findMany({
+      include: { inventory: true }
+    });
+    res.json(locations);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch pickup locations' });
+  }
+});
+
+router.post('/pickup-locations', async (req, res) => {
+  try {
+    const { name, address, lat, lng, open_hours, is_active } = req.body;
+    const location = await prisma.pickupLocation.create({
+      data: { 
+        name, 
+        address, 
+        lat: parseFloat(lat), 
+        lng: parseFloat(lng), 
+        open_hours,
+        is_active: is_active !== undefined ? is_active : true
+      }
+    });
+    res.json(location);
+  } catch (error) {
+    console.error('Error creating pickup location:', error);
+    res.status(500).json({ error: 'Failed to create pickup location' });
+  }
+});
+
+router.put('/pickup-locations/:id', async (req, res) => {
+  try {
+    const { name, address, lat, lng, open_hours, is_active } = req.body;
+    const location = await prisma.pickupLocation.update({
+      where: { id: req.params.id },
+      data: { name, address, lat: parseFloat(lat), lng: parseFloat(lng), open_hours, is_active }
+    });
+    res.json(location);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update pickup location' });
+  }
+});
+
+router.delete('/pickup-locations/:id', async (req, res) => {
+  try {
+    await prisma.pickupLocation.delete({ where: { id: req.params.id } });
+    res.json({ message: 'Pickup location deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete pickup location' });
+  }
+});
 
 // Routes for category and subcategory creation
 router.post('/category', admin.createCategory);

@@ -86,7 +86,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
       <button
         onClick={handleRemove}
         className="flex-shrink-0 p-3 sm:p-4 rounded-xl hover:bg-red-50 text-red-500 hover:text-red-600 transition-all"
-        title="Remove item"
+        title={t("cartPage.removeItemTitle")}
       >
         <TrashIcon className="w-5 sm:w-6 h-5 sm:h-6" />
       </button>
