@@ -468,7 +468,7 @@ export default function PrescriptionsPage() {
     try {
       await prescriptionApi.setReminder(rx.id);
       toast.success(t("prescriptionsPage.reminderSet"));
-    } catch (error) {
+    } catch (_error) {
       toast.error(t("prescriptionsPage.failedReminder"));
     }
   };

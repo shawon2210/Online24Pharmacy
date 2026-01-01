@@ -23,6 +23,10 @@ import pickupRoutes from './routes/pickup.js';
 
 dotenv.config();
 
+// Load cron jobs (side-effect imports)
+import './cron/reminders.js';
+import './cron/geocode.js';
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 

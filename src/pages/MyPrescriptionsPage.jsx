@@ -103,29 +103,23 @@ export default function MyPrescriptionsPage() {
 
   const handleUpload = () => navigate("/prescription");
 
-  const handleReorder = async (rx) => {
-    toast.success(
-      t("myPrescriptionsPage.medicinesAdded")
-    );
+  const handleReorder = async (_rx) => {
+    toast.success(t("myPrescriptionsPage.medicinesAdded"));
     setTimeout(() => navigate("/cart"), 1000);
   };
 
-  const handleReminder = async (rx) => {
-    toast.success(
-      t("myPrescriptionsPage.reminderSet")
-    );
+  const handleReminder = async (_rx) => {
+    toast.success(t("myPrescriptionsPage.reminderSet"));
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
-      <SEOHead
-        title={t("myPrescriptionsPage.title")}
-      />
+      <SEOHead title={t("myPrescriptionsPage.title")} />
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
-          <nav className="mb-3" aria-label={t('breadcrumb')}>
+          <nav className="mb-3" aria-label={t("breadcrumb")}>
             <ol className="flex items-center gap-1 text-sm text-gray-500">
               <li>
                 <a href="/" className="hover:text-emerald-600 font-medium">
@@ -276,7 +270,7 @@ export default function MyPrescriptionsPage() {
                         </div>
                         <div>
                           <h3 className="text-lg font-bold text-gray-900">
-                            {rx.medicationName || t('prescription')}
+                            {rx.medicationName || t("prescription")}
                           </h3>
                           <p className="text-sm text-gray-600">
                             {rx.doctorName && `Dr. ${rx.doctorName}`}
@@ -313,8 +307,7 @@ export default function MyPrescriptionsPage() {
                       <div className="flex items-center gap-2 text-gray-600">
                         <ClockIcon className="w-4 h-4" />
                         <span>
-                          {t("myPrescriptionsPage.expires")}{" "}
-                          {rx.expiresAt}
+                          {t("myPrescriptionsPage.expires")} {rx.expiresAt}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">

@@ -144,7 +144,7 @@ export default function CheckoutPage() {
       clearCart();
       toast.success(t("checkoutPage.orderPlaced"));
       navigate("/orders");
-    } catch (error) {
+    } catch (_error) {
       toast.error(t("checkoutPage.orderFailed"));
     } finally {
       setLoading(false);

@@ -58,7 +58,7 @@ export const authenticateToken = async (req, res, next) => {
             isActive: true
           }
         });
-      } catch (prismaError) {
+      } catch (_prismaError) {
         // Continue to file fallback
       }
     }

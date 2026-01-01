@@ -69,7 +69,7 @@ function CategoryPage() {
     filteredProducts.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
   const activeFiltersCount = Object.entries(filters).filter(
-    ([k, v]) =>
+    ([_k, v]) =>
       (Array.isArray(v) && v.length > 0) ||
       (typeof v === "string" && v !== "all")
   ).length;

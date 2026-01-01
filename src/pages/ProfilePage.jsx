@@ -69,6 +69,7 @@ export default function ProfilePage() {
         updateUser({ profilePicture: savedPicture });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleProfilePictureChange = (e) => {
@@ -354,7 +355,9 @@ export default function ProfilePage() {
                             setFormData({ ...formData, street: e.target.value })
                           }
                           disabled={!isEditing}
-                          placeholder={t("profilePage.streetAddressPlaceholder")}
+                          placeholder={t(
+                            "profilePage.streetAddressPlaceholder"
+                          )}
                           className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         />
                       </div>

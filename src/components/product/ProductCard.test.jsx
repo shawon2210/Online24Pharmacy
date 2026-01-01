@@ -1,3 +1,4 @@
+/* global beforeAll, afterAll */
 // Silence React Router v7 future flag warnings in this test file
 const originalWarn = console.warn;
 beforeAll(() => {

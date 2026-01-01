@@ -108,7 +108,7 @@ export const apiRequest = async (endpoint, options = {}, retryCount = 0) => {
       
       // Wait for token refresh to complete
       return new Promise((resolve, reject) => {
-        addRefreshSubscriber((token) => {
+        addRefreshSubscriber((_token) => {
           apiRequest(endpoint, options, retryCount + 1)
             .then(resolve)
             .catch(reject);
@@ -161,14 +161,14 @@ export const uploadFile = async (endpoint, formData, onProgress) => {
         try {
           const data = JSON.parse(xhr.responseText);
           resolve(data);
-        } catch (error) {
+        } catch {
           reject(new APIError('Invalid response', xhr.status, null));
         }
       } else {
         try {
           const data = JSON.parse(xhr.responseText);
           reject(new APIError(data.error || 'Upload failed', xhr.status, data));
-        } catch (error) {
+        } catch {
           reject(new APIError('Upload failed', xhr.status, null));
         }
       }
@@ -234,7 +234,7 @@ export const batchRequests = async (requests) => {
         return { success: false, error: result.reason, index };
       }
     });
-  } catch (error) {
+  } catch {
     throw new APIError('Batch request failed', 0, null);
   }
 };

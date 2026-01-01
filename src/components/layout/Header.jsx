@@ -39,8 +39,8 @@ export default function Header() {
     try {
       const res = t(key);
       if (res && res !== key) return res;
-    } catch (e) {
-      // swallow
+    } catch (_e) {
+      // Translation key not found, use fallback
     }
     return typeof fallback !== "undefined" ? fallback : key;
   };

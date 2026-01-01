@@ -171,7 +171,7 @@ async function main() {
   console.log('Created products');
 
   // 6. Create Pickup Locations
-  const dhanmondiLocation = await prisma.pickupLocation.upsert({
+  await prisma.pickupLocation.upsert({
     where: { name: 'Online24 Pharma - Dhanmondi' },
     update: {},
     create: {
@@ -184,7 +184,7 @@ async function main() {
     },
   });
 
-  const gulshanLocation = await prisma.pickupLocation.upsert({
+  await prisma.pickupLocation.upsert({
     where: { name: 'Online24 Pharma - Gulshan' },
     update: {},
     create: {
@@ -197,7 +197,7 @@ async function main() {
     },
   });
 
-  const uttaraLocation = await prisma.pickupLocation.upsert({
+  await prisma.pickupLocation.upsert({
     where: { name: 'Online24 Pharma - Uttara' },
     update: {},
     create: {

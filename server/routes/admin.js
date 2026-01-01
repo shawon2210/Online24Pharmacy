@@ -1,6 +1,8 @@
 import express from 'express';
 import prisma from '../db/prisma.js';
 import { authenticateToken } from '../middleware/roleAuth.js';
+import { geocodeAddress, batchGeocodeMissing } from '../utils/geocoding.js';
+import { startJob as startGeocodeJob, status as geocodeStatus } from '../cron/geocodeManager.js';
 
 const router = express.Router();
 
@@ -309,7 +311,7 @@ router.get('/categories', authenticateToken, adminAuth, async (req, res) => {
     const filePath = path.resolve(process.cwd(), 'server', 'data', 'categories.json');
     const data = await fs.readFile(filePath, 'utf8').catch(() => '[]');
     res.json({ categories: JSON.parse(data) });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to fetch categories' });
   }
 });
@@ -325,7 +327,7 @@ router.post('/categories', authenticateToken, adminAuth, async (req, res) => {
     categories.push(newCategory);
     await fs.writeFile(filePath, JSON.stringify(categories, null, 2));
     res.status(201).json(newCategory);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to create category' });
   }
 });
@@ -342,7 +344,7 @@ router.put('/categories/:id', authenticateToken, adminAuth, async (req, res) => 
     categories[index] = { ...categories[index], ...req.body, updatedAt: new Date() };
     await fs.writeFile(filePath, JSON.stringify(categories, null, 2));
     res.json(categories[index]);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to update category' });
   }
 });
@@ -356,7 +358,7 @@ router.delete('/categories/:id', authenticateToken, adminAuth, async (req, res) 
     const categories = JSON.parse(data).filter(c => c.id !== req.params.id);
     await fs.writeFile(filePath, JSON.stringify(categories, null, 2));
     res.json({ message: 'Category deleted' });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to delete category' });
   }
 });
@@ -368,20 +370,32 @@ router.get('/pickup-locations', authenticateToken, adminAuth, async (req, res) =
       include: { inventory: true }
     });
     res.json(locations);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to fetch pickup locations' });
   }
 });
 
 router.post('/pickup-locations', authenticateToken, adminAuth, async (req, res) => {
   try {
-    const { name, address, lat, lng, open_hours, is_active } = req.body;
+    let { name, address, lat, lng, open_hours, is_active } = req.body;
+
+    lat = lat !== undefined && lat !== null && lat !== '' ? parseFloat(lat) : null;
+    lng = lng !== undefined && lng !== null && lng !== '' ? parseFloat(lng) : null;
+
+    if (!lat || !lng) {
+      const geo = await geocodeAddress(address || name || '');
+      if (geo) {
+        lat = geo.lat;
+        lng = geo.lng;
+      }
+    }
+
     const location = await prisma.pickupLocation.create({
-      data: { 
-        name, 
-        address, 
-        lat: parseFloat(lat), 
-        lng: parseFloat(lng), 
+      data: {
+        name,
+        address,
+        lat,
+        lng,
         open_hours,
         is_active: is_active !== undefined ? is_active : true
       }
@@ -395,13 +409,25 @@ router.post('/pickup-locations', authenticateToken, adminAuth, async (req, res) 
 
 router.put('/pickup-locations/:id', authenticateToken, adminAuth, async (req, res) => {
   try {
-    const { name, address, lat, lng, open_hours, is_active } = req.body;
+    let { name, address, lat, lng, open_hours, is_active } = req.body;
+
+    lat = lat !== undefined && lat !== null && lat !== '' ? parseFloat(lat) : null;
+    lng = lng !== undefined && lng !== null && lng !== '' ? parseFloat(lng) : null;
+
+    if (!lat || !lng) {
+      const geo = await geocodeAddress(address || name || '');
+      if (geo) {
+        lat = geo.lat;
+        lng = geo.lng;
+      }
+    }
+
     const location = await prisma.pickupLocation.update({
       where: { id: req.params.id },
-      data: { name, address, lat: parseFloat(lat), lng: parseFloat(lng), open_hours, is_active }
+      data: { name, address, lat, lng, open_hours, is_active }
     });
     res.json(location);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to update pickup location' });
   }
 });
@@ -410,8 +436,43 @@ router.delete('/pickup-locations/:id', authenticateToken, adminAuth, async (req,
   try {
     await prisma.pickupLocation.delete({ where: { id: req.params.id } });
     res.json({ message: 'Pickup location deleted' });
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to delete pickup location' });
+  }
+});
+
+// Batch geocode missing pickup locations (admin only)
+router.post('/pickup-locations/batch-geocode', authenticateToken, adminAuth, async (req, res) => {
+  try {
+    const { limit = 20, delayMs = 1000 } = req.body || {};
+    const result = await batchGeocodeMissing(prisma, { limit, delayMs });
+    res.json(result);
+  } catch (error) {
+    console.error('Batch geocode error', error);
+    res.status(500).json({ error: 'Failed to batch geocode pickup locations' });
+  }
+});
+
+// Start a background job for geocoding (non-blocking)
+router.post('/pickup-locations/start-geocode-job', authenticateToken, adminAuth, async (req, res) => {
+  try {
+    const { limit = 20, delayMs = 1000 } = req.body || {};
+    // Start job but do not await so we respond immediately
+    startGeocodeJob(prisma, { limit, delayMs })
+      .then((r) => console.log('Background geocode job finished:', r))
+      .catch((e) => console.error('Background geocode job failed:', e));
+    res.status(202).json({ message: 'Geocode job started' });
+  } catch (error) {
+    console.error('Failed to start geocode job', error);
+    res.status(500).json({ error: 'Failed to start geocode job' });
+  }
+});
+
+router.get('/pickup-locations/geocode-status', authenticateToken, adminAuth, async (_req, res) => {
+  try {
+    res.json(geocodeStatus());
+  } catch (_error) {
+    res.status(500).json({ error: 'Failed to fetch geocode job status' });
   }
 });
 

@@ -17,7 +17,7 @@ if (typeof window !== "undefined") {
         if (!translated || translated === key)
           return typeof fallback !== "undefined" ? fallback : key;
         return translated;
-      } catch (e) {
+      } catch (_e) {
         return typeof fallback !== "undefined" ? fallback : key;
       }
     };

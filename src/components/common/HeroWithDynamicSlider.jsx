@@ -22,7 +22,9 @@ export default function HeroAIGlassPremium() {
     try {
       const res = t(key);
       if (res && res !== key) return res;
-    } catch (e) {}
+    } catch (_e) {
+      // Translation key not found, use fallback
+    }
     return typeof fallback !== "undefined" ? fallback : key;
   };
   const [textIndex, setTextIndex] = useState(0);
@@ -53,6 +55,7 @@ export default function HeroAIGlassPremium() {
       }
     }, 70);
     return () => clearInterval(typing);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textIndex, t]);
 
   return (

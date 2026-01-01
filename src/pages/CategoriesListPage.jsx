@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import SEOHead from "../components/common/SEOHead";
 import { Squares2X2Icon } from "@heroicons/react/24/outline";
@@ -80,7 +79,6 @@ const categories = [
 ];
 
 export default function CategoriesListPage() {
-  const [headerOffset, setHeaderOffset] = useState(0);
   const { t } = useTranslation();
 
   // Fetch categories from API
@@ -153,7 +151,7 @@ export default function CategoriesListPage() {
       {/* Categories Grid */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {displayCategories.map((category, index) => (
+          {displayCategories.map((category, _index) => (
             <Link
               key={category.slug}
               to={`/categories/${category.slug}`}

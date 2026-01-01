@@ -18,12 +18,13 @@ import AnimatedButton from "../components/common/AnimatedButton";
 import i18next from "i18next";
 
 // Generic tf helper using i18next directly for modules that don't define tf
-const tf = (key, options, fallback) => {
+// eslint-disable-next-line no-unused-vars
+const tf = (key, _options, fallback) => {
   try {
-    const translated = i18next.t(key, options);
+    const translated = i18next.t(key);
     if (!translated || translated === key) return fallback || translated || key;
     return translated;
-  } catch (e) {
+  } catch (_e) {
     return typeof fallback !== "undefined" ? fallback : key;
   }
 };

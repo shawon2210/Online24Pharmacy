@@ -20,7 +20,11 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_|^e$|^error$' }],
+      'no-unused-vars': ['error', { 
+        varsIgnorePattern: '^[A-Z_]|^_', 
+        argsIgnorePattern: '^_|^e$|^error$',
+        caughtErrorsIgnorePattern: '^_'
+      }],
     },
   },
 
@@ -41,7 +45,11 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_|^e$|^error$' }],
+      'no-unused-vars': ['error', { 
+        varsIgnorePattern: '^[A-Z_]|^_', 
+        argsIgnorePattern: '^_|^e$|^error$',
+        caughtErrorsIgnorePattern: '^_'
+      }],
     },
   },
   // Config/build files and prisma seed script run in Node

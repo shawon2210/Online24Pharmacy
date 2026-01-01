@@ -4,10 +4,22 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en.json';
 import bn from './locales/bn.json';
 
+
 const resources = {
-  en: { translation: en },
-  bn: { translation: bn },
+  en: {
+    common: en,
+    prescriptionsPage: en.prescriptionsPage,
+    myPrescriptionsPage: en.myPrescriptionsPage,
+    // add other namespaces as needed
+  },
+  bn: {
+    common: bn,
+    prescriptionsPage: bn.prescriptionsPage,
+    myPrescriptionsPage: bn.myPrescriptionsPage,
+    // add other namespaces as needed
+  },
 };
+
 
 i18n
   .use(LanguageDetector)
@@ -15,6 +27,8 @@ i18n
   .init({
     resources,
     fallbackLng: 'en',
+    ns: ['common', 'prescriptionsPage', 'myPrescriptionsPage'],
+    defaultNS: 'common',
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator'],

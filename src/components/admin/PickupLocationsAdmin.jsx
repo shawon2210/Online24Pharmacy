@@ -14,6 +14,69 @@ const PickupLocationsAdmin = () => {
     open_hours: "",
     is_active: true,
   });
+  // Geocode job state
+  const [geocodeStatus, setGeocodeStatus] = useState(null);
+  const [geocodeLoading, setGeocodeLoading] = useState(false);
+  const [geocodeError, setGeocodeError] = useState("");
+  const [geocodeSuccess, setGeocodeSuccess] = useState("");
+  // Fetch geocode job status
+  const fetchGeocodeStatus = async () => {
+    setGeocodeError("");
+    try {
+      const token = localStorage.getItem("auth_token");
+      if (!token) return;
+      const res = await fetch("/api/admin/pickup-locations/geocode-status", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setGeocodeStatus(data);
+      } else {
+        setGeocodeError("Failed to fetch geocode job status");
+      }
+    } catch (_e) {
+      setGeocodeError("Failed to fetch geocode job status");
+    }
+  };
+
+  // Start geocode job
+  const handleStartGeocodeJob = async () => {
+    setGeocodeLoading(true);
+    setGeocodeError("");
+    setGeocodeSuccess("");
+    try {
+      const token = localStorage.getItem("auth_token");
+      if (!token) throw new Error("No admin token");
+      const res = await fetch("/api/admin/pickup-locations/start-geocode-job", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({}),
+      });
+      if (res.ok) {
+        setGeocodeSuccess("Geocode job started.");
+        fetchGeocodeStatus();
+      } else {
+        const err = await res.text();
+        setGeocodeError("Failed to start geocode job: " + err);
+      }
+    } catch (_e) {
+      setGeocodeError("Failed to start geocode job");
+    } finally {
+      setGeocodeLoading(false);
+    }
+  };
+
+  // Poll geocode status every 5s when job is running
+  useEffect(() => {
+    fetchGeocodeStatus();
+    const interval = setInterval(() => {
+      fetchGeocodeStatus();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     fetchLocations();
@@ -155,9 +218,76 @@ const PickupLocationsAdmin = () => {
   return (
     <div className="p-4 sm:p-6 max-w-full overflow-x-hidden">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-          Pickup Locations Management
-        </h2>
+        <div className="flex flex-col gap-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+            Pickup Locations Management
+          </h2>
+          <div className="mt-2 flex flex-col gap-1">
+            <div className="flex flex-row gap-2 items-center">
+              <button
+                onClick={handleStartGeocodeJob}
+                disabled={geocodeLoading}
+                className={`bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                  geocodeLoading ? "opacity-60 cursor-not-allowed" : ""
+                }`}
+              >
+                {geocodeLoading ? "Starting..." : "Start Geocode Job"}
+              </button>
+              <button
+                onClick={fetchGeocodeStatus}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-2 py-1 rounded text-xs font-medium"
+              >
+                Refresh Status
+              </button>
+            </div>
+            {geocodeError && (
+              <div className="text-red-600 text-xs">{geocodeError}</div>
+            )}
+            {geocodeSuccess && (
+              <div className="text-green-600 text-xs">{geocodeSuccess}</div>
+            )}
+            <div className="text-xs mt-1">
+              <b>Geocode Job Status:</b>{" "}
+              {geocodeStatus ? (
+                <span>
+                  {geocodeStatus.running ? (
+                    <span className="text-blue-700 font-semibold">Running</span>
+                  ) : (
+                    <span className="text-gray-700">Idle</span>
+                  )}
+                  {geocodeStatus.lastRun && (
+                    <span className="ml-2 text-gray-500">
+                      Last: {geocodeStatus.lastRun.status} (
+                      {geocodeStatus.lastRun.updatedAt
+                        ? new Date(
+                            geocodeStatus.lastRun.updatedAt
+                          ).toLocaleString()
+                        : ""}
+                      )
+                    </span>
+                  )}
+                  {typeof geocodeStatus.pending === "number" && (
+                    <span className="ml-2 text-gray-500">
+                      Pending: {geocodeStatus.pending}
+                    </span>
+                  )}
+                  {typeof geocodeStatus.completed === "number" && (
+                    <span className="ml-2 text-gray-500">
+                      Completed: {geocodeStatus.completed}
+                    </span>
+                  )}
+                  {geocodeStatus.error && (
+                    <span className="ml-2 text-red-600">
+                      Error: {geocodeStatus.error}
+                    </span>
+                  )}
+                </span>
+              ) : (
+                <span className="text-gray-400">Loading...</span>
+              )}
+            </div>
+          </div>
+        </div>
         <button
           onClick={() => setShowForm(true)}
           className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"

@@ -62,6 +62,7 @@ model User {
   sessions      Session[]
   notifications Notification[]
   auditLogs     AuditLog[]
+  adminLogs     AdminLog[]
 
   @@index([email])
   @@index([phone])
@@ -86,6 +87,24 @@ model Session {
   @@index([token])
   @@index([expiresAt])
   @@map("sessions")
+}
+
+model AdminLog {
+  id          String   @id @default(cuid())
+  adminId     String   @db.Uuid
+  action      String   // e.g., "UPDATE_PRODUCT", "REJECT_PRESCRIPTION"
+  targetType  String?  // e.g., "Product", "Prescription"
+  targetId    String?
+  details     Json?    // JSON object for rich details
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id], onDelete: NoAction)
+
+  @@index([adminId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("admin_logs")
 }
 
 model AuditLog {
@@ -209,13 +228,35 @@ model PickupLocation {
     id        String    @id @default(cuid())
     name      String    @unique
     address   String
-    lat       Float
-    lng       Float
+    lat       Float?
+    lng       Float?
     open_hours String
     is_active Boolean   @default(true)
     inventory Inventory[]
 
     @@map("pickup_locations")
+}
+
+enum GeocodeStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+model GeocodeCache {
+  id          String        @id @default(cuid())
+  query       String        @unique
+  lat         Float?
+  lng         Float?
+  provider    String?
+  status      GeocodeStatus @default(PENDING)
+  attempts    Int           @default(0)
+  lastAttempt DateTime?
+  error       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("geocode_cache")
 }
 
 model Inventory {

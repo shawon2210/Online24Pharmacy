@@ -6,7 +6,7 @@ import HeroButton from "../components/common/HeroButton";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 export default function SmartPrescriptionRecorderPage() {
-  const { t } = useTranslation();
+  const { t: _t } = useTranslation();
   const navigate = useNavigate();
   const [headerOffset, setHeaderOffset] = useState(0);
 
@@ -127,7 +127,10 @@ export default function SmartPrescriptionRecorderPage() {
                     <ArrowRightIcon className="w-5 h-5 transition-transform duration-300" />
                   </HeroButton>
 
-                  <HeroButton onClick={handleViewPrescriptions} variant="outline">
+                  <HeroButton
+                    onClick={handleViewPrescriptions}
+                    variant="outline"
+                  >
                     <span>📋 View My Prescriptions</span>
                   </HeroButton>
 

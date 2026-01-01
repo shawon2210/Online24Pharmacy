@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import twilio from 'twilio';
 
 // Email transporter
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
@@ -11,7 +11,9 @@ const transporter = nodemailer.createTransporter({
 });
 
 // SMS client (using Twilio for demo - replace with local SMS service)
-const smsClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+const smsClient = process.env.TWILIO_SID && process.env.TWILIO_TOKEN 
+  ? twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN)
+  : null;
 
 export const sendOrderConfirmationEmail = async (user, order) => {
   const mailOptions = {
@@ -39,6 +41,11 @@ export const sendOrderConfirmationEmail = async (user, order) => {
 };
 
 export const sendOrderStatusSMS = async (phone, orderNumber, status) => {
+  if (!smsClient) {
+    console.warn('SMS client not configured - skipping SMS notification');
+    return;
+  }
+
   const messages = {
     confirmed: `Your order ${orderNumber} has been confirmed and is being processed. Track: online24pharmacy.com/orders`,
     processing: `Your order ${orderNumber} is being prepared for shipment.`,

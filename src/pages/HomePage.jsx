@@ -62,13 +62,6 @@ const CATEGORIES = [
 
 const CategoryCard = memo(({ category }) => {
   const { t } = useTranslation();
-  const tf = (key, fallback) => {
-    try {
-      const res = t(key);
-      if (res && res !== key) return res;
-    } catch (e) {}
-    return typeof fallback !== "undefined" ? fallback : key;
-  };
   return (
     <Link
       to={category.link}
@@ -109,6 +102,16 @@ const LazySection = memo(({ children }) => {
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const tf = (key, fallback) => {
+    try {
+      const res = t(key);
+      if (res && res !== key) return res;
+    } catch (_e) {
+      // Translation key not found, use fallback
+    }
+    return typeof fallback !== "undefined" ? fallback : key;
+  };
+
   const { data: products, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {

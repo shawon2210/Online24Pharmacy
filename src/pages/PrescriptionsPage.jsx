@@ -87,7 +87,7 @@ export default function PrescriptionsPage() {
       !formData.doctorName ||
       !formData.prescriptionDate
     ) {
-      toast.error(t("prescriptionsPage.errors.fillRequiredFields"));
+      toast.error(t("errors.fillRequiredFields"));
       return;
     }
     setIsSubmitting(true);
@@ -105,9 +105,9 @@ export default function PrescriptionsPage() {
         prescriptionDate: "",
       });
       setFiles([]);
-      toast.success(t("prescriptionsPage.success.uploaded"));
-    } catch (error) {
-      toast.error(t("prescriptionsPage.errors.submitFailed"));
+      toast.success(t("success.uploaded"));
+    } catch (_error) {
+      toast.error(t("errors.submitFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -280,33 +280,33 @@ export default function PrescriptionsPage() {
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-4">
           <nav className="mb-3" aria-label="Breadcrumb">
-            <ol className="flex items-center gap-1 text-sm text-gray-500">
+            <ol className="flex flex-wrap items-center gap-1 text-xs sm:text-sm md:text-base text-gray-500">
               <li>
                 <a href="/" className="hover:text-emerald-600 font-medium">
                   {t("home")}
                 </a>
               </li>
               <li className="px-1 text-gray-400">/</li>
-              <li className="text-gray-900 font-bold">
-                {t("prescriptionsPage.uploadPrescription")}
+              <li className="text-gray-900 font-bold break-words max-w-xs sm:max-w-sm md:max-w-md">
+                {t("uploadPrescription")}
               </li>
             </ol>
           </nav>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
-                {t("prescriptionsPage.uploadPrescription")}
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1 break-words max-w-xs sm:max-w-sm md:max-w-md">
+                {t("uploadPrescription")}
               </h1>
-              <p className="text-sm sm:text-base text-gray-600">
-                {t("prescriptionsPage.uploadDescription")}
+              <p className="text-sm sm:text-base md:text-lg text-gray-600">
+                {t("uploadDescription")}
               </p>
             </div>
             <a
               href="/my-prescriptions"
-              className="bg-gray-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors"
+              className="bg-gray-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors text-sm sm:text-base md:text-lg"
             >
-              📋 {t("prescriptionsPage.myPrescriptions")}
+              📋 {t("myPrescriptions")}
             </a>
           </div>
         </div>
@@ -320,8 +320,8 @@ export default function PrescriptionsPage() {
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-emerald-50 to-cyan-50 px-6 lg:px-8 py-6 border-b border-gray-200">
               <div className="text-center">
-                <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                  {t("prescriptionsPage.formIntro")}
+                <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                  {t("formIntro")}
                 </p>
               </div>
             </div>
@@ -334,14 +334,14 @@ export default function PrescriptionsPage() {
                       <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
                         <span className="text-white text-lg">👤</span>
                       </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-900">
-                        {t("prescriptionsPage.patientInfo")}
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">
+                        {t("patientInfo")}
                       </h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
-                          {t("prescriptionsPage.patientName")}
+                        <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700">
+                          {t("patientName")}
                         </label>
                         <input
                           type="text"
@@ -350,14 +350,12 @@ export default function PrescriptionsPage() {
                           value={formData.patientName}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder={t(
-                            "prescriptionsPage.patientNamePlaceholder"
-                          )}
+                          placeholder={t("patientNamePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
-                          {t("prescriptionsPage.patientAge")}
+                        <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700">
+                          {t("patientAge")}
                         </label>
                         <input
                           type="number"
@@ -368,12 +366,12 @@ export default function PrescriptionsPage() {
                           value={formData.patientAge}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder={t("prescriptionsPage.agePlaceholder")}
+                          placeholder={t("agePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
-                          {t("prescriptionsPage.patientPhone")}
+                        <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700">
+                          {t("patientPhone")}
                         </label>
                         <input
                           type="tel"
@@ -382,12 +380,12 @@ export default function PrescriptionsPage() {
                           value={formData.patientPhone}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder={t("prescriptionsPage.phonePlaceholder")}
+                          placeholder={t("phonePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
-                          {t("prescriptionsPage.patientAddress")}
+                        <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700">
+                          {t("patientAddress")}
                         </label>
                         <input
                           type="text"
@@ -396,9 +394,7 @@ export default function PrescriptionsPage() {
                           value={formData.patientAddress}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder-gray-400"
-                          placeholder={t(
-                            "prescriptionsPage.addressPlaceholder"
-                          )}
+                          placeholder={t("addressPlaceholder")}
                         />
                       </div>
                     </div>
@@ -409,14 +405,14 @@ export default function PrescriptionsPage() {
                       <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                         <span className="text-white text-lg">👨⚕️</span>
                       </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-900">
-                        {t("prescriptionsPage.doctorInfo")}
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">
+                        {t("doctorInfo")}
                       </h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
-                          {t("prescriptionsPage.doctorName")}
+                        <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700">
+                          {t("doctorName")}
                         </label>
                         <input
                           type="text"
@@ -425,14 +421,12 @@ export default function PrescriptionsPage() {
                           value={formData.doctorName}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
-                          placeholder={t(
-                            "prescriptionsPage.doctorNamePlaceholder"
-                          )}
+                          placeholder={t("doctorNamePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
-                          {t("prescriptionsPage.hospitalClinic")}
+                        <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700">
+                          {t("hospitalClinic")}
                         </label>
                         <input
                           type="text"
@@ -440,14 +434,12 @@ export default function PrescriptionsPage() {
                           value={formData.hospitalClinic}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
-                          placeholder={t(
-                            "prescriptionsPage.hospitalPlaceholder"
-                          )}
+                          placeholder={t("hospitalPlaceholder")}
                         />
                       </div>
                       <div className="sm:col-span-2 space-y-2">
-                        <label className="block text-sm sm:text-base font-semibold text-gray-700">
-                          {t("prescriptionsPage.prescriptionDate")}
+                        <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700">
+                          {t("prescriptionDate")}
                         </label>
                         <input
                           type="date"
@@ -468,8 +460,8 @@ export default function PrescriptionsPage() {
                       <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
                         <span className="text-white text-lg">📎</span>
                       </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-900">
-                        {t("prescriptionsPage.prescriptionFiles")}
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">
+                        {t("prescriptionFiles")}
                       </h3>
                     </div>
                     <div
@@ -486,10 +478,10 @@ export default function PrescriptionsPage() {
                       <div className="flex flex-col items-center">
                         <CloudArrowUpIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mb-4" />
                         <p className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                          {t("prescriptionsPage.dragAndDrop")}
+                          {t("dragAndDrop")}
                         </p>
                         <p className="text-xs sm:text-sm text-gray-600 mb-6">
-                          {t("prescriptionsPage.orClickToBrowse")}
+                          {t("orClickToBrowse")}
                         </p>
                         <input
                           type="file"
@@ -505,21 +497,21 @@ export default function PrescriptionsPage() {
                         >
                           <span>📁</span>
                           <span className="whitespace-normal text-sm sm:text-base">
-                            {t("prescriptionsPage.chooseFiles")}
+                            {t("chooseFiles")}
                           </span>
                         </label>
                         <div className="mt-4 flex flex-wrap gap-4 text-xs sm:text-sm text-gray-500">
                           <span className="flex items-center gap-1">
                             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                            {t("prescriptionsPage.fileTypes")}
+                            {t("fileTypes")}
                           </span>
                           <span className="flex items-center gap-1">
                             <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                            {t("prescriptionsPage.maxSizeEach")}
+                            {t("maxSizeEach")}
                           </span>
                           <span className="flex items-center gap-1">
                             <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                            {t("prescriptionsPage.multipleFilesAllowed")}
+                            {t("multipleFilesAllowed")}
                           </span>
                         </div>
                       </div>
@@ -532,8 +524,7 @@ export default function PrescriptionsPage() {
                             ✓
                           </span>
                           <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
-                            {t("prescriptionsPage.uploadedFiles")} (
-                            {files.length})
+                            {t("uploadedFiles")} ({files.length})
                           </h4>
                         </div>
                         <div className="space-y-3">
@@ -585,14 +576,14 @@ export default function PrescriptionsPage() {
                     <span className="flex items-center justify-center gap-3">
                       <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       <span className="text-sm sm:text-base">
-                        {t("prescriptionsPage.uploading")}
+                        {t("uploading")}
                       </span>
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-3">
                       <span>🚀</span>
                       <span className="text-sm sm:text-base">
-                        {t("prescriptionsPage.submitPrescription")}
+                        {t("submitPrescription")}
                       </span>
                     </span>
                   )}
@@ -600,19 +591,19 @@ export default function PrescriptionsPage() {
 
                 <div className="mt-4 text-center">
                   <p className="text-xs sm:text-sm text-gray-500">
-                    {t("prescriptionsPage.bySubmitting")}
+                    {t("bySubmitting")}
                     <a
                       href="/terms"
                       className="text-emerald-600 hover:underline"
                     >
-                      {t("prescriptionsPage.termsOfService")}
+                      {t("termsOfService")}
                     </a>{" "}
-                    {t("prescriptionsPage.and")}{" "}
+                    {t("and")}{" "}
                     <a
                       href="/privacy"
                       className="text-emerald-600 hover:underline"
                     >
-                      {t("prescriptionsPage.privacyPolicy")}
+                      {t("privacyPolicy")}
                     </a>
                   </p>
                 </div>

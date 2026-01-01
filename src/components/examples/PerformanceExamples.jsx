@@ -1,18 +1,32 @@
-import { memo, useState, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import usePagination from '../../hooks/usePagination';
-import useDebounce from '../../hooks/useDebounce';
-import Pagination from '../common/Pagination';
-import OptimizedImage from '../common/OptimizedImage';
-import SearchBar from '../common/SearchBar';
+/* eslint-disable react-hooks/set-state-in-effect */
+import { memo, useState, useCallback, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import usePagination from "../../hooks/usePagination";
+import useDebounce from "../../hooks/useDebounce";
+import Pagination from "../common/Pagination";
+import OptimizedImage from "../common/OptimizedImage";
+import SearchBar from "../common/SearchBar";
 
 /**
  * Example 1: Paginated List
  */
-  const [items] = useState(Array.from({ length: 100 }, (_, i) => ({ id: i, name: `Item ${i}` })));
-  const { page, limit, totalPages, setTotal, nextPage, prevPage, goToPage, hasNext, hasPrev } = usePagination(1, 10);
+export function PaginatedListExample() {
+  const [items] = useState(
+    Array.from({ length: 100 }, (_, i) => ({ id: i, name: `Item ${i}` }))
+  );
+  const {
+    page,
+    limit,
+    totalPages,
+    setTotal,
+    _nextPage,
+    _prevPage,
+    goToPage,
+    hasNext,
+    hasPrev,
+  } = usePagination(1, 10);
   const { t } = useTranslation();
-  React.useEffect(() => {
+  useEffect(() => {
     setTotal(items.length);
   }, [items.length, setTotal]);
   const currentItems = useMemo(() => {
@@ -21,9 +35,12 @@ import SearchBar from '../common/SearchBar';
   }, [items, page, limit]);
   return (
     <div>
-      <h2>{t('paginatedList', 'Paginated List')} ({items.length} {t('items', 'items')})</h2>
+      <h2>
+        {t("paginatedList", "Paginated List")} ({items.length}{" "}
+        {t("items", "items")})
+      </h2>
       <ul>
-        {currentItems.map(item => (
+        {currentItems.map((item) => (
           <li key={item.id}>{item.name}</li>
         ))}
       </ul>
@@ -41,20 +58,24 @@ import SearchBar from '../common/SearchBar';
 /**
  * Example 2: Debounced Search
  */
-  const [query, setQuery] = useState('');
+export function DebouncedSearchExample() {
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const debouncedQuery = useDebounce(query, 500);
   const { t } = useTranslation();
-  React.useEffect(() => {
+  useEffect(() => {
     if (debouncedQuery) {
       // Simulate API call
-      console.log(t('searchingFor', 'Searching for:'), debouncedQuery);
-      setResults([`${t('resultFor', 'Result for')} "${debouncedQuery}"`]);
+      console.log(t("searchingFor", "Searching for:"), debouncedQuery);
+      setResults([`${t("resultFor", "Result for")} "${debouncedQuery}"`]);
     }
   }, [debouncedQuery, t]);
   return (
     <div>
-      <SearchBar onSearch={setQuery} placeholder={t('searchProducts', 'Search products...')} />
+      <SearchBar
+        onSearch={setQuery}
+        placeholder={t("searchProducts", "Search products...")}
+      />
       <ul>
         {results.map((result, i) => (
           <li key={i}>{result}</li>
@@ -70,8 +91,8 @@ import SearchBar from '../common/SearchBar';
 const ExpensiveComponent = memo(({ data }) => {
   // Expensive calculation
   const processedData = useMemo(() => {
-    console.log('Processing data...');
-    return data.map(item => item * 2);
+    console.log("Processing data...");
+    return data.map((item) => item * 2);
   }, [data]);
 
   return (
@@ -83,21 +104,21 @@ const ExpensiveComponent = memo(({ data }) => {
   );
 });
 
-ExpensiveComponent.displayName = 'ExpensiveComponent';
+ExpensiveComponent.displayName = "ExpensiveComponent";
 
 /**
  * Example 4: Optimized Images
  */
 export function OptimizedImagesExample() {
   const images = [
-    { id: 1, src: '/product1.jpg', alt: 'Product 1' },
-    { id: 2, src: '/product2.jpg', alt: 'Product 2' },
-    { id: 3, src: '/product3.jpg', alt: 'Product 3' }
+    { id: 1, src: "/product1.jpg", alt: "Product 1" },
+    { id: 2, src: "/product2.jpg", alt: "Product 2" },
+    { id: 3, src: "/product3.jpg", alt: "Product 3" },
   ];
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      {images.map(img => (
+      {images.map((img) => (
         <OptimizedImage
           key={img.id}
           src={img.src}
@@ -112,27 +133,30 @@ export function OptimizedImagesExample() {
 /**
  * Example 5: Callback Optimization
  */
+export function CallbackOptimizationExample() {
   const [count, setCount] = useState(0);
   const [items, setItems] = useState([]);
   const { t } = useTranslation();
   const handleAddItem = useCallback(() => {
-    setItems(prev => [...prev, `${t('item', 'Item')} ${prev.length + 1}`]);
+    setItems((prev) => [...prev, `${t("item", "Item")} ${prev.length + 1}`]);
   }, [t]);
   const handleIncrement = useCallback(() => {
-    setCount(c => c + 1);
+    setCount((c) => c + 1);
   }, []);
   return (
     <div>
-      <p>{t('count', 'Count')}: {count}</p>
-      <button onClick={handleIncrement}>{t('increment', 'Increment')}</button>
-      <button onClick={handleAddItem}>{t('addItem', 'Add Item')}</button>
+      <p>
+        {t("count", "Count")}: {count}
+      </p>
+      <button onClick={handleIncrement}>{t("increment", "Increment")}</button>
+      <button onClick={handleAddItem}>{t("addItem", "Add Item")}</button>
       <MemoizedList items={items} />
     </div>
   );
 }
 
 const MemoizedList = memo(({ items }) => {
-  console.log('MemoizedList rendered');
+  console.log("MemoizedList rendered");
   return (
     <ul>
       {items.map((item, i) => (
@@ -142,4 +166,4 @@ const MemoizedList = memo(({ items }) => {
   );
 });
 
-MemoizedList.displayName = 'MemoizedList';
+MemoizedList.displayName = "MemoizedList";

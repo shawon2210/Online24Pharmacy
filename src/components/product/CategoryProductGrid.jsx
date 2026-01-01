@@ -13,7 +13,9 @@ export default function CategoryProductGrid({
     try {
       const res = t(key);
       if (res && res !== key) return res;
-    } catch (e) {}
+    } catch (_e) {
+      // Translation key not found, use fallback
+    }
     return typeof fallback !== "undefined" ? fallback : key;
   };
   if (isLoading) {
