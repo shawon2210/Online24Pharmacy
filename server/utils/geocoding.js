@@ -113,11 +113,30 @@ export async function batchGeocodeMissing(prisma, options = {}) {
   const { limit = 20, delayMs = 1000 } = options;
   const result = { updated: 0, failed: 0, total: 0, details: [] };
 
+  // Optimized query: Check count first to avoid unnecessary processing
+  const missingCount = await prisma.pickupLocation.count({
+    where: {
+      OR: [{ lat: null }, { lng: null }]
+    }
+  });
+
+  // Early return if nothing to do
+  if (missingCount === 0) {
+    return result;
+  }
+
   const locations = await prisma.pickupLocation.findMany({
     where: {
       OR: [{ lat: null }, { lng: null }]
     },
-    take: limit
+    take: limit,
+    select: {
+      id: true,
+      name: true,
+      address: true,
+      lat: true,
+      lng: true
+    }
   });
 
   for (const loc of locations) {

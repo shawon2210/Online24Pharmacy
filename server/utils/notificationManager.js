@@ -4,7 +4,7 @@
 // Role-based, DGDA-compliant notification system
 // ============================================
 
-import { prisma } from '../db/prisma.js';
+import prisma from '../db/prisma.js';
 import { getDhakaTimestamp } from './auditLogger.js';
 
 // ============================================
@@ -64,14 +64,14 @@ const notificationTemplates = {
   
   [NotificationType.PRESCRIPTION_APPROVED]: {
     title: '📋 Prescription Approved',
-    getMessage: (data) => `Your prescription has been approved! You can now proceed with your order.`,
+    getMessage: (_data) => `Your prescription has been approved! You can now proceed with your order.`,
     actionUrl: (data) => `/orders/${data.orderId || ''}`,
   },
   
   [NotificationType.PRESCRIPTION_REJECTED]: {
     title: '⚠️ Prescription Rejected',
     getMessage: (data) => `Your prescription was rejected. Reason: ${data.reason || 'Please upload a valid prescription'}. Upload again.`,
-    actionUrl: (data) => `/upload-prescription`,
+    actionUrl: (_data) => `/upload-prescription`,
   },
   
   [NotificationType.PRODUCT_BACK_IN_STOCK]: {
@@ -95,7 +95,7 @@ const notificationTemplates = {
   [NotificationType.PRESCRIPTION_EXPIRING]: {
     title: '⏰ Prescription Expiring Soon',
     getMessage: (data) => `Your prescription expires on ${data.expiryDate}. Upload a new one soon!`,
-    actionUrl: (data) => `/upload-prescription`,
+    actionUrl: (_data) => `/upload-prescription`,
   },
   
   // Admin notifications
@@ -132,7 +132,7 @@ const notificationTemplates = {
   [NotificationType.INVENTORY_ISSUE]: {
     title: '🚨 Inventory Issue',
     getMessage: (data) => `${data.issue} - Please review: ${data.details}`,
-    actionUrl: (data) => `/admin/products`,
+    actionUrl: (_data) => `/admin/products`,
   },
 };
 

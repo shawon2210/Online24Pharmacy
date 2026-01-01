@@ -4,13 +4,6 @@
  */
 
 import prisma from '../../db/prisma.js';
-import {
-  validateProductIntegrity,
-  updateProductStock,
-  validateOrderPrescriptionRequirement,
-  validateCategoryDeletion,
-  transitionOrderStatus,
-} from '../../db/integrityMiddleware.js';
 
 /**
  * Test: No orphan products (all products must have active categories)

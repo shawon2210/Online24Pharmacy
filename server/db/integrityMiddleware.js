@@ -13,7 +13,7 @@
 
 import prisma from './prisma.js';
 import { EventEmitter } from 'events';
-import { logProductAudit, logStockMovement } from './auditLogger.js';
+import { logProductAudit, logStockMovement } from '../utils/auditLogger.js';
 
 export const integrityEvents = new EventEmitter();
 

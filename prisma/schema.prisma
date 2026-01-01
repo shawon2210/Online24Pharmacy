@@ -234,6 +234,7 @@ model PickupLocation {
     is_active Boolean   @default(true)
     inventory Inventory[]
 
+    @@index([lat, lng])
     @@map("pickup_locations")
 }
 

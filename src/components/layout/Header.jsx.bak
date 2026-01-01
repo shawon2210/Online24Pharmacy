@@ -510,12 +510,12 @@ export default function Header() {
 
       {/* Navigation */}
       <nav
-        className={`hidden lg:block w-full bg-gradient-to-r from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b-2 border-gray-200 dark:border-gray-700 shadow-md relative z-40 transition-transform duration-200 ease-out ${
+        className={`hidden lg:block w-full bg-gradient-to-r from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b-2 border-gray-200 dark:border-gray-700 shadow-md sticky z-40 transition-transform duration-200 ease-out ${
           isNavVisible
             ? "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0 pointer-events-none"
         }`}
-        style={{ marginTop: headerHeight ? `${headerHeight}px` : "72px" }}
+        style={{ top: headerHeight ? `${headerHeight}px` : "72px" }}
       >
         <div className="w-full px-6 xl:px-8">
           <div className="flex items-center gap-2 h-14 max-w-[1920px] mx-auto">

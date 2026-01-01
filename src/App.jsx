@@ -72,8 +72,8 @@ function App() {
           <AIChatbot />
           <Routes>
             {/* Guest Routes */}
-            <Route path="/login" element={<RequireGuest><Layout><LoginPage /></Layout></RequireGuest>} />
-            <Route path="/signup" element={<RequireGuest><Layout><SignupPage /></Layout></RequireGuest>} />
+            <Route path="/login" element={<RequireGuest><LoginPage /></RequireGuest>} />
+            <Route path="/signup" element={<RequireGuest><SignupPage /></RequireGuest>} />
 
             {/* Admin Routes */}
             <Route 

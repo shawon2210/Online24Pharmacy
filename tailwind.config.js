@@ -60,6 +60,8 @@ export default {
         soft: '0 8px 24px rgba(16, 185, 129, 0.12)',
         elevated: '0 16px 40px rgba(16, 185, 129, 0.18)',
         glass: '0 10px 30px rgba(17, 24, 39, 0.35)',
+        'dark-xl': '0 20px 50px rgba(0, 0, 0, 0.5)',
+        'dark-2xl': '0 25px 60px rgba(0, 0, 0, 0.7)',
       },
       borderRadius: {
         xl: '1rem',

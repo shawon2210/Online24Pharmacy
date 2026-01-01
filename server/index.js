@@ -20,6 +20,7 @@ import usersRoutes from './routes/users.js';
 import chatbotRoutes from './routes/chatbot.js';
 import savedKitsRoutes from './routes/savedKits.js';
 import pickupRoutes from './routes/pickup.js';
+import notificationRoutes from './routes/notifications.js';
 
 dotenv.config();
 
@@ -61,6 +62,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/kits', savedKitsRoutes);
 app.use('/api', pickupRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

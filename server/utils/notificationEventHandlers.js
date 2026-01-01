@@ -5,7 +5,6 @@
 // ============================================
 
 import { eCommerceEventEmitter } from '../events/commerceEventEmitter.js';
-import { integrityEvents } from '../db/integrityMiddleware.js';
 import {
   createNotification,
   createBulkNotifications,

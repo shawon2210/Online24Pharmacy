@@ -7,9 +7,21 @@ cron.schedule('*/30 * * * *', async () => {
   console.log('[geocode cron] Starting geocode batch job...');
   try {
     const result = await startJob(prisma, { limit: 20, delayMs: 1000 });
-    console.log('[geocode cron] Result:', result);
+    
+    if (result.started && result.result?.result) {
+      const { updated, failed, total } = result.result.result;
+      if (total === 0) {
+        console.log('[geocode cron] ✅ No locations need geocoding. All locations have coordinates.');
+      } else if (updated > 0) {
+        console.log(`[geocode cron] ✅ Successfully geocoded ${updated}/${total} locations.`);
+      } else if (failed > 0) {
+        console.warn(`[geocode cron] ⚠️ Failed to geocode ${failed}/${total} locations.`);
+      }
+    } else if (!result.started) {
+      console.log(`[geocode cron] ⏭️ Skipped: ${result.reason}`);
+    }
   } catch (err) {
-    console.error('[geocode cron] Error running job:', err);
+    console.error('[geocode cron] ❌ Error running job:', err.message);
   }
 });
 

@@ -4,14 +4,13 @@
 // Real-time unread count updates
 // ============================================
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Bell, X } from "lucide-react";
 import { NotificationPanel } from "./NotificationPanel";
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   // ============================================
   // FETCH UNREAD COUNT
@@ -47,7 +46,7 @@ export function NotificationBell() {
           setUnreadCount(data.unreadCount);
         });
 
-        window.socket.on("notification", (notification) => {
+        window.socket.on("notification", (_notification) => {
           // Update unread count when new notification arrives
           fetchUnreadCount();
         });
@@ -67,6 +66,11 @@ export function NotificationBell() {
 
     return cleanup;
   }, []);
+
+  const handleNotificationRead = useCallback(() => {
+    fetchUnreadCount();
+  }, []);
+
 
   // ============================================
   // HANDLE PANEL CLOSE
@@ -108,7 +112,7 @@ export function NotificationBell() {
         <div className="absolute right-0 mt-2 w-96 max-w-full z-50">
           <NotificationPanel
             onClose={handleClose}
-            onNotificationRead={fetchUnreadCount}
+            onNotificationRead={handleNotificationRead}
           />
         </div>
       )}

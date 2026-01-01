@@ -32,14 +32,11 @@ const prismaClientSingleton = () => {
     // Logging configuration for development
     log: process.env.NODE_ENV === 'development' 
       ? [
-          { emit: 'stdout', level: 'query' },
-          { emit: 'stdout', level: 'info' },
           { emit: 'stdout', level: 'warn' },
           { emit: 'stdout', level: 'error' }
         ]
       : [
-          { emit: 'stdout', level: 'error' },
-          { emit: 'stdout', level: 'warn' }
+          { emit: 'stdout', level: 'error' }
         ],
     
     // Error formatting
@@ -83,9 +80,12 @@ if (process.env.NODE_ENV === 'development') {
     const result = await next(params);
     const after = Date.now();
     
-    if (after - before > 100) {
+    // Higher threshold for batch operations and complex queries
+    const threshold = params.action === 'findMany' ? 200 : 100;
+    
+    if (after - before > threshold) {
       console.warn(
-        `[SLOW QUERY] ${params.model}.${params.action} took ${after - before}ms`
+        `[SLOW QUERY] ${params.model}.${params.action} took ${after - before}ms (threshold: ${threshold}ms)`
       );
     }
     

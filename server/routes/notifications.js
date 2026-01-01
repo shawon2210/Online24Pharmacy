@@ -6,7 +6,6 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
 import {
-  createNotification,
   getUserNotifications,
   markNotificationAsRead,
   markAllNotificationsAsRead,

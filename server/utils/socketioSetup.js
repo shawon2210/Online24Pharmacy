@@ -6,9 +6,7 @@
 import { Server } from 'socket.io';
 import { notificationEmitter } from '../utils/notificationEmitter.js';
 import {
-  createNotification,
   getUnreadCount,
-  getUnreadCountByType,
 } from '../utils/notificationManager.js';
 import { prisma } from '../db/prisma.js';
 
