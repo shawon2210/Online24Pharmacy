@@ -1,9 +1,16 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 
 const prismaClientSingleton = () => {
+  const connectionString = process.env.DATABASE_URL;
+  const pool = new pg.Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
+  
   return new PrismaClient({
+    adapter,
     log: process.env.NODE_ENV === 'development' 
-      ? ['query', 'error', 'warn'] 
+      ? ['error', 'warn'] 
       : ['error'],
     errorFormat: 'minimal',
   });
@@ -15,23 +22,7 @@ const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-// Middleware to exclude password from queries
-prisma.$use(async (params, next) => {
-  const result = await next(params);
-  
-  if (params.model === 'User') {
-    if (Array.isArray(result)) {
-      return result.map(user => {
-        const { passwordHash: _passwordHash, ...userWithoutPassword } = user;
-        return userWithoutPassword;
-      });
-    } else if (result && typeof result === 'object') {
-      const { passwordHash: _passwordHash, ...userWithoutPassword } = result;
-      return userWithoutPassword;
-    }
-  }
-  
-  return result;
-});
+// Note: Middleware ($use) is not supported with PrismaPg adapter
+// Use explicit select statements to exclude passwordHash from queries
 
 export default prisma;

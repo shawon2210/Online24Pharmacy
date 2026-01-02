@@ -26,10 +26,16 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 
 const prismaClientSingleton = () => {
+  const connectionString = process.env.DATABASE_URL;
+  const pool = new pg.Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
+  
   return new PrismaClient({
-    // Logging configuration for development
+    adapter,
     log: process.env.NODE_ENV === 'development' 
       ? [
           { emit: 'stdout', level: 'warn' },
@@ -38,8 +44,6 @@ const prismaClientSingleton = () => {
       : [
           { emit: 'stdout', level: 'error' }
         ],
-    
-    // Error formatting
     errorFormat: 'pretty',
   });
 };
@@ -73,41 +77,8 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
  * ============================================
  */
 
-// Log slow queries in development
-if (process.env.NODE_ENV === 'development') {
-  prisma.$use(async (params, next) => {
-    const before = Date.now();
-    const result = await next(params);
-    const after = Date.now();
-    
-    // Higher threshold for batch operations and complex queries
-    const threshold = params.action === 'findMany' ? 200 : 100;
-    
-    if (after - before > threshold) {
-      console.warn(
-        `[SLOW QUERY] ${params.model}.${params.action} took ${after - before}ms (threshold: ${threshold}ms)`
-      );
-    }
-    
-    return result;
-  });
-}
-
-// Security middleware: Never return password fields unless explicitly selected
-prisma.$use(async (params, next) => {
-  // If querying User and password is being selected, log warning in development
-  if (
-    params.model === 'User' &&
-    (params.action === 'findUnique' || params.action === 'findMany') &&
-    !params.args.select
-  ) {
-    console.warn(
-      `[SECURITY WARNING] User query without explicit field selection. This will return passwordHash!`
-    );
-  }
-  
-  return next(params);
-});
+// Note: Middleware ($use) is not supported with PrismaPg adapter
+// Use application-level logging instead
 
 /**
  * ============================================

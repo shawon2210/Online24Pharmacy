@@ -77,7 +77,6 @@ export default function Header() {
 
   // Always show nav when route changes to avoid hidden state on new pages
   useEffect(() => {
-    setIsNavVisible(true);
     lastScrollYRef.current = window.scrollY;
   }, [location.pathname]);
 
@@ -123,7 +122,7 @@ export default function Header() {
       window.removeEventListener("scroll", handleNavVisibility);
       window.removeEventListener("orientationchange", handleNavVisibility);
     };
-  }, []);
+  }, [location.pathname]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -212,7 +211,7 @@ export default function Header() {
         </div>
 
         {/* Main Header */}
-        <div className="w-full px-6 xl:px-8 py-3">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between gap-4 max-w-[1920px] mx-auto">
             {/* Logo */}
             <Link
@@ -493,15 +492,15 @@ export default function Header() {
           </div>
 
           {/* Mobile Search */}
-          <form onSubmit={handleSearch} className="md:hidden mt-2">
+          <form onSubmit={handleSearch} className="md:hidden mt-3">
             <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-emerald-600/70 z-10" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-100/70 z-10" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t("search")}
-                className="w-full h-7 pl-7 pr-2 rounded-lg bg-white/20 backdrop-blur-md border border-white/30 text-white text-[11px] font-medium focus:outline-none focus:bg-white/30 focus:border-white/50 placeholder:text-white/70 transition-all shadow-sm"
+                className="w-full h-10 pl-9 pr-4 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-sm font-medium focus:outline-none focus:bg-white/30 focus:border-white/50 placeholder:text-white/80 transition-all shadow-sm"
               />
             </div>
           </form>
@@ -517,8 +516,8 @@ export default function Header() {
         }`}
         style={{ marginTop: headerHeight ? `${headerHeight}px` : "72px" }}
       >
-        <div className="w-full px-6 xl:px-8">
-          <div className="flex items-center gap-2 h-14 max-w-[1920px] mx-auto">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-1 h-14 max-w-[1920px] mx-auto">
             <Link
               to="/"
               className="relative px-5 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-300 hover:scale-105 group"
