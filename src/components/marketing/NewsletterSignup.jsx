@@ -60,13 +60,13 @@ export default function NewsletterSignup() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+          className="flex-1 px-3 py-2 border border-border rounded-md text-sm"
           required
         />
         <button
           type="submit"
           disabled={subscribeMutation.isPending}
-          className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:opacity-50 text-sm"
+          className="px-4 py-2 bg-emerald-600 text-background rounded-md hover:bg-emerald-700 disabled:opacity-50 text-sm"
         >
           {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
         </button>
@@ -78,7 +78,7 @@ export default function NewsletterSignup() {
         </p>
       )}
 
-      <div className="mt-3 text-xs text-gray-600">
+      <div className="mt-3 text-xs text-muted-foreground">
         <p>✓ Weekly health tips</p>
         <p>✓ Exclusive discounts</p>
         <p>✓ Medicine reminders</p>

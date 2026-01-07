@@ -10,12 +10,12 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+      <div className="bg-background rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-800 text-2xl"
+            className="text-background0 hover:text-foreground text-2xl"
           >
             &times;
           </button>
@@ -28,7 +28,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 const Button = ({ children, onClick, className = "", ...props }) => (
   <button
     onClick={onClick}
-    className={`px-4 py-2 rounded-md font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition disabled:bg-gray-400 ${className}`}
+    className={`px-4 py-2 rounded-md font-semibold text-background bg-emerald-600 hover:bg-emerald-700 transition disabled:bg-muted-foreground ${className}`}
     {...props}
   >
     {children}
@@ -63,10 +63,18 @@ const fetchOrders = ({ queryKey }) => {
     .get(`${API_URL}/api/admin/orders?${params.toString()}`)
     .then((res) => res.data);
 };
-const fetchOrderDetails = (orderId) =>
-  axios.get(`${API_URL}/api/admin/orders/${orderId}`).then((res) => res.data);
-const updateOrderStatus = ({ id, status }) =>
-  axios.put(`${API_URL}/api/admin/orders/${id}/status`, { status });
+const fetchOrderDetails = (orderId) => {
+  if (!orderId || typeof orderId !== 'string') throw new Error('Invalid order ID');
+  return axios.get(`${API_URL}/api/admin/orders/${encodeURIComponent(orderId)}`).then((res) => res.data);
+};
+const updateOrderStatus = ({ id, status }) => {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  const headers = {};
+  if (csrfToken) {
+    headers['X-CSRF-Token'] = csrfToken;
+  }
+  return axios.put(`${API_URL}/api/admin/orders/${id}/status`, { status }, { headers });
+};
 
 const OrderStatusBadge = ({ status }) => {
   const statusClasses = {
@@ -76,12 +84,12 @@ const OrderStatusBadge = ({ status }) => {
     SHIPPED: "bg-purple-100 text-purple-800",
     DELIVERED: "bg-green-100 text-green-800",
     CANCELLED: "bg-red-100 text-red-800",
-    REFUNDED: "bg-gray-100 text-gray-800",
+    REFUNDED: "bg-muted text-foreground",
   };
   return (
     <span
       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-        statusClasses[status] || "bg-gray-100"
+        statusClasses[status] || "bg-muted"
       }`}
     >
       {status}
@@ -166,7 +174,7 @@ const OrderDetailModal = ({ orderId, onClose }) => {
             </p>
           </div>
         </div>
-        <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+        <div className="space-y-4 bg-background p-4 rounded-lg">
           <div>
             <h3 className="font-bold text-lg">Customer Details</h3>
             <p>
@@ -188,7 +196,7 @@ const OrderDetailModal = ({ orderId, onClose }) => {
               Status: <OrderStatusBadge status={order.status} />
             </h3>
             <select
-              className="mt-2 w-full rounded-md border-gray-300"
+              className="mt-2 w-full rounded-md border-border"
               onChange={(e) =>
                 updateStatusMutation({ id: order.id, status: e.target.value })
               }
@@ -248,7 +256,7 @@ const AdminOrdersPage = () => {
         <div className="flex items-center gap-4">
           <div className="relative">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               size={20}
             />
             <input
@@ -274,32 +282,32 @@ const AdminOrdersPage = () => {
         </div>
       </div>
 
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="bg-background shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-background">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Order #
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Customer
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Total
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-right text-xs font-medium text-background0 uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-background divide-y divide-gray-200">
               {isLoading ? (
                 <tr>
                   <td colSpan="6" className="text-center py-4">
@@ -315,16 +323,16 @@ const AdminOrdersPage = () => {
               ) : (
                 data?.data.map((order) => (
                   <tr key={order.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                       {order.orderNumber}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                       {order.user.email}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                       ৳{parseFloat(order.totalAmount).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -345,7 +353,7 @@ const AdminOrdersPage = () => {
           </table>
         </div>
         <div className="p-4 flex justify-between items-center">
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-foreground">
             Page {data?.pagination.currentPage} of {data?.pagination.totalPages}
           </span>
           <div className="space-x-2">

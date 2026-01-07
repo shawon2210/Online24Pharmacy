@@ -52,9 +52,9 @@ export default defineConfig([
       }],
     },
   },
-  // Config/build files and prisma seed script run in Node
+  // Config/build files, test files, and prisma seed script run in Node
   {
-    files: ['prisma/**/*.js', 'tailwind.config.js', 'postcss.config.js'],
+    files: ['prisma/**/*.js', 'src/**/*.test.js', 'src/setupTests.js', 'tailwind.config.js', 'postcss.config.js'],
     extends: [js.configs.recommended],
     languageOptions: {
       ecmaVersion: 'latest',

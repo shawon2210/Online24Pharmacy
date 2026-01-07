@@ -8,7 +8,7 @@ export default function Badge({
   className = "",
 }) {
   const variants = {
-    default: "bg-gray-100 text-gray-800",
+    default: "bg-muted text-foreground",
     primary: "bg-emerald-100 text-emerald-800",
     success: "bg-green-100 text-green-800",
     warning: "bg-yellow-100 text-yellow-800",

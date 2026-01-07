@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 /**
  * Generic Icon component backed by lucide-react icons.
- * Usage: <Icon name="ShoppingCart" size={20} className="text-gray-600" />
+ * Usage: <Icon name="ShoppingCart" size={20} className="text-muted-foreground" />
  */
 const Icon = ({ name, size = 20, className = "", title, ...props }) => {
   const Component = Lucide[name];

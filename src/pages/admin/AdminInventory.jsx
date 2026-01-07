@@ -32,10 +32,10 @@ export default function AdminInventory() {
         description="Admin inventory — track stock levels and batches in Online24 Pharmacy."
         url="/admin/inventory"
       />
-      <div className="min-h-screen bg-gray-50 py-6 md:py-10">
+      <div className="min-h-screen bg-background py-6 md:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-foreground">
               {t("adminInventory.title")}
             </h1>
             <button
@@ -63,23 +63,23 @@ export default function AdminInventory() {
           )}
 
           {/* Inventory Table */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-background rounded-lg shadow-md overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-background">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Product
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Batch
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Stock
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Expiry
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Status
                   </th>
                 </tr>
@@ -88,20 +88,20 @@ export default function AdminInventory() {
                 {inventory?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-foreground">
                         {item.product.name}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-background0">
                         {item.product.sku}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                       {item.batchNumber}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                       {item.quantity}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                       {new Date(item.expiryDate).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

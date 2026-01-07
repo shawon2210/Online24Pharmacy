@@ -3,7 +3,7 @@ import FloatingSidebar from "./FloatingSidebar";
 
 export default function SiteLayout({ children }) {
   return (
-    <div className="antialiased bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="antialiased bg-background dark:bg-card min-h-screen">
       <Header />
       {/* Sidebar overlays on mobile, fixed on desktop */}
       <div className="relative flex">

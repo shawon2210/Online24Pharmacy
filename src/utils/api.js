@@ -36,6 +36,9 @@ export const fetchProduct = async (slug) => {
 };
 
 export const fetchProductReviews = async (productId) => {
+  if (!Number.isInteger(productId) || productId <= 0) {
+    throw new Error('Invalid productId');
+  }
   const response = await api.get(`/reviews/product/${productId}`);
   return response.data;
 };
@@ -61,6 +64,9 @@ export const fetchCart = async () => {
 };
 
 export const updateCartItem = async (itemId, quantity) => {
+  if (!Number.isInteger(itemId) || itemId <= 0) {
+    throw new Error('Invalid itemId');
+  }
   const response = await api.put(`/cart/update/${itemId}`, { quantity });
   return response.data;
 };
@@ -102,7 +108,9 @@ export const fetchAdminOrders = async () => {
 };
 
 export const fetchAdminPrescriptions = async (status) => {
-  const response = await api.get(`/admin/prescriptions${status ? `?status=${status}` : ''}`);
+  const validStatuses = ['pending', 'approved', 'rejected'];
+  const params = status && validStatuses.includes(status) ? { status } : {};
+  const response = await api.get('/admin/prescriptions', { params });
   return response.data;
 };
 
@@ -142,6 +150,9 @@ export const addSupplier = async (payload) => {
 };
 
 export const updateSupplier = async (payload) => {
+  if (!Number.isInteger(payload.id) || payload.id <= 0) {
+    throw new Error('Invalid supplier id');
+  }
   const response = await api.put(`/admin/suppliers/${payload.id}`, payload);
   return response.data;
 };

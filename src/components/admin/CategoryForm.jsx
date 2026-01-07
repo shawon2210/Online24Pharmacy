@@ -1,9 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
-
 export default function CategoryForm({ onSuccess }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,9 +33,11 @@ export default function CategoryForm({ onSuccess }) {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <h3 className="font-bold text-lg">Create Category</h3>
+      <label className="block mb-1">{t("categoryForm.name")}</label>
       <div>
-        <label className="block mb-1">Name</label>
+        <label className="block mb-1">
+          {t("adminCategories.name", "Name")}
+        </label>
         <input
           type="text"
           value={name}
@@ -44,7 +47,9 @@ export default function CategoryForm({ onSuccess }) {
         />
       </div>
       <div>
-        <label className="block mb-1">Description</label>
+        <label className="block mb-1">
+          {t("adminCategories.description", "Description")}
+        </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -53,7 +58,9 @@ export default function CategoryForm({ onSuccess }) {
       </div>
       {!!error && <div className="text-red-500">{error}</div>}
       <button type="submit" className="btn btn-primary" disabled={loading}>
-        {loading ? "Creating..." : "Create Category"}
+        {loading
+          ? t("adminCategories.creating", "Creating...")
+          : t("adminCategories.createCategory", "Create Category")}
       </button>
     </form>
   );

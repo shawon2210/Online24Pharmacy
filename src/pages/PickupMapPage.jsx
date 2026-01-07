@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import SEOHead from "../components/common/SEOHead";
+import { useTranslation } from "react-i18next";
 
 const PickupMapPage = () => {
+  const { t } = useTranslation();
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [mapReady, setMapReady] = useState(false);
@@ -37,16 +40,19 @@ const PickupMapPage = () => {
 
     const fetchShops = async () => {
       try {
-        const url = productId
-          ? `/api/pickup-locations?productId=${productId}`
-          : "/api/pickup-locations";
+        const params = new URLSearchParams();
+        if (productId && /^[a-zA-Z0-9_-]+$/.test(productId)) {
+          params.append("productId", productId);
+        }
+        const url = `/api/pickup-locations${
+          params.toString() ? "?" + params.toString() : ""
+        }`;
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error("Failed to load pickup locations");
         }
         const data = await response.json();
 
-        // Normalize coordinates and geocode if missing
         const normalized = await Promise.all(
           data.map(async (shop) => {
             let { lat, lng } = shop;
@@ -99,7 +105,6 @@ const PickupMapPage = () => {
         attributionControl: false,
       });
 
-      // Add controls for navigation and geolocation (better UX like Google Maps)
       map.current.addControl(new maplibregl.NavigationControl(), "top-right");
       map.current.addControl(
         new maplibregl.GeolocateControl({
@@ -134,7 +139,6 @@ const PickupMapPage = () => {
   useEffect(() => {
     if (!map.current || !mapReady) return;
 
-    // Clear existing markers
     Object.values(markers.current).forEach((m) => m.remove());
     markers.current = {};
 
@@ -143,7 +147,7 @@ const PickupMapPage = () => {
       el.className = `shop-marker w-8 h-8 rounded-full border-2 border-white shadow-lg cursor-pointer flex items-center justify-center transition-all duration-300 ${
         selectedShop?.id === shop.id
           ? "bg-red-500 scale-125 ring-4 ring-red-200"
-          : "bg-emerald-600 hover:bg-emerald-700 hover:scale-110"
+          : "bg-primary hover:opacity-90 hover:scale-110"
       }`;
       el.innerHTML = `<span class="text-white text-sm font-bold">🏥</span>`;
 
@@ -156,7 +160,6 @@ const PickupMapPage = () => {
       markers.current[shop.id] = marker;
     });
 
-    // Fit bounds to shops
     if (shops.length > 0) {
       const bounds = new maplibregl.LngLatBounds();
       shops.forEach((shop) => bounds.extend([shop.lng, shop.lat]));
@@ -172,7 +175,6 @@ const PickupMapPage = () => {
   useEffect(() => {
     if (!map.current || !mapReady || !selectedShop) return;
 
-    // remove any existing popups
     const existingPopups = document.querySelectorAll(".mapboxgl-popup");
     existingPopups.forEach((p) => p.remove());
 
@@ -186,8 +188,8 @@ const PickupMapPage = () => {
       .setLngLat([selectedShop.lng, selectedShop.lat])
       .setHTML(
         `<div class="p-2">
-          <h3 class="font-bold text-gray-900 text-sm">${selectedShop.name}</h3>
-          <p class="text-xs text-gray-600 mt-1">${selectedShop.address}</p>
+          <h3 class="font-bold text-foreground text-sm">${selectedShop.name}</h3>
+          <p class="text-xs text-muted-foreground mt-1">${selectedShop.address}</p>
         </div>`
       )
       .addTo(map.current);
@@ -205,10 +207,12 @@ const PickupMapPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent"></div>
-          <p className="mt-2 text-gray-600">Loading pickup locations...</p>
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="mt-4 text-muted-foreground font-medium">
+            {t("pickupMapPage.loading")}
+          </p>
         </div>
       </div>
     );
@@ -216,53 +220,95 @@ const PickupMapPage = () => {
 
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow">
-        <h2 className="text-xl font-bold text-red-600 mb-2">Oops!</h2>
-        <p className="text-gray-600">{error}</p>
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="bg-card rounded-2xl shadow-lg border-2 border-red-200 p-8 max-w-md text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-red-600 mb-2">
+            {t("pickupMapPage.error")}
+          </h2>
+          <p className="text-muted-foreground">{error}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
-          {productId ? "Pickup Locations" : "All Pharmacy Locations"}
-        </h1>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 relative h-[600px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
-            <div ref={mapContainer} className="w-full h-full" />
-          </div>
-          <div className="lg:col-span-1">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              {shops.length > 0 ? "Available Shops" : "No Shops Found"}
-            </h2>
-            <div className="space-y-4 max-h-[600px] overflow-y-auto">
-              {shops.map((shop) => (
-                <div
-                  key={shop.id}
-                  className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 ${
-                    selectedShop?.id === shop.id
-                      ? "border-emerald-500 bg-emerald-50 shadow-lg"
-                      : "border-gray-200 bg-white hover:border-emerald-300"
-                  }`}
-                  onClick={() => setSelectedShop(shop)}
-                >
-                  <h3 className="font-bold text-gray-900 text-base">
-                    {shop.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-1">{shop.address}</p>
-                  <div className="mt-2 flex items-center text-sm">
-                    <span className="text-gray-500">🕒</span>
-                    <span className="ml-1">{shop.hours}</span>
-                  </div>
-                </div>
-              ))}
+    <>
+      <SEOHead
+        title={t("pickupMapPage.seoTitle")}
+        description={t("pickupMapPage.seoDescription")}
+        url="/pickup-map"
+      />
+      <div className="sticky top-0 z-40 bg-card/95 backdrop-blur-md shadow-md border-b border-border">
+        <div className="container mx-auto px-4 py-4">
+          <nav className="mb-3" aria-label={t("breadcrumb")}>
+            <ol className="flex items-center gap-1 text-sm text-foreground">
+              <li>
+                <a href="/" className="hover:text-primary font-medium">
+                  {t("home")}
+                </a>
+              </li>
+              <li className="px-1 text-muted-foreground">/</li>
+              <li className="text-foreground font-bold" aria-current="page">
+                {t("pickupMapPage.title")}
+              </li>
+            </ol>
+          </nav>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-black text-primary mb-1">
+                {t("pickupMapPage.title")}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {t("pickupMapPage.description")}
+              </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 relative h-[600px] rounded-2xl overflow-hidden shadow-lg border-2 border-border hover:shadow-xl transition-shadow duration-300">
+              <div ref={mapContainer} className="w-full h-full" />
+            </div>
+            <div className="lg:col-span-1">
+              <h2 className="text-xl font-bold text-foreground mb-4">
+                {shops.length > 0
+                  ? t("pickupMapPage.availableShops")
+                  : t("pickupMapPage.noShops")}
+              </h2>
+              <div className="space-y-4 max-h-[600px] overflow-y-auto bg-card rounded-2xl shadow-lg border-2 border-border p-4">
+                {shops.map((shop) => (
+                  <div
+                    key={shop.id}
+                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                      selectedShop?.id === shop.id
+                        ? "border-primary bg-primary/10 shadow-lg"
+                        : "border-border bg-card hover:border-primary/50 hover:shadow-md"
+                    }`}
+                    onClick={() => setSelectedShop(shop)}
+                  >
+                    <h3 className="font-bold text-foreground text-base">
+                      {shop.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {shop.address}
+                    </p>
+                    <div className="mt-2 flex items-center text-sm text-foreground">
+                      <span className="text-lg">🕒</span>
+                      <span className="ml-2">{shop.hours}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

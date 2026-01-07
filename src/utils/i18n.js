@@ -271,8 +271,8 @@ i18n
             signUpLink: 'Sign Up',
             demoAccounts: {
               title: 'Test Accounts',
-              admin: 'Admin: admin@pharmacy.com / password123',
-              user: 'Customer: user@example.com / password123',
+              admin: 'Admin: [email] / [password]',
+              user: 'Customer: [email] / [password]',
             },
             leftPanel: {
               title: 'Online24 Pharmacy',
@@ -1899,8 +1899,8 @@ i18n
             lastName: 'শেষ নাম',
             email: 'ইমেইল ঠিকানা',
             phone: 'ফোন নম্বর',
-            password: 'পাসওয়ার্ড',
-            confirmPassword: 'পাসওয়ার্ড নিশ্চিত করুন',
+            password: 'পাসওয়ার্ড', // UI label only, not a credential
+            confirmPassword: 'পাসওয়ার্ড নিশ্চিত করুন', // UI label only, not a credential
             agreeTerms: 'আমি শর্তাবলীতে সম্মত',
             createAccount: 'অ্যাকাউন্ট তৈরি করুন',
             creating: 'অ্যাকাউন্ট তৈরি হচ্ছে...',

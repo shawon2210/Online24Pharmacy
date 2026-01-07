@@ -13,6 +13,8 @@ class ErrorBoundary extends React.Component {
       error: null,
       errorInfo: null
     };
+    this.handleReset = this.handleReset.bind(this);
+    this.handleReload = this.handleReload.bind(this);
   }
 
   static getDerivedStateFromError(error) {
@@ -36,28 +38,32 @@ class ErrorBoundary extends React.Component {
     }
   }
 
-  handleReset = () => {
+  handleReset() {
     this.setState({ 
       hasError: false, 
       error: null,
       errorInfo: null
     });
-  };
+  }
+
+  handleReload() {
+    window.location.reload();
+  }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-background px-4">
           <div className="max-w-md w-full text-center">
             <div className="mb-6">
               <span className="text-6xl">⚠️</span>
             </div>
             
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl font-bold text-foreground mb-4">
               Something went wrong
             </h1>
             
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               We're sorry for the inconvenience. Please try refreshing the page.
             </p>
             
@@ -75,7 +81,7 @@ class ErrorBoundary extends React.Component {
             
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
-                onClick={() => window.location.reload()}
+                onClick={this.handleReload}
                 className="btn-primary"
               >
                 Refresh Page

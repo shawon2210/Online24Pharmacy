@@ -19,10 +19,10 @@ export default function LanguageSwitcher() {
       }
       tabIndex={0}
     >
-      <span className="text-base font-bold text-white drop-shadow-lg select-none">
+      <span className="text-base font-bold text-background drop-shadow-lg select-none">
         {i18n.language === "en" ? t("englishShort") : t("banglaShort")}
       </span>
-      <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-gray-900/90 backdrop-blur-sm text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
+      <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-card/90 backdrop-blur-sm text-background text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
         {i18n.language === "en" ? t("viewInBangla") : t("viewInEnglish")}
       </span>
     </button>

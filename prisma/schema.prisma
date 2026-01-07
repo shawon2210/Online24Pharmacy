@@ -1,66 +1,40 @@
-// ============================================
-// Elite Database Setup for Online24-Pharmacy
-// PostgreSQL + Prisma ORM
-// ============================================
-// 
-// SECURITY FEATURES:
-// ✓ UUID primary keys for User model
-// ✓ Password fields never selected by default
-// ✓ Row-level security enforced via queries
-// ✓ Encrypted sensitive fields (implementation ready)
-// ✓ Audit logs for sensitive operations
-// ✓ Session management with token expiry
-//
-// COMPLIANCE FEATURES:
-// ✓ DGDA-compliant prescription handling
-// ✓ Product inventory tracking
-// ✓ User verification workflow
-// ✓ Audit trails for admin actions
-// ✓ Delivery zone management for Bangladesh
-// ============================================
-
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearchPostgres"]
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// ============================================
-// USERS & AUTHENTICATION
-// ============================================
-
 model User {
-  id           String    @id @default(uuid()) @db.Uuid
-  email        String    @unique
-  phone        String    @unique
-  passwordHash String    // Never select this field without explicit intention
-  firstName    String
-  lastName     String
-  role         Role      @default(USER)
-  dateOfBirth  DateTime?
-  gender       String?
-  isVerified   Boolean   @default(false)
-  isActive     Boolean   @default(true)
-  lastLoginAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  // Relations
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  phone         String         @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  role          Role           @default(USER)
+  dateOfBirth   DateTime?
+  gender        String?
+  isVerified    Boolean        @default(false)
+  isActive      Boolean        @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  addresses     Address[]
+  adminLogs     AdminLog[]
+  auditLogs     AuditLog[]
+  cartItems     CartItem[]
+  notifications Notification[]
   orders        Order[]
   prescriptions Prescription[]
-  cartItems     CartItem[]
-  addresses     Address[]
-  wishlistItems WishlistItem[]
   reviews       Review[]
   savedKits     SavedKit[]
   sessions      Session[]
-  notifications Notification[]
-  auditLogs     AuditLog[]
-  adminLogs     AdminLog[]
+  wishlistItems WishlistItem[]
 
   @@index([email])
   @@index([phone])
@@ -78,8 +52,7 @@ model Session {
   expiresAt    DateTime
   isRevoked    Boolean  @default(false)
   createdAt    DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([token])
@@ -88,16 +61,15 @@ model Session {
 }
 
 model AdminLog {
-  id          String   @id @default(cuid())
-  adminId     String   @db.Uuid
-  action      String   // e.g., "UPDATE_PRODUCT", "REJECT_PRESCRIPTION"
-  targetType  String?  // e.g., "Product", "Prescription"
-  targetId    String?
-  details     Json?    // JSON object for rich details
-  ipAddress   String?
-  createdAt   DateTime @default(now())
-
-  admin User @relation(fields: [adminId], references: [id], onDelete: NoAction)
+  id         String   @id @default(cuid())
+  adminId    String   @db.Uuid
+  action     String
+  targetType String?
+  targetId   String?
+  details    Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+  admin      User     @relation(fields: [adminId], references: [id], onDelete: NoAction)
 
   @@index([adminId])
   @@index([action])
@@ -106,17 +78,16 @@ model AdminLog {
 }
 
 model AuditLog {
-  id          String   @id @default(cuid())
-  userId      String   @db.Uuid
-  action      String   // e.g., "ORDER_PLACED", "PRESCRIPTION_UPLOADED"
-  targetType  String?  // e.g., "Order", "Prescription"
-  targetId    String?
-  details     String?  // JSON stringified
-  ipAddress   String?
-  userAgent   String?
-  createdAt   DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  userId     String   @db.Uuid
+  action     String
+  targetType String?
+  targetId   String?
+  details    String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([action])
@@ -124,41 +95,37 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// ============================================
-// PRODUCTS & INVENTORY
-// ============================================
-
 model Category {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String?  @unique
-  description String?
-  imageUrl    String?
-  isActive    Boolean  @default(true)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  subcategories Subcategory[]
+  id            String        @id @default(cuid())
+  name          String        @unique
+  slug          String?       @unique
+  description   String?
+  imageUrl      String?
+  icon          String?
+  color         String?
+  isActive      Boolean       @default(true)
+  sortOrder     Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   products      Product[]
+  subcategories Subcategory[]
 
   @@index([slug])
   @@map("categories")
 }
 
 model Subcategory {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   slug        String?
   description String?
-  isActive    Boolean  @default(true)
-  sortOrder   Int      @default(0)
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
   categoryId  String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  category Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  products Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@unique([name, categoryId])
   @@map("subcategories")
@@ -173,46 +140,33 @@ model Product {
   sku                  String?        @unique
   brand                String?
   manufacturer         String?
-  
-  // Pricing
   price                Float
   discountPrice        Float?
-  costPrice            Float?        // For inventory cost tracking
-  
-  // Pharmacy specifics
+  costPrice            Float?
   requiresPrescription Boolean        @default(false)
   isOTC                Boolean        @default(true)
-  strength             String?        // e.g., "500mg", "10 IU"
-  dosageForm           String?        // e.g., "Tablet", "Capsule", "Injection"
-  packSize             String?        // e.g., "10 tablets", "1 vial"
-  genericName          String?        // For generic drugs
-  
-  // Inventory
+  strength             String?
+  dosageForm           String?
+  packSize             String?
+  genericName          String?
   stockQuantity        Int            @default(0)
   minStockLevel        Int            @default(10)
   maxOrderQuantity     Int            @default(10)
-  
-  // Status & SEO
   isActive             Boolean        @default(true)
-  images               String?        // JSON array of URLs
+  images               String?
   seoTitle             String?
   seoDescription       String?
-  
-  // Category relations
   subcategoryId        String
   categoryId           String?
-  
   createdAt            DateTime       @default(now())
   updatedAt            DateTime       @updatedAt
-
-  // Relations
-  category             Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  subcategory          Subcategory    @relation(fields: [subcategoryId], references: [id])
-  orderItems           OrderItem[]
   cartItems            CartItem[]
-  wishlistItems        WishlistItem[]
-  reviews              Review[]
   inventoryRecords     Inventory[]
+  orderItems           OrderItem[]
+  category             Category?      @relation(fields: [categoryId], references: [id])
+  subcategory          Subcategory    @relation(fields: [subcategoryId], references: [id])
+  reviews              Review[]
+  wishlistItems        WishlistItem[]
 
   @@index([slug])
   @@index([sku])
@@ -223,23 +177,17 @@ model Product {
 }
 
 model PickupLocation {
-    id        String    @id @default(cuid())
-    name      String    @unique
-    address   String
-    lat       Float?
-    lng       Float?
-    open_hours String
-    is_active Boolean   @default(true)
-    inventory Inventory[]
+  id         String      @id @default(cuid())
+  name       String      @unique
+  address    String
+  lat        Float?
+  lng        Float?
+  open_hours String
+  is_active  Boolean     @default(true)
+  inventory  Inventory[]
 
-    @@index([lat, lng])
-    @@map("pickup_locations")
-}
-
-enum GeocodeStatus {
-  SUCCESS
-  FAILED
-  PENDING
+  @@index([lat, lng])
+  @@map("pickup_locations")
 }
 
 model GeocodeCache {
@@ -259,23 +207,21 @@ model GeocodeCache {
 }
 
 model Inventory {
-  id           String    @id @default(cuid())
-  productId    String
-  locationId   String
-  stock_quantity Int      @default(0)
-  updated_at     DateTime @updatedAt
-
-  product  Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
-  location PickupLocation @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  batchNumber  String?
-  expiryDate   DateTime?
-  quantity     Int
-  costPrice    Decimal?
-  supplierId   String?
-  receivedDate DateTime  @default(now())
-  createdAt    DateTime  @default(now())
-
-  supplier Supplier? @relation(fields: [supplierId], references: [id])
+  id             String         @id @default(cuid())
+  productId      String
+  locationId     String
+  stock_quantity Int            @default(0)
+  updated_at     DateTime       @updatedAt
+  batchNumber    String?
+  expiryDate     DateTime?
+  quantity       Int
+  costPrice      Decimal?
+  supplierId     String?
+  receivedDate   DateTime       @default(now())
+  createdAt      DateTime       @default(now())
+  location       PickupLocation @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  product        Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supplier       Supplier?      @relation(fields: [supplierId], references: [id])
 
   @@unique([productId, locationId])
   @@index([productId])
@@ -284,58 +230,44 @@ model Inventory {
 }
 
 model Supplier {
-  id             String      @id @default(cuid())
-  name           String
-  contactPerson  String?
-  email          String?
-  phone          String?
-  address        String?
-  registrationId String?     // DGDA registration if applicable
-  isActive       Boolean     @default(true)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-
+  id               String      @id @default(cuid())
+  name             String
+  contactPerson    String?
+  email            String?
+  phone            String?
+  address          String?
+  registrationId   String?
+  isActive         Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
   inventoryRecords Inventory[]
 
   @@map("suppliers")
 }
 
-// ============================================
-// ORDERS & TRANSACTIONS
-// ============================================
-
 model Order {
-  id              String    @id @default(cuid())
-  userId          String    @db.Uuid
-  orderNumber     String    @unique
-  status          OrderStatus @default(PENDING)
+  id              String          @id @default(cuid())
+  userId          String          @db.Uuid
+  orderNumber     String          @unique
+  status          OrderStatus     @default(PENDING)
   totalAmount     Decimal
-  discountAmount  Decimal   @default(0)
-  shippingCost    Decimal   @default(0)
-  
-  // Payment
-  paymentMethod   String?   // e.g., "COD", "BKASH", "CARD"
-  paymentStatus   PaymentStatus @default(PENDING)
-  paymentId       String?   // Gateway transaction ID
-  
-  // Prescription requirement
+  discountAmount  Decimal         @default(0)
+  shippingCost    Decimal         @default(0)
+  paymentMethod   String?
+  paymentStatus   PaymentStatus   @default(PENDING)
+  paymentId       String?
   prescriptionId  String?
-  
-  // Delivery
-  shippingAddress String    // JSON stringified Address
+  shippingAddress String
   billingAddress  String?
   deliveryZoneId  String?
   deliveryDate    DateTime?
-  
   notes           String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  // Relations
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  prescription    Prescription? @relation(fields: [prescriptionId], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   orderItems      OrderItem[]
   orderTracking   OrderTracking[]
+  prescription    Prescription?   @relation(fields: [prescriptionId], references: [id])
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([orderNumber])
@@ -352,9 +284,8 @@ model OrderItem {
   unitPrice  Decimal
   totalPrice Decimal
   createdAt  DateTime @default(now())
-
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@map("order_items")
@@ -363,67 +294,47 @@ model OrderItem {
 model OrderTracking {
   id          String   @id @default(cuid())
   orderId     String
-  status      String   // e.g., "Confirmed", "Processing", "Shipped"
-  location    String?  // Delivery location
-  description String?  // Status update message
+  status      String
+  location    String?
+  description String?
   createdAt   DateTime @default(now())
-
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
   @@index([createdAt])
   @@map("order_tracking")
 }
 
-// ============================================
-// PRESCRIPTIONS & DGDA COMPLIANCE
-// ============================================
-
 model Prescription {
   id                String             @id @default(cuid())
   referenceNumber   String             @unique
   userId            String             @db.Uuid
-  prescriptionImage String             // Cloudinary URL
-  
-  // Patient info
+  prescriptionImage String
   patientName       String?
   patientAge        Int?
   patientPhone      String?
   patientAddress    String?
-  
-  // Doctor info
   doctorName        String?
-  doctorLicense     String?            // Doctor license number for DGDA
+  doctorLicense     String?
   hospitalClinic    String?
-  
-  // Prescription details
   prescriptionDate  DateTime?
-  items             String?            // JSON array of prescribed items
+  items             String?
   status            PrescriptionStatus @default(PENDING)
-  expiresAt         DateTime?          // Prescription validity
+  expiresAt         DateTime?
   isReorderable     Boolean            @default(true)
-  
-  // Verification (DGDA compliance)
-  verifiedBy        String?            // Admin ID who verified
+  verifiedBy        String?
   verifiedAt        DateTime?
   adminNotes        String?
-  
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
-
-  // Relations
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orders Order[]
+  orders            Order[]
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([status])
   @@index([expiresAt])
   @@map("prescriptions")
 }
-
-// ============================================
-// SHOPPING FEATURES
-// ============================================
 
 model CartItem {
   id        String   @id @default(cuid())
@@ -432,9 +343,8 @@ model CartItem {
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
   @@map("cart_items")
@@ -445,9 +355,8 @@ model WishlistItem {
   userId    String   @db.Uuid
   productId String
   createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
   @@map("wishlist_items")
@@ -457,15 +366,14 @@ model Review {
   id         String   @id @default(cuid())
   userId     String   @db.Uuid
   productId  String
-  rating     Int      // 1-5
+  rating     Int
   comment    String?
   isVerified Boolean  @default(false)
   status     String   @default("pending")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
   @@index([productId])
@@ -477,60 +385,49 @@ model SavedKit {
   userId      String   @db.Uuid
   name        String
   description String?
-  products    String   // JSON array of product IDs
+  products    String
   totalPrice  Decimal? @default(0)
   isPublic    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("saved_kits")
 }
 
-// ============================================
-// USER PROFILE & ADDRESSES
-// ============================================
-
 model Address {
   id           String   @id @default(cuid())
   userId       String   @db.Uuid
-  type         String   @default("shipping") // shipping | billing
+  type         String   @default("shipping")
   name         String
   phone        String
   addressLine1 String
   addressLine2 String?
   city         String
-  area         String   // For Bangladesh (Dhaka division, etc.)
+  area         String
   postalCode   String?
-  latitude     Float?   // For location-based delivery
+  latitude     Float?
   longitude    Float?
   isDefault    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("addresses")
 }
 
-// ============================================
-// NOTIFICATIONS & MESSAGING
-// ============================================
-
 model Notification {
   id        String   @id @default(cuid())
   userId    String   @db.Uuid
-  type      String   // e.g., "ORDER_CONFIRMED", "PRESCRIPTION_APPROVED"
+  type      String
   title     String
   message   String
   isRead    Boolean  @default(false)
-  metadata  String?  // JSON for additional data
+  metadata  String?
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([isRead])
@@ -538,26 +435,22 @@ model Notification {
   @@map("notifications")
 }
 
-// ============================================
-// PROMOTIONS & DISCOUNTS
-// ============================================
-
 model Promotion {
-  id              String    @id @default(cuid())
-  code            String    @unique
-  title           String
-  description     String?
-  discountType    String    // "PERCENTAGE" | "FIXED"
-  discountValue   Decimal
-  minOrderAmount  Decimal?  @default(0)
-  maxDiscount     Decimal?
-  startDate       DateTime
-  endDate         DateTime
-  usageLimit      Int?      @default(0)
-  usageCount      Int       @default(0)
-  isActive        Boolean   @default(true)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String   @id @default(cuid())
+  code           String   @unique
+  title          String
+  description    String?
+  discountType   String
+  discountValue  Decimal
+  minOrderAmount Decimal? @default(0)
+  maxDiscount    Decimal?
+  startDate      DateTime
+  endDate        DateTime
+  usageLimit     Int?     @default(0)
+  usageCount     Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([code])
   @@index([isActive])
@@ -567,7 +460,7 @@ model Promotion {
 model Coupon {
   id             String    @id @default(cuid())
   code           String    @unique
-  discountType   String    // "PERCENTAGE" | "FIXED"
+  discountType   String
   discountValue  Decimal
   minOrderAmount Decimal?  @default(0)
   maxDiscount    Decimal?
@@ -583,60 +476,54 @@ model Coupon {
   @@map("coupons")
 }
 
-// ============================================
-// DELIVERY & LOGISTICS
-// ============================================
-
 model DeliveryZone {
-  id            String   @id @default(cuid())
-  name          String
-  city          String   // e.g., "Dhaka"
-  areas         String   // JSON array of area names
-  shippingCost  Decimal
-  deliveryTime  String?  // e.g., "1-2 days"
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  city         String
+  areas        String
+  shippingCost Decimal
+  deliveryTime String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([city])
   @@index([isActive])
   @@map("delivery_zones")
 }
 
-// ============================================
-// AI & SEARCH FEATURES
-// ============================================
-
 model ChatbotDocument {
-  id        String    @id @default(cuid())
-  docId     String    @unique
+  id        String   @id @default(cuid())
+  docId     String   @unique
   title     String
   source    String
-  category  String?   // e.g., "Product FAQ", "Prescription Help"
+  category  String?
   content   String
   url       String?
-  metadata  String?   // JSON
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  metadata  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([category])
   @@map("chatbot_documents")
 }
 
 model VectorEmbedding {
-  id        String    @id @default(cuid())
-  docId     String    @unique
-  vector    String?   // Vector representation (if storing locally)
+  id        String   @id @default(cuid())
+  docId     String   @unique
+  vector    String?
   metadata  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("vector_embeddings")
 }
 
-// ============================================
-// ENUMS
-// ============================================
+enum GeocodeStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
 
 enum Role {
   USER

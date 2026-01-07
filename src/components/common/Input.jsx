@@ -36,7 +36,7 @@ const Input = forwardRef(({
         <p className="mt-1 text-sm text-red-600">{error}</p>
       )}
       {helperText && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
+        <p className="mt-1 text-sm text-background0">{helperText}</p>
       )}
     </div>
   );

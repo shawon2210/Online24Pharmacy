@@ -35,7 +35,12 @@ const useCases = {
     "Medical Tape",
     "Pain Relievers",
   ],
-  "Diabetic Wound Kit": ["Gauze", "Antiseptic", "Saline Solution", "Bandages"],
+  "Diabetic Wound Kit": [
+    "Gauze",
+    "Antiseptic",
+    "Saline Solution",
+    "Bandages",
+  ],
   "First Aid for Home": [
     "Bandages",
     "Antiseptic Wipes",
@@ -58,19 +63,19 @@ const ProductItem = ({ product, onAdd }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-white p-3 rounded-lg shadow-sm flex justify-between items-center mb-2"
+      className="bg-card p-3 rounded-lg shadow-sm flex justify-between items-center mb-2 border border-border hover:shadow-md transition-shadow"
     >
       <div
         {...listeners}
         {...attributes}
         className="flex-1 cursor-move touch-none"
       >
-        <p className="font-semibold text-gray-800">{product.name}</p>
-        <p className="text-sm text-gray-500">${product.price.toFixed(2)}</p>
+        <p className="font-semibold text-foreground">{product.name}</p>
+        <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
       </div>
       <button
         onClick={() => onAdd(product)}
-        className="text-emerald-500 hover:text-emerald-700"
+        className="text-primary hover:opacity-80 transition-opacity"
       >
         <PlusIcon className="w-6 h-6" />
       </button>
@@ -80,14 +85,14 @@ const ProductItem = ({ product, onAdd }) => {
 
 const KitItem = ({ item, onRemove }) => {
   return (
-    <div className="bg-white p-3 rounded-lg shadow-sm flex justify-between items-center mb-2">
+    <div className="bg-card p-3 rounded-lg shadow-sm flex justify-between items-center mb-2 border border-border hover:shadow-md transition-shadow">
       <div>
-        <p className="font-semibold text-gray-800">{item.name}</p>
-        <p className="text-sm text-gray-500">${item.price.toFixed(2)}</p>
+        <p className="font-semibold text-foreground">{item.name}</p>
+        <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
       </div>
       <button
         onClick={() => onRemove(item.instanceId)}
-        className="text-red-500 hover:text-red-700"
+        className="text-red-600 hover:opacity-80 transition-opacity"
       >
         <TrashIcon className="w-5 h-5" />
       </button>
@@ -100,7 +105,7 @@ export default function CustomSurgicalKitBuilder() {
   const { user, token } = useAuth();
   const { addItem, clearCart } = useCartStore();
   const [kitItems, setKitItems] = useState([]);
-  const [kitName, setKitName] = useState(t('customKitBuilder.myCustomKit'));
+  const [kitName, setKitName] = useState(t("customKitBuilder.myCustomKit"));
   const [searchTerm, setSearchTerm] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
@@ -108,7 +113,7 @@ export default function CustomSurgicalKitBuilder() {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch(`${API_URL}/api/products`);
-      if (!response.ok) throw new Error(t('customKitBuilder.fetchProductsError'));
+      if (!response.ok) throw new Error(t("customKitBuilder.fetchProductsError"));
       const data = await response.json();
       return data.products || [];
     },
@@ -129,7 +134,7 @@ export default function CustomSurgicalKitBuilder() {
         { ...product, instanceId: `${product.id}-${Date.now()}` },
       ]);
     } else {
-      toast.error(t('customKitBuilder.itemAlreadyInKit'));
+      toast.error(t("customKitBuilder.itemAlreadyInKit"));
     }
   };
 
@@ -172,11 +177,11 @@ export default function CustomSurgicalKitBuilder() {
 
   const saveKit = async () => {
     if (!user) {
-      toast.error(t('customKitBuilder.loginToSave'));
+      toast.error(t("customKitBuilder.loginToSave"));
       return;
     }
     if (kitItems.length === 0) {
-      toast.error(t('customKitBuilder.kitEmpty'));
+      toast.error(t("customKitBuilder.kitEmpty"));
       return;
     }
 
@@ -194,35 +199,33 @@ export default function CustomSurgicalKitBuilder() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 201) {
-        toast.success(t('customKitBuilder.kitSaved'));
+        toast.success(t("customKitBuilder.kitSaved"));
       }
     } catch (error) {
-      toast.error(t('customKitBuilder.saveKitError'));
+      toast.error(t("customKitBuilder.saveKitError"));
       console.error(error);
     }
   };
 
   const shareKit = () => {
     if (kitItems.length === 0) {
-      toast.error(t('customKitBuilder.shareEmptyKitError'));
+      toast.error(t("customKitBuilder.shareEmptyKitError"));
       return;
     }
     const itemIds = kitItems.map((item) => item.id).join(",");
     const url = `${window.location.origin}/build-a-kit?items=${itemIds}`;
     navigator.clipboard.writeText(url);
-    toast.success(t('customKitBuilder.shareLinkCopied'));
+    toast.success(t("customKitBuilder.shareLinkCopied"));
   };
 
   const addKitToCart = () => {
     if (kitItems.length === 0) {
-      toast.error(t('customKitBuilder.addEmptyKitError'));
+      toast.error(t("customKitBuilder.addEmptyKitError"));
       return;
     }
 
-    // Clear cart first to remove any old custom kit items
     clearCart();
 
-    // Add each kit item individually to cart with proper product structure
     kitItems.forEach((item) => {
       const product = {
         id: item.id,
@@ -234,33 +237,35 @@ export default function CustomSurgicalKitBuilder() {
       addItem(product, 1);
     });
 
-    toast.success(t('customKitBuilder.kitAddedToCart', { kitName, count: kitItems.length }));
+    toast.success(
+      t("customKitBuilder.kitAddedToCart", { kitName, count: kitItems.length })
+    );
   };
 
   const { isOver, setNodeRef } = useDroppable({ id: "kit-drop-zone" });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+    <div className="min-h-screen bg-background">
       <SEOHead
-        title={t('customKitBuilder.seoTitle')}
-        description={t('customKitBuilder.seoDescription')}
+        title={t("customKitBuilder.seoTitle")}
+        description={t("customKitBuilder.seoDescription")}
         url="/build-kit"
       />
-      
+
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+      <div className="sticky top-0 z-40 bg-card/95 backdrop-blur-md shadow-md border-b border-border">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
-          <nav className="mb-3" aria-label={t('breadcrumb')}>
-            <ol className="flex items-center gap-1 text-sm text-gray-500">
+          <nav className="mb-3" aria-label={t("breadcrumb")}>
+            <ol className="flex items-center gap-1 text-sm text-foreground">
               <li>
-                <a href="/" className="hover:text-emerald-600 font-medium">
-                  {t('home')}
+                <a href="/" className="hover:text-primary font-medium">
+                  {t("home")}
                 </a>
               </li>
-              <li className="px-1 text-gray-400">/</li>
-              <li className="text-gray-900 font-bold" aria-current="page">
-                {t('customKitBuilder.title')}
+              <li className="px-1 text-muted-foreground">/</li>
+              <li className="text-foreground font-bold" aria-current="page">
+                {t("customKitBuilder.title")}
               </li>
             </ol>
           </nav>
@@ -268,16 +273,16 @@ export default function CustomSurgicalKitBuilder() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
-                {t('customKitBuilder.title')}
+              <h1 className="text-2xl md:text-3xl font-black text-primary mb-1">
+                {t("customKitBuilder.title")}
               </h1>
-              <p className="text-sm text-gray-600">
-                {t('customKitBuilder.subtitle')}
+              <p className="text-sm text-muted-foreground">
+                {t("customKitBuilder.subtitle")}
               </p>
             </div>
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-100 to-cyan-100 border-2 border-emerald-200 text-emerald-700 rounded-full text-sm font-bold">
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary/10 border-2 border-primary/30 text-primary rounded-full text-sm font-bold">
               <ShoppingBagIcon className="w-5 h-5" />
-              <span>{kitItems.length} {t('items')}</span>
+              <span>{kitItems.length} {t("items")}</span>
             </div>
           </div>
         </div>
@@ -285,21 +290,31 @@ export default function CustomSurgicalKitBuilder() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Templates Section */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        <div className="bg-card rounded-xl shadow-lg border border-border p-6 mb-6">
+          <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+            <svg
+              className="w-5 h-5 text-primary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
             </svg>
-            {t('customKitBuilder.quickStartTemplates')}
+            {t("customKitBuilder.quickStartTemplates")}
           </h2>
           <div className="flex flex-wrap gap-3">
             {Object.keys(useCases).map((useCase) => (
               <button
                 key={useCase}
                 onClick={() => selectUseCase(useCase)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-emerald-100 hover:text-emerald-700 transition-colors"
+                className="px-4 py-2 bg-muted text-foreground rounded-lg font-medium hover:bg-primary/10 hover:text-primary transition-colors border border-border"
               >
-                {t(`customKitBuilder.useCases.${useCase.replace(/\s+/g, '')}`)}
+                {t(`customKitBuilder.useCases.${useCase.replace(/\s+/g, "")}`)}
               </button>
             ))}
           </div>
@@ -312,27 +327,37 @@ export default function CustomSurgicalKitBuilder() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Available Items */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+              <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                  />
                 </svg>
-                {t('customKitBuilder.availableItems')}
+                {t("customKitBuilder.availableItems")}
               </h2>
               <div className="relative mb-4">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder={t('customKitBuilder.searchPlaceholder')}
+                  placeholder={t("customKitBuilder.searchPlaceholder")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                 />
               </div>
-              <div className="bg-gray-50 rounded-lg p-4 h-96 overflow-y-auto">
+              <div className="bg-muted rounded-lg p-4 h-96 overflow-y-auto border border-border">
                 {isLoading ? (
                   <div className="flex items-center justify-center h-full">
-                    <div className="w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                   </div>
                 ) : (
                   filteredProducts.map((product) => (
@@ -351,27 +376,29 @@ export default function CustomSurgicalKitBuilder() {
               ref={setNodeRef}
               className={`rounded-xl shadow-lg border-2 p-6 transition-all duration-300 ${
                 isOver
-                  ? "border-emerald-500 bg-emerald-50"
-                  : "border-gray-200 bg-white"
+                  ? "border-primary bg-primary/5"
+                  : "border-border bg-card"
               }`}
             >
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <ShoppingBagIcon className="w-5 h-5 text-emerald-600" />
-                  {t('customKitBuilder.yourCustomKit')}
+                <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  <ShoppingBagIcon className="w-5 h-5 text-primary" />
+                  {t("customKitBuilder.yourCustomKit")}
                 </h2>
                 {kitItems.length > 0 && (
                   <button
                     onClick={clearKit}
-                    className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                    className="text-sm font-medium text-red-600 hover:opacity-80 flex items-center gap-1 transition-opacity"
                   >
-                    <XMarkIcon className="w-4 h-4" /> {t('clearAll')}
+                    <XMarkIcon className="w-4 h-4" /> {t("clearAll")}
                   </button>
                 )}
               </div>
               <div
-                className={`rounded-lg p-4 h-96 overflow-y-auto transition-colors ${
-                  isDragging ? "bg-emerald-50/50" : "bg-gray-50"
+                className={`rounded-lg p-4 h-96 overflow-y-auto transition-colors border border-border ${
+                  isDragging
+                    ? "bg-primary/5"
+                    : "bg-muted"
                 }`}
               >
                 {kitItems.length > 0 ? (
@@ -383,11 +410,13 @@ export default function CustomSurgicalKitBuilder() {
                     />
                   ))
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-                    <ShoppingBagIcon className="w-16 h-16 text-gray-300 mb-4" />
-                    <p className="font-semibold">{t('customKitBuilder.kitEmpty')}</p>
+                  <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
+                    <ShoppingBagIcon className="w-16 h-16 text-muted mb-4" />
+                    <p className="font-semibold text-foreground">
+                      {t("customKitBuilder.kitEmpty")}
+                    </p>
                     <p className="text-sm">
-                      {t('customKitBuilder.dragAndDrop')}
+                      {t("customKitBuilder.dragAndDrop")}
                     </p>
                   </div>
                 )}
@@ -397,10 +426,10 @@ export default function CustomSurgicalKitBuilder() {
         </DndContext>
 
         {/* Finalize Kit Section */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mt-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <CheckCircleIcon className="w-5 h-5 text-green-600" />
-            {t('customKitBuilder.finalizeKit')}
+        <div className="bg-card rounded-xl shadow-lg border border-border p-6 mt-6">
+          <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+            <CheckCircleIcon className="w-5 h-5 text-primary" />
+            {t("customKitBuilder.finalizeKit")}
           </h2>
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
             <div className="flex-1">
@@ -408,20 +437,24 @@ export default function CustomSurgicalKitBuilder() {
                 type="text"
                 value={kitName}
                 onChange={(e) => setKitName(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
-                placeholder={t('customKitBuilder.kitNamePlaceholder')}
+                className="w-full border border-border rounded-lg p-3 bg-background text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                placeholder={t("customKitBuilder.kitNamePlaceholder")}
               />
             </div>
             <div className="flex items-center gap-6">
               <div className="text-center">
-                <p className="text-xs text-gray-500 font-medium">{t('items')}</p>
-                <p className="text-lg font-bold text-gray-900">
+                <p className="text-xs text-muted-foreground font-medium">
+                  {t("items")}
+                </p>
+                <p className="text-lg font-bold text-foreground">
                   {kitItems.length}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-xs text-gray-500 font-medium">{t('total')}</p>
-                <p className="text-lg font-bold text-emerald-600">
+                <p className="text-xs text-muted-foreground font-medium">
+                  {t("total")}
+                </p>
+                <p className="text-lg font-bold text-primary">
                   ${totalPrice.toFixed(2)}
                 </p>
               </div>
@@ -429,21 +462,21 @@ export default function CustomSurgicalKitBuilder() {
             <div className="flex gap-3">
               <button
                 onClick={addKitToCart}
-                className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center gap-2"
+                className="bg-primary hover:opacity-90 text-white px-6 py-3 rounded-lg font-semibold transition-opacity flex items-center gap-2 shadow-lg hover:shadow-xl"
               >
-                <ShoppingCartIcon className="w-5 h-5" /> {t('addToCart')}
+                <ShoppingCartIcon className="w-5 h-5" /> {t("addToCart")}
               </button>
               <button
                 onClick={saveKit}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
+                className="bg-blue-600 hover:opacity-90 text-white px-6 py-3 rounded-lg font-semibold transition-opacity flex items-center gap-2 shadow-lg hover:shadow-xl"
               >
-                <CheckCircleIcon className="w-5 h-5" /> {t('customKitBuilder.saveKit')}
+                <CheckCircleIcon className="w-5 h-5" /> {t("customKitBuilder.saveKit")}
               </button>
               <button
                 onClick={shareKit}
-                className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors flex items-center gap-2"
+                className="bg-muted-foreground hover:opacity-80 text-background px-6 py-3 rounded-lg font-semibold transition-opacity flex items-center gap-2 shadow-lg hover:shadow-xl"
               >
-                <ShareIcon className="w-5 h-5" /> {t('share')}
+                <ShareIcon className="w-5 h-5" /> {t("share")}
               </button>
             </div>
           </div>

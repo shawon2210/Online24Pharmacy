@@ -32,9 +32,9 @@ export default function PWAInstallButton() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
-      <div className="bg-gradient-to-r from-emerald-600 to-cyan-600 text-white p-4 rounded-lg shadow-lg max-w-sm">
+      <div className="bg-linear-to-r from-emerald-600 to-cyan-600 text-background p-4 rounded-lg shadow-lg max-w-sm">
         <div className="flex items-start space-x-3">
-          <ArrowDownTrayIcon className="w-6 h-6 flex-shrink-0 mt-1" />
+          <ArrowDownTrayIcon className="w-6 h-6 shrink-0 mt-1" />
           <div className="flex-1">
             <h4 className="font-semibold text-sm">Install App</h4>
             <p className="text-xs opacity-90 mt-1">
@@ -43,13 +43,13 @@ export default function PWAInstallButton() {
             <div className="flex space-x-2 mt-3">
               <button
                 onClick={handleInstall}
-                className="bg-gradient-to-r from-emerald-600 to-cyan-600 text-white px-3 py-1 rounded text-xs font-medium hover:from-emerald-700 hover:to-cyan-700 transition-all duration-300"
+                className="bg-linear-to-r from-emerald-600 to-cyan-600 text-background px-3 py-1 rounded text-xs font-medium hover:from-emerald-700 hover:to-cyan-700 transition-all duration-300"
               >
                 Install
               </button>
               <button
                 onClick={() => setShowInstall(false)}
-                className="text-white opacity-75 px-3 py-1 text-xs"
+                className="text-background opacity-75 px-3 py-1 text-xs"
               >
                 Later
               </button>

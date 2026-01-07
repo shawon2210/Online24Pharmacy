@@ -14,6 +14,7 @@ import {
   Package,
   FileText,
   Zap,
+  Bell,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,8 +33,10 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
   const fetchNotifications = async (pageNum = 0) => {
     try {
       setIsLoading(true);
+      const limit = 20;
+      const offset = Math.max(0, pageNum) * limit;
       const response = await fetch(
-        `/api/notifications?limit=20&offset=${pageNum * 20}`,
+        `/api/notifications?limit=${limit}&offset=${offset}`,
         { credentials: "include" }
       );
 
@@ -63,9 +66,11 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
   const handleMarkAsRead = async (notificationId, e) => {
     e.stopPropagation();
 
+    if (!notificationId || typeof notificationId !== "string") return;
+
     try {
       const response = await fetch(
-        `/api/notifications/${notificationId}/read`,
+        `/api/notifications/${encodeURIComponent(notificationId)}/read`,
         {
           method: "POST",
           credentials: "include",
@@ -122,11 +127,16 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
   const handleDelete = async (notificationId, e) => {
     e.stopPropagation();
 
+    if (!notificationId || typeof notificationId !== "string") return;
+
     try {
-      const response = await fetch(`/api/notifications/${notificationId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `/api/notifications/${encodeURIComponent(notificationId)}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to delete notification");
 
@@ -159,8 +169,12 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
       });
     }
 
-    // Navigate to action URL
-    if (actionUrl) {
+    // Validate and navigate to action URL (only relative paths)
+    if (
+      actionUrl &&
+      typeof actionUrl === "string" &&
+      actionUrl.startsWith("/")
+    ) {
       navigate(actionUrl);
       onClose();
     }
@@ -190,7 +204,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
   // ============================================
 
   const getNotificationColor = (type) => {
-    if (!type) return "bg-gray-50";
+    if (!type) return "bg-background";
 
     if (
       type.includes("ERROR") ||
@@ -213,7 +227,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
     if (type.includes("ORDER") || type.includes("SHIPPED"))
       return "bg-blue-50 border-l-4 border-blue-500";
 
-    return "bg-gray-50";
+    return "bg-background";
   };
 
   // ============================================
@@ -222,11 +236,11 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
 
   if (!isLoading && notifications.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full">
+      <div className="bg-background rounded-lg shadow-lg overflow-hidden w-full">
         <div className="p-6 text-center">
-          <Bell className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-          <p className="text-gray-500 text-sm">No notifications yet</p>
-          <p className="text-gray-400 text-xs mt-2">
+          <Bell className="w-12 h-12 mx-auto mb-4 text-muted" />
+          <p className="text-background0 text-sm">No notifications yet</p>
+          <p className="text-muted-foreground text-xs mt-2">
             We'll notify you when something important happens
           </p>
         </div>
@@ -239,14 +253,14 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
   // ============================================
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full max-h-96 flex flex-col">
+    <div className="bg-background rounded-lg shadow-lg overflow-hidden w-full max-h-96 flex flex-col">
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-4 py-3 flex justify-between items-center">
-        <h3 className="text-white font-semibold text-sm">Notifications</h3>
+      <div className="bg-primary px-4 py-3 flex justify-between items-center text-white">
+        <h3 className="font-semibold text-sm">Notifications</h3>
         {notifications.some((n) => !n.isRead) && (
           <button
             onClick={handleMarkAllAsRead}
-            className="text-white text-xs hover:bg-emerald-800 px-2 py-1 rounded transition-colors flex items-center gap-1"
+            className="text-white text-xs hover:bg-primary/80 px-2 py-1 rounded transition-colors flex items-center gap-1"
             title="Mark all as read"
           >
             <CheckCheck className="w-3 h-3" />
@@ -257,8 +271,8 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
 
       {/* Loading State */}
       {isLoading && notifications.length === 0 && (
-        <div className="p-4 text-center text-gray-500">
-          <div className="animate-spin w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto" />
+        <div className="p-4 text-center text-muted-foreground">
+          <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full mx-auto" />
         </div>
       )}
 
@@ -275,13 +289,13 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
           <div
             key={notification.id}
             onClick={() => handleNotificationClick(notification)}
-            className={`px-4 py-3 border-b cursor-pointer transition-colors hover:bg-gray-50 ${
-              notification.isRead ? "bg-gray-50" : "bg-white"
+            className={`px-4 py-3 border-b cursor-pointer transition-colors hover:bg-background ${
+              notification.isRead ? "bg-background" : "bg-background"
             } ${getNotificationColor(notification.type)}`}
           >
             <div className="flex justify-between items-start gap-3">
               {/* Icon */}
-              <div className="flex-shrink-0 mt-0.5 text-emerald-600">
+              <div className="shrink-0 mt-0.5 text-primary">
                 {getNotificationIcon(notification.type)}
               </div>
 
@@ -290,21 +304,23 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
                 <div className="flex items-start gap-2">
                   <p
                     className={`text-sm font-semibold ${
-                      notification.isRead ? "text-gray-600" : "text-gray-900"
+                      notification.isRead
+                        ? "text-muted-foreground"
+                        : "text-foreground"
                     }`}
                   >
                     {notification.title}
                   </p>
                   {!notification.isRead && (
-                    <span className="flex-shrink-0 w-2 h-2 bg-emerald-600 rounded-full mt-2" />
+                    <span className="shrink-0 w-2 h-2 bg-primary rounded-full mt-2" />
                   )}
                 </div>
 
-                <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                   {notification.message}
                 </p>
 
-                <time className="text-xs text-gray-400 mt-2 block">
+                <time className="text-xs text-muted-foreground mt-2 block">
                   {new Date(notification.createdAt).toLocaleDateString(
                     "en-US",
                     {
@@ -318,11 +334,11 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
               </div>
 
               {/* Actions */}
-              <div className="flex-shrink-0 flex gap-1">
+              <div className="shrink-0 flex gap-1">
                 {!notification.isRead && (
                   <button
                     onClick={(e) => handleMarkAsRead(notification.id, e)}
-                    className="p-1 text-gray-400 hover:text-emerald-600 transition-colors"
+                    className="p-1 text-muted-foreground hover:text-primary transition-colors"
                     title="Mark as read"
                   >
                     <Check className="w-4 h-4" />
@@ -330,7 +346,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
                 )}
                 <button
                   onClick={(e) => handleDelete(notification.id, e)}
-                  className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                  className="p-1 text-muted-foreground hover:text-red-600 transition-colors"
                   title="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -346,7 +362,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
         <div className="border-t px-4 py-2 text-center">
           <button
             onClick={() => fetchNotifications(page + 1)}
-            className="text-emerald-600 text-sm font-semibold hover:text-emerald-700 transition-colors"
+            className="text-primary text-sm font-semibold hover:text-primary/80 transition-colors"
           >
             Load more
           </button>
@@ -354,10 +370,10 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
       )}
 
       {/* Footer */}
-      <div className="bg-gray-50 px-4 py-2 text-center border-t">
+      <div className="bg-background px-4 py-2 text-center border-t">
         <a
           href="/notifications"
-          className="text-emerald-600 text-xs font-semibold hover:text-emerald-700 transition-colors"
+          className="text-primary text-xs font-semibold hover:text-primary/80 transition-colors"
         >
           View all notifications →
         </a>

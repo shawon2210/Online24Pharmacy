@@ -33,7 +33,7 @@ const STATUS_META = {
   },
   PENDING: {
     label: "myPrescriptionsPage.pending",
-    color: "bg-gray-100 text-gray-700 border-gray-200",
+    color: "bg-muted text-foreground border-border",
   },
   APPROVED: {
     label: "myPrescriptionsPage.active",
@@ -113,21 +113,21 @@ export default function MyPrescriptionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50/30 to-gray-50">
       <SEOHead title={t("myPrescriptionsPage.title")} />
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
           <nav className="mb-3" aria-label={t("breadcrumb")}>
-            <ol className="flex items-center gap-1 text-sm text-gray-500">
+            <ol className="flex items-center gap-1 text-sm text-background0">
               <li>
                 <a href="/" className="hover:text-emerald-600 font-medium">
                   {t("home")}
                 </a>
               </li>
-              <li className="px-1 text-gray-400">/</li>
-              <li className="text-gray-900 font-bold" aria-current="page">
+              <li className="px-1 text-muted-foreground">/</li>
+              <li className="text-foreground font-bold" aria-current="page">
                 {t("myPrescriptionsPage.title")}
               </li>
             </ol>
@@ -135,16 +135,16 @@ export default function MyPrescriptionsPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
+              <h1 className="text-2xl md:text-3xl font-black bg-linear-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
                 {t("myPrescriptionsPage.title")}
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 {t("myPrescriptionsPage.subtitle")}
               </p>
             </div>
             <button
               onClick={handleUpload}
-              className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
+              className="bg-emerald-600 text-background px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
             >
               <svg
                 className="w-4 h-4"
@@ -167,7 +167,7 @@ export default function MyPrescriptionsPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filter Tabs */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
+        <div className="bg-background rounded-xl shadow-lg border border-border p-6 mb-6">
           <div className="flex flex-wrap gap-2">
             {TABS.map((t) => (
               <button
@@ -175,8 +175,8 @@ export default function MyPrescriptionsPage() {
                 onClick={() => setTab(t.key)}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   tab === t.key
-                    ? "bg-emerald-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-emerald-600 text-background"
+                    : "bg-muted text-foreground hover:bg-border"
                 }`}
               >
                 {t(t.label)}
@@ -188,17 +188,17 @@ export default function MyPrescriptionsPage() {
         {/* Prescription Cards */}
         <div className="space-y-4">
           {filtered.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
-              <DocumentIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="bg-background rounded-xl shadow-lg border border-border p-12 text-center">
+              <DocumentIcon className="w-16 h-16 text-muted mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-foreground mb-2">
                 {t("myPrescriptionsPage.noPrescriptions")}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 {t("myPrescriptionsPage.uploadFirst")}
               </p>
               <button
                 onClick={handleUpload}
-                className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2 mx-auto"
+                className="bg-emerald-600 text-background px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2 mx-auto"
               >
                 <svg
                   className="w-5 h-5"
@@ -225,7 +225,7 @@ export default function MyPrescriptionsPage() {
               return (
                 <div
                   key={rx.id}
-                  className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all"
+                  className="bg-background border border-border rounded-xl p-6 hover:shadow-lg transition-all"
                 >
                   {/* Status Banner */}
                   {rx.derivedStatus === "EXPIRING" && (
@@ -269,10 +269,10 @@ export default function MyPrescriptionsPage() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold text-gray-900">
+                          <h3 className="text-lg font-bold text-foreground">
                             {rx.medicationName || t("prescription")}
                           </h3>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-muted-foreground">
                             {rx.doctorName && `Dr. ${rx.doctorName}`}
                           </p>
                         </div>
@@ -285,7 +285,7 @@ export default function MyPrescriptionsPage() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 text-sm mb-6">
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-muted-foreground">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -304,13 +304,13 @@ export default function MyPrescriptionsPage() {
                           {rx.prescriptionDate}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-muted-foreground">
                         <ClockIcon className="w-4 h-4" />
                         <span>
                           {t("myPrescriptionsPage.expires")} {rx.expiresAt}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-muted-foreground">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -330,7 +330,7 @@ export default function MyPrescriptionsPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="border-t border-gray-100 pt-4">
+                  <div className="border-t border-border pt-4">
                     {isPending(rx) ? (
                       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                         <div className="flex items-center gap-2 text-yellow-800">
@@ -344,7 +344,7 @@ export default function MyPrescriptionsPage() {
                       <div className="space-y-3">
                         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                           <div className="flex items-start gap-3">
-                            <ExclamationTriangleIcon className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                            <ExclamationTriangleIcon className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
                             <div>
                               <p className="font-semibold text-red-900 mb-1">
                                 {t("myPrescriptionsPage.complianceRequired")}
@@ -357,7 +357,7 @@ export default function MyPrescriptionsPage() {
                         </div>
                         <button
                           onClick={handleUpload}
-                          className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                          className="w-full bg-blue-600 text-background px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                         >
                           <svg
                             className="w-5 h-5"
@@ -388,7 +388,7 @@ export default function MyPrescriptionsPage() {
                         <div className="flex flex-col sm:flex-row gap-3">
                           <button
                             onClick={() => handleReorder(rx)}
-                            className="flex-1 bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 bg-emerald-600 text-background px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
                           >
                             <svg
                               className="w-5 h-5"
@@ -407,7 +407,7 @@ export default function MyPrescriptionsPage() {
                           </button>
                           <button
                             onClick={() => handleReminder(rx)}
-                            className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 bg-blue-600 text-background px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                           >
                             <svg
                               className="w-5 h-5"

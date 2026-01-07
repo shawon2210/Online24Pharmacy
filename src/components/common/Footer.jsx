@@ -40,11 +40,11 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+    <footer className="bg-background dark:bg-card border-t border-border dark:border-card">
       {/* Newsletter Section */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 py-10 px-2 sm:px-0">
+      <div className="bg-linear-to-br from-emerald-600 to-teal-600 py-8 sm:py-10 px-3 sm:px-4 md:px-0">
         <div className="max-w-3xl mx-auto">
-          <div className="rounded-2xl bg-white/90 dark:bg-gray-900/90 shadow-2xl px-6 sm:px-10 py-8 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-10 border border-emerald-100 dark:border-emerald-900/40 relative overflow-hidden">
+          <div className="rounded-2xl bg-white/90 dark:bg-card/90 shadow-2xl px-4 sm:px-6 md:px-10 py-6 sm:py-8 flex flex-col md:flex-row items-center md:items-end gap-4 sm:gap-6 md:gap-10 border border-emerald-100 dark:border-emerald-900/40 relative overflow-hidden">
             <div className="flex flex-col items-center md:items-start w-full md:w-2/3">
               <div className="flex items-center gap-3 mb-2">
                 <svg
@@ -71,14 +71,14 @@ export default function Footer() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <h3 className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 tracking-tight">
+                <h3 className="text-lg sm:text-xl font-extrabold text-emerald-700 dark:text-emerald-300 tracking-tight">
                   {t(
                     "footer.subscribeNewsletter",
                     "Subscribe to Our Newsletter"
                   )}
                 </h3>
               </div>
-              <p className="text-sm text-gray-700 dark:text-gray-200 mb-2 md:mb-0 text-center md:text-left max-w-md">
+              <p className="text-sm text-foreground dark:text-muted mb-2 md:mb-0 text-center md:text-left max-w-md">
                 {t(
                   "footer.newsletterDesc",
                   "Get exclusive deals, health tips, and updates delivered to your inbox. Join our community and stay informed!"
@@ -95,12 +95,12 @@ export default function Footer() {
                   "footer.emailPlaceholder",
                   "Enter your email address"
                 )}
-                className="flex-1 min-w-[180px] sm:w-64 px-4 py-3 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all"
+                className="flex-1 min-w-45 sm:w-64 px-4 py-3 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-background dark:bg-card text-foreground dark:text-background placeholder-gray-400 dark:placeholder-gray-500 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all"
                 required
               />
               <button
                 type="submit"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-base shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className="px-6 py-3 rounded-xl bg-linear-to-br from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-background font-bold text-base shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
               >
                 {t("footer.subscribe", "Subscribe")}
               </button>
@@ -112,18 +112,18 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="w-full px-4 sm:px-8 lg:px-16 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-16 xl:gap-20">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-10 sm:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12 xl:gap-16">
           {/* Brand Section */}
-          <div className="lg:col-span-2 flex flex-col h-full justify-between pb-6 lg:pb-0 border-b lg:border-b-0 border-gray-200 dark:border-gray-800">
+          <div className="lg:col-span-2 flex flex-col h-full justify-between pb-6 lg:pb-0 border-b lg:border-b-0 border-border dark:border-card">
             <Link to="/" className="inline-flex items-center gap-3 mb-5 group">
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                <span className="text-white text-2xl font-black tracking-tight drop-shadow">
+              <div className="w-12 h-12 bg-linear-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                <span className="text-background text-2xl font-black tracking-tight drop-shadow">
                   O24
                 </span>
               </div>
               <div>
-                <h2 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
+                <h2 className="text-xl font-extrabold text-foreground dark:text-background tracking-tight leading-tight">
                   {t("footer.brandName", "Online24 Pharmacy")}
                 </h2>
                 <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
@@ -131,7 +131,7 @@ export default function Footer() {
                 </p>
               </div>
             </Link>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-md leading-relaxed">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-6 max-w-md leading-relaxed">
               {t(
                 "footer.brandDesc",
                 "Your trusted online pharmacy providing quality medicines and healthcare products with fast delivery across Bangladesh."
@@ -149,15 +149,15 @@ export default function Footer() {
             </div>
 
             <div className="mt-8 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
                 <PhoneIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{t("footer.phone", "+880-1234-567890")}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
                 <EnvelopeIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{t("footer.email", "support@online24pharmacy.com")}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
                 <MapPinIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{t("footer.address", "Dhaka, Bangladesh")}</span>
               </div>
@@ -166,7 +166,7 @@ export default function Footer() {
 
           {/* Company Links */}
           <div className="flex flex-col gap-2">
-            <h3 className="text-base font-extrabold text-gray-900 dark:text-white mb-4 tracking-wide uppercase">
+            <h3 className="text-base font-extrabold text-foreground dark:text-background mb-4 tracking-wide uppercase">
               {t("footer.company", "Company")}
             </h3>
             <ul className="space-y-2">
@@ -174,7 +174,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors duration-200 pl-1"
+                    className="text-sm text-muted-foreground dark:text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors duration-200 pl-1"
                   >
                     {link.label}
                   </Link>
@@ -185,7 +185,7 @@ export default function Footer() {
 
           {/* Support Links */}
           <div className="flex flex-col gap-2">
-            <h3 className="text-base font-extrabold text-gray-900 dark:text-white mb-4 tracking-wide uppercase">
+            <h3 className="text-base font-extrabold text-foreground dark:text-background mb-4 tracking-wide uppercase">
               {t("footer.support", "Support")}
             </h3>
             <ul className="space-y-2">
@@ -193,7 +193,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors duration-200 pl-1"
+                    className="text-sm text-muted-foreground dark:text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors duration-200 pl-1"
                   >
                     {link.label}
                   </Link>
@@ -204,7 +204,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div className="flex flex-col gap-2">
-            <h3 className="text-base font-extrabold text-gray-900 dark:text-white mb-4 tracking-wide uppercase">
+            <h3 className="text-base font-extrabold text-foreground dark:text-background mb-4 tracking-wide uppercase">
               {t("footer.legal", "Legal")}
             </h3>
             <ul className="space-y-2">
@@ -212,7 +212,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors duration-200 pl-1"
+                    className="text-sm text-muted-foreground dark:text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors duration-200 pl-1"
                   >
                     {link.label}
                   </Link>
@@ -224,11 +224,11 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-gray-200 dark:border-gray-800">
-        <div className="w-full px-4 sm:px-8 lg:px-16 py-7">
+      <div className="border-t border-border dark:border-card">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-5 sm:py-7">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-4">
             {/* Copyright */}
-            <p className="text-sm text-gray-600 dark:text-gray-400 text-center md:text-left">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground text-center md:text-left">
               {t(
                 "footer.copyright",
                 "© {year} Online24 Pharmacy. All rights reserved.",
@@ -238,14 +238,14 @@ export default function Footer() {
 
             {/* Payment Methods */}
             <div className="flex flex-col items-center md:flex-row gap-2 md:gap-3">
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold tracking-wide">
+              <span className="text-xs text-background0 dark:text-muted-foreground font-semibold tracking-wide">
                 {t("footer.weAccept", "We Accept:")}
               </span>
               <div className="flex items-center gap-2">
                 {paymentMethods.map((method) => (
                   <span
                     key={method.name}
-                    className={`bg-gradient-to-r ${method.color} text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md tracking-wide`}
+                    className={`bg-linear-to-br ${method.color} text-background px-3 py-1.5 rounded-lg text-xs font-bold shadow-md tracking-wide`}
                   >
                     {method.name}
                   </span>
@@ -257,7 +257,7 @@ export default function Footer() {
             <div className="flex items-center gap-2 px-2 sm:px-4 md:px-8 lg:px-12 xl:px-16">
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-emerald-600 hover:text-white transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-background transition-colors"
                 aria-label="Facebook"
               >
                 <svg
@@ -270,7 +270,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-emerald-600 hover:text-white transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-background transition-colors"
                 aria-label="Twitter"
               >
                 <svg
@@ -283,7 +283,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-emerald-600 hover:text-white transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-background transition-colors"
                 aria-label="Instagram"
               >
                 <svg

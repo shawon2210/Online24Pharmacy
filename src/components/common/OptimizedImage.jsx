@@ -16,7 +16,7 @@ const OptimizedImage = memo(({
   return (
     <div className={`relative ${className}`}>
       {!loaded && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded" />
+        <div className="absolute inset-0 bg-border animate-pulse rounded" />
       )}
       <img
         src={error ? fallback : src}

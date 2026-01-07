@@ -65,16 +65,23 @@ const CategoryCard = memo(({ category }) => {
   return (
     <Link
       to={category.link}
-      className="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-400 p-3 sm:p-4 flex flex-col items-center text-center transition-all"
+      className="group flex flex-col h-full items-center text-center transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-white dark:bg-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-border hover:border-emerald-400 dark:hover:border-emerald-400 shadow-md hover:shadow-xl p-3 xs:p-4 sm:p-5 md:p-6 lg:p-7"
     >
-      <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-500 shadow-lg mb-2">
-        <span className="text-white text-xl sm:text-2xl">{category.icon}</span>
+      {/* Icon Container */}
+      <div className="flex items-center justify-center w-14 sm:w-16 md:w-20 h-14 sm:h-16 md:h-20 rounded-lg sm:rounded-xl bg-line-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 shadow-lg group-hover:shadow-xl mb-3 sm:mb-4 lg:mb-5">
+        <span className="text-white text-2xl sm:text-3xl md:text-4xl">
+          {category.icon}
+        </span>
       </div>
-      <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-white mb-1 line-clamp-2">
+
+      {/* Category Name */}
+      <h3 className="font-bold text-base sm:text-lg md:text-xl text-foreground dark:text-foreground mb-2 sm:mb-3 line-clamp-2">
         {t(category.nameKey)}
       </h3>
-      <span className="text-xs text-white bg-gradient-to-r from-emerald-600 to-cyan-600 px-2 py-1 rounded-full">
-        {category.count}
+
+      {/* Product Count Badge */}
+      <span className="text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md group-hover:shadow-lg transition-all">
+        {category.count} {category.count === 1 ? "product" : "products"}
       </span>
     </Link>
   );
@@ -85,7 +92,7 @@ const Skeleton = () => (
     {[...Array(4)].map((_, i) => (
       <div
         key={i}
-        className="w-48 h-64 rounded-2xl bg-gray-200 dark:bg-gray-700"
+        className="w-48 h-64 rounded-2xl bg-border dark:bg-foreground"
       />
     ))}
   </div>
@@ -136,74 +143,103 @@ export default function HomePage() {
         description={t("homePage.seoDescription")}
         url="/"
       />
-      <div className="w-full bg-gray-50 dark:bg-gray-900">
+      <div className="w-full bg-background dark:bg-background">
+        {/* Hero Section */}
         <HeroWithDynamicSlider />
+
+        {/* Special Offer Banner */}
         <LazySection>
-          <SpecialOfferBanner />
+          <div className="w-full bg-card dark:bg-card border-b border-border dark:border-border">
+            <SpecialOfferBanner />
+          </div>
         </LazySection>
 
-        <section className="w-full py-16 px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
-              {tf("homePage.featuredProducts", "Featured Products")}
-            </h2>
-            <p className="text-gray-600 text-lg">
-              {tf(
-                "homePage.popularMedicines",
-                "Popular medicines and top picks"
+        {/* Featured Products Section - Full Width with responsive padding */}
+        <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-background dark:bg-background border-b border-border dark:border-border">
+          <div className="mx-auto max-w-7xl px-4 xs:px-5 sm:px-6 md:px-8 lg:px-12">
+            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-2 sm:mb-3 lg:mb-4">
+                {tf("homePage.featuredProducts", "Featured Products")}
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto">
+                {tf(
+                  "homePage.popularMedicines",
+                  "Popular medicines and healthcare products"
+                )}
+              </p>
+            </div>
+            <Suspense fallback={<Skeleton />}>
+              {isLoading ? (
+                <Skeleton />
+              ) : (
+                <ProductCarousel products={products?.slice(0, 8) || []} />
               )}
-            </p>
+            </Suspense>
           </div>
-          <Suspense fallback={<Skeleton />}>
-            {isLoading ? (
-              <Skeleton />
-            ) : (
-              <ProductCarousel products={products?.slice(0, 8) || []} />
-            )}
-          </Suspense>
         </section>
 
-        <section className="w-full py-16 bg-white dark:bg-gray-800 px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
-              {tf("homePage.shopByCategory", "Shop by Category")}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">
-              {tf(
-                "homePage.exploreProducts",
-                "Explore products across categories"
-              )}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 max-w-7xl mx-auto">
-            {CATEGORIES.map((cat) => (
-              <CategoryCard key={cat.nameKey} category={cat} />
-            ))}
-          </div>
-          <div className="flex justify-center mt-16">
-            <Link
-              to="/categories"
-              className="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-bold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+        {/* Shop by Category Section - Full Width with alternating background */}
+        <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-card dark:bg-card border-b border-border dark:border-border">
+          <div className="mx-auto max-w-7xl px-4 xs:px-5 sm:px-6 md:px-8 lg:px-12">
+            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-2 sm:mb-3 lg:mb-4">
+                {tf("homePage.shopByCategory", "Shop by Category")}
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto">
+                {tf(
+                  "homePage.exploreProducts",
+                  "Explore our comprehensive range of medical products"
+                )}
+              </p>
+            </div>
+            <div
+              className="grid auto-rows-fr gap-3 sm:gap-4 lg:gap-6 mb-10 sm:mb-12 lg:mb-16"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}
             >
-              <span>
-                {tf("homePage.viewAllCategories", "View all categories")}
-              </span>
-              <ArrowRightIcon className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </Link>
+              {CATEGORIES.map((cat) => (
+                <CategoryCard key={cat.nameKey} category={cat} />
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <Link
+                to="/categories"
+                className="group inline-flex items-center gap-2 sm:gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
+              >
+                <span className="text-sm sm:text-base">
+                  {tf("homePage.viewAllCategories", "View All Categories")}
+                </span>
+                <ArrowRightIcon className="w-4 sm:w-6 h-4 sm:h-6 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </section>
 
+        {/* Prescription Upload Section */}
         <LazySection>
-          <PrescriptionUpload />
+          <div className="w-full bg-background dark:bg-background border-b border-border dark:border-border">
+            <PrescriptionUpload />
+          </div>
         </LazySection>
+
+        {/* All Products Section */}
         <LazySection>
-          <AllProducts products={products} isLoading={isLoading} />
+          <div className="w-full bg-card dark:bg-card border-b border-border dark:border-border">
+            <AllProducts products={products} isLoading={isLoading} />
+          </div>
         </LazySection>
+
+        {/* Why Choose Us - Trust & Social Proof */}
         <LazySection>
-          <WhyChooseUs />
+          <div className="w-full bg-background dark:bg-background border-b border-border dark:border-border">
+            <WhyChooseUs />
+          </div>
         </LazySection>
+
+        {/* Contact/Newsletter Section */}
         <LazySection>
-          <ContactForm />
+          <div className="w-full bg-card dark:bg-card">
+            <ContactForm />
+          </div>
         </LazySection>
       </div>
     </>

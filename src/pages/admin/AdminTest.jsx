@@ -4,8 +4,8 @@ export default function AdminTest() {
   const { user, isAuthenticated, isAdmin } = useAuth();
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+    <div className="p-8 bg-muted min-h-screen">
+      <div className="max-w-2xl mx-auto bg-background rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold text-green-600 mb-6">✅ Admin Access Working!</h1>
         
         <div className="space-y-4">

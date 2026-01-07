@@ -9,14 +9,14 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   const navLinkClasses = ({ isActive }) =>
     `flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
       isActive
-        ? 'bg-emerald-700 text-white'
-        : 'text-gray-200 hover:bg-emerald-600 hover:text-white'
+        ? 'bg-emerald-700 text-background'
+        : 'text-muted hover:bg-emerald-600 hover:text-background'
     }`;
 
   return (
     <>
       <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-screen bg-gray-800 text-white transition-transform ${
+        className={`fixed top-0 left-0 z-40 w-64 h-screen bg-card text-background transition-transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0`}
         aria-label="Sidebar"
@@ -24,9 +24,9 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
         <div className="h-full px-3 py-4 overflow-y-auto">
           <div className="flex items-center justify-between mb-6 px-4">
             <NavLink to="/admin" className="flex items-center">
-              <span className="self-center text-xl font-semibold whitespace-nowrap text-white">Admin Panel</span>
+              <span className="self-center text-xl font-semibold whitespace-nowrap text-background">Admin Panel</span>
             </NavLink>
-            <button onClick={toggleSidebar} className="md:hidden text-white">
+            <button onClick={toggleSidebar} className="md:hidden text-background">
               <X size={24} />
             </button>
           </div>
@@ -56,16 +56,16 @@ const AdminHeader = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-20 bg-white shadow-md md:left-64">
+    <header className="fixed top-0 left-0 right-0 z-20 bg-background shadow-md md:left-64">
       <div className="flex items-center justify-between h-16 px-4 md:px-6">
-        <button onClick={toggleSidebar} className="text-gray-600 md:hidden">
+        <button onClick={toggleSidebar} className="text-muted-foreground md:hidden">
           <Menu size={24} />
         </button>
         <div className="hidden md:block">
           {/* Can add breadcrumbs here later */}
         </div>
         <div className="flex items-center space-x-4">
-          <button className="relative text-gray-600 hover:text-emerald-600">
+          <button className="relative text-muted-foreground hover:text-emerald-600">
             <Bell size={22} />
             <span className="absolute top-0 right-0 flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -73,12 +73,12 @@ const AdminHeader = ({ toggleSidebar }) => {
             </span>
           </button>
           <div className="flex items-center">
-            <span className="text-sm font-medium text-gray-700 mr-2">
+            <span className="text-sm font-medium text-foreground mr-2">
               Welcome, {user?.firstName || 'Admin'}
             </span>
             <button
               onClick={handleLogout}
-              className="flex items-center text-sm text-gray-600 hover:text-red-600"
+              className="flex items-center text-sm text-muted-foreground hover:text-red-600"
               title="Logout"
             >
               <LogOut size={20} />
@@ -98,7 +98,7 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-background min-h-screen">
       <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <AdminHeader toggleSidebar={toggleSidebar} />
       <main className="pt-16 md:ml-64">

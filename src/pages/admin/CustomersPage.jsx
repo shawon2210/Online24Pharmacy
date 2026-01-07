@@ -9,12 +9,12 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+      <div className="bg-background rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-800 text-2xl"
+            className="text-background0 hover:text-foreground text-2xl"
           >
             &times;
           </button>
@@ -27,7 +27,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 const Button = ({ children, onClick, className = "", ...props }) => (
   <button
     onClick={onClick}
-    className={`px-4 py-2 rounded-md font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition disabled:bg-gray-400 ${className}`}
+    className={`px-4 py-2 rounded-md font-semibold text-background bg-emerald-600 hover:bg-emerald-700 transition disabled:bg-muted-foreground ${className}`}
     {...props}
   >
     {children}
@@ -44,10 +44,12 @@ const fetchCustomers = ({ queryKey }) => {
     .get(`${API_URL}/api/admin/customers?${params.toString()}`)
     .then((res) => res.data);
 };
-const fetchCustomerDetails = (customerId) =>
-  axios
-    .get(`${API_URL}/api/admin/customers/${customerId}`)
+const fetchCustomerDetails = (customerId) => {
+  if (!customerId || typeof customerId !== 'string') throw new Error('Invalid customer ID');
+  return axios
+    .get(`${API_URL}/api/admin/customers/${encodeURIComponent(customerId)}`)
     .then((res) => res.data);
+};
 
 const CustomerDetailModal = ({ customerId, onClose }) => {
   const {
@@ -151,7 +153,7 @@ const AdminCustomersPage = () => {
         <h1 className="text-3xl font-bold">View Customers</h1>
         <div className="relative">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={20}
           />
           <input
@@ -164,29 +166,29 @@ const AdminCustomersPage = () => {
         </div>
       </div>
 
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="bg-background shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-background">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Member Since
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                   Orders
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-right text-xs font-medium text-background0 uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-background divide-y divide-gray-200">
               {isLoading ? (
                 <tr>
                   <td colSpan="5" className="text-center py-4">
@@ -202,16 +204,16 @@ const AdminCustomersPage = () => {
               ) : (
                 data?.data.map((customer) => (
                   <tr key={customer.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                       {customer.firstName} {customer.lastName}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                       {customer.email}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                       {new Date(customer.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                       {customer._count.orders}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -229,7 +231,7 @@ const AdminCustomersPage = () => {
           </table>
         </div>
         <div className="p-4 flex justify-between items-center">
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-foreground">
             Page {data?.pagination.currentPage} of {data?.pagination.totalPages}
           </span>
           <div className="space-x-2">

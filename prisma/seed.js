@@ -107,7 +107,7 @@ async function main() {
       brand: 'MediCare',
       isOTC: true,
       requiresPrescription: false,
-      images: '["/images/products/mask.jpg"]',
+      images: '["/uploads/products/placeholder.jpg"]',
     },
   });
 
@@ -126,7 +126,7 @@ async function main() {
       brand: 'HealthFirst',
       isOTC: true,
       requiresPrescription: false,
-      images: '["/images/products/vit-c.jpg"]',
+      images: '["/uploads/products/placeholder.jpg"]',
     },
   });
 
@@ -145,7 +145,7 @@ async function main() {
       brand: 'Generic',
       isOTC: true,
       requiresPrescription: false,
-      images: '["/images/products/ibuprofen.jpg"]',
+      images: '["/uploads/products/placeholder.jpg"]',
     },
   });
 
@@ -164,7 +164,7 @@ async function main() {
       brand: 'PharmaCo',
       isOTC: false,
       requiresPrescription: true,
-      images: '["/images/products/amoxicillin.jpg"]',
+      images: '["/uploads/products/placeholder.jpg"]',
     },
   });
 

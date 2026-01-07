@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import SEOHead from "../components/common/SEOHead";
-import { normalizeProduct } from "../utils/normalizeProduct";
+import {
+  normalizeProduct,
+  generateSlugFromName,
+} from "../utils/normalizeProduct";
 import {
   ArrowLeftIcon,
   ShoppingCartIcon,
@@ -16,6 +19,27 @@ import { useCartStore } from "../stores/cartStore";
 import { useTranslation } from "react-i18next";
 import AnimatedButton from "../components/common/AnimatedButton";
 import i18next from "i18next";
+
+const API_URL = (
+  import.meta.env.VITE_API_URL || "http://localhost:3000"
+).replace(/\/$/, "");
+
+const ensureAbsoluteImages = (prod) => {
+  if (!prod) return prod;
+  const toAbsolute = (url) => {
+    if (!url) return url;
+    if (/^(https?:)?\/\//.test(url) || url.startsWith("data:")) return url;
+    if (url.startsWith("/")) return `${API_URL}${url}`;
+    return `${API_URL}/${url}`;
+  };
+  const images = (prod.images || []).map(toAbsolute).filter(Boolean);
+  const image = toAbsolute(prod.image || images[0]);
+  return {
+    ...prod,
+    images: images.length ? images : image ? [image] : [],
+    image,
+  };
+};
 
 // Generic tf helper using i18next directly for modules that don't define tf
 // eslint-disable-next-line no-unused-vars
@@ -38,13 +62,14 @@ function ProductList() {
   const { data, isLoading } = useQuery({
     queryKey: ["products", page],
     queryFn: async () => {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
       const response = await fetch(
         `${API_URL}/api/products?page=${page}&limit=${limit}`
       );
       const result = await response.json();
       return {
-        products: result.products.map(normalizeProduct),
+        products: result.products
+          .map(normalizeProduct)
+          .map(ensureAbsoluteImages),
         total: result.total,
       };
     },
@@ -54,7 +79,7 @@ function ProductList() {
 
   // const { t } = useTranslation();
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title={t("productPage.allProductsTitle")}
         description={t("productPage.allProductsDesc")}
@@ -62,18 +87,18 @@ function ProductList() {
       />
 
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+      <div className="sticky top-0 z-40 bg-background border-b border-border shadow-md">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
           <nav className="mb-3" aria-label={t("breadcrumb")}>
-            <ol className="flex items-center gap-1 text-sm text-gray-500">
+            <ol className="flex items-center gap-1 text-sm text-foreground">
               <li>
                 <Link to="/" className="hover:text-emerald-600 font-medium">
                   {t("home")}
                 </Link>
               </li>
-              <li className="px-1 text-gray-400">/</li>
-              <li className="text-gray-900 font-bold" aria-current="page">
+              <li className="px-1 text-muted-foreground">/</li>
+              <li className="text-foreground font-bold" aria-current="page">
                 {t("productPage.allProducts")}
               </li>
             </ol>
@@ -82,10 +107,10 @@ function ProductList() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
+              <h1 className="text-2xl md:text-3xl font-black bg-linear-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
                 {t("productPage.allProducts")}
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 {t("productPage.allProductsDesc")}
               </p>
             </div>
@@ -94,7 +119,7 @@ function ProductList() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-4 text-sm text-gray-600">
+        <div className="mb-4 text-sm text-muted-foreground">
           {isLoading
             ? t("loading")
             : t("productPage.productsFound", { count: data?.total || 0 })}
@@ -105,11 +130,11 @@ function ProductList() {
             {Array.from({ length: 12 }).map((_, i) => (
               <div
                 key={i}
-                className="bg-white rounded-lg p-4 animate-pulse border border-gray-200"
+                className="bg-background rounded-lg p-4 animate-pulse border border-border"
               >
-                <div className="w-full h-48 bg-gray-200 rounded mb-4" />
-                <div className="h-4 bg-gray-200 rounded mb-2" />
-                <div className="h-4 bg-gray-200 rounded w-2/3" />
+                <div className="w-full h-48 bg-border rounded mb-4" />
+                <div className="h-4 bg-border rounded mb-2" />
+                <div className="h-4 bg-border rounded w-2/3" />
               </div>
             ))}
           </div>
@@ -126,17 +151,17 @@ function ProductList() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                  className="px-4 py-2 bg-emerald-600 text-background rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
                   {t("previous")}
                 </button>
-                <span className="px-4 py-2 text-sm text-gray-600">
+                <span className="px-4 py-2 text-sm text-muted-foreground">
                   {t("productPage.pageOf", { page, totalPages })}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                  className="px-4 py-2 bg-emerald-600 text-background rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
                   {t("next")}
                 </button>
@@ -176,68 +201,58 @@ function ProductDetail({ slug }) {
   const _authUser = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const addToCart = useCartStore((state) => state.addItem);
+  const targetSlug = slug?.toString().toLowerCase();
 
   const fetchProduct = useCallback(async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
       const response = await fetch(`${API_URL}/api/products/${slug}`);
 
       if (response.ok) {
-        const foundProduct = await response.json();
-        setProduct({
-          ...foundProduct,
-          images: foundProduct.images || [
-            foundProduct.image || "/placeholder-product.jpg",
-          ],
-          stockQuantity: foundProduct.stock || foundProduct.stockQuantity || 0,
-        });
+        const foundProduct = ensureAbsoluteImages(
+          normalizeProduct(await response.json())
+        );
+        setProduct(foundProduct);
 
         const allResponse = await fetch(`${API_URL}/api/products`);
         const allData = await allResponse.json();
-        const products = allData.products || allData;
+        const products = (allData.products || allData)
+          .map(normalizeProduct)
+          .map(ensureAbsoluteImages);
         const related = products
           .filter(
             (p) =>
-              (p.slug || p.id) !== slug &&
+              (p.slug || p.id) !== foundProduct.slug &&
               (p.category === foundProduct.category ||
                 p.categoryId === foundProduct.categoryId)
           )
-          .slice(0, 6)
-          .map((p) => ({
-            ...p,
-            images: p.images || [p.image || "/placeholder-product.jpg"],
-            stockQuantity: p.stock || p.stockQuantity || 0,
-          }));
+          .slice(0, 6);
         setRelatedProducts(related);
       } else {
         const allResponse = await fetch(`${API_URL}/api/products`);
         const data = await allResponse.json();
-        const products = data.products || data;
-        const foundProduct = products.find((p) => (p.slug || p.id) === slug);
+        const products = (data.products || data)
+          .map(normalizeProduct)
+          .map(ensureAbsoluteImages);
+        const foundProduct = products.find((p) => {
+          const pSlug = p.slug?.toString().toLowerCase();
+          return (
+            pSlug === targetSlug ||
+            generateSlugFromName(p.name) === targetSlug ||
+            p.id?.toString().toLowerCase() === targetSlug
+          );
+        });
 
         if (foundProduct) {
-          setProduct({
-            ...foundProduct,
-            images: foundProduct.images || [
-              foundProduct.image || "/placeholder-product.jpg",
-            ],
-            stockQuantity:
-              foundProduct.stock || foundProduct.stockQuantity || 0,
-          });
+          setProduct(foundProduct);
 
           const related = products
             .filter(
               (p) =>
-                (p.slug || p.id) !== slug &&
+                (p.slug || p.id) !== foundProduct.slug &&
                 (p.category === foundProduct.category ||
                   p.categoryId === foundProduct.categoryId)
             )
-            .slice(0, 6)
-            .map((p) => ({
-              ...p,
-              images: p.images || [p.image || "/placeholder-product.jpg"],
-              stockQuantity: p.stock || p.stockQuantity || 0,
-            }));
+            .slice(0, 6);
           setRelatedProducts(related);
         }
       }
@@ -252,6 +267,18 @@ function ProductDetail({ slug }) {
     fetchProduct();
   }, [fetchProduct, slug]);
 
+  const categoryName =
+    typeof product?.category === "string"
+      ? product.category
+      : product?.category?.name ||
+        product?.categoryName ||
+        product?.subcategory?.category?.name ||
+        "";
+
+  const categorySlug = categoryName
+    ? categoryName.toLowerCase().replace(/\s+/g, "-")
+    : "";
+
   const handleAddToCart = () => {
     const cartProduct = {
       id: product.id || product.slug,
@@ -262,14 +289,14 @@ function ProductDetail({ slug }) {
       images: product.images || [product.image],
       stock: product.stockQuantity,
       stockQuantity: product.stockQuantity,
-      category: product.category,
+      category: categoryName || product.category,
       requiresPrescription: product.requiresPrescription,
     };
     addToCart(cartProduct, quantity);
 
     const notification = document.createElement("div");
     notification.className =
-      "fixed top-20 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-md flex items-center gap-3 animate-slide-in";
+      "fixed top-20 right-4 z-50 bg-green-500 text-background px-6 py-4 rounded-lg shadow-md flex items-center gap-3 animate-slide-in";
     notification.innerHTML = `
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -289,7 +316,17 @@ function ProductDetail({ slug }) {
   const fetchReviews = async (pid) => {
     try {
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-      const res = await fetch(`${API_URL}/api/reviews/product/${pid}`);
+      if (
+        !API_URL.startsWith("http://localhost") &&
+        !API_URL.startsWith("http://127.0.0.1") &&
+        !API_URL.startsWith(window.location.origin)
+      ) {
+        console.error("Invalid API URL");
+        return;
+      }
+      const res = await fetch(
+        `${API_URL}/api/reviews/product/${encodeURIComponent(pid)}`
+      );
       if (!res.ok) return;
       const data = await res.json();
       setReviews(data.reviews || []);
@@ -312,12 +349,19 @@ function ProductDetail({ slug }) {
     setReviewSubmitting(true);
     try {
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${useAuthStore.getState().token}`,
+      };
+      if (csrfToken) {
+        headers["X-CSRF-Token"] = csrfToken;
+      }
       const res = await fetch(`${API_URL}/api/reviews`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${useAuthStore.getState().token}`,
-        },
+        headers,
         body: JSON.stringify({
           productId: product.id,
           rating: reviewRating,
@@ -329,7 +373,7 @@ function ProductDetail({ slug }) {
         setReviewRating(5);
         const toast = document.createElement("div");
         toast.className =
-          "fixed bottom-6 right-6 bg-amber-500 text-white px-5 py-3 rounded-lg shadow-md text-sm font-semibold animate-fade-in";
+          "fixed bottom-6 right-6 bg-amber-500 text-background px-5 py-3 rounded-lg shadow-md text-sm font-semibold animate-fade-in";
         toast.textContent = t("productPage.reviewSubmitted");
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3500);
@@ -337,7 +381,7 @@ function ProductDetail({ slug }) {
     } catch {
       const toast = document.createElement("div");
       toast.className =
-        "fixed bottom-6 right-6 bg-red-600 text-white px-5 py-3 rounded-lg shadow-md text-sm font-semibold animate-fade-in";
+        "fixed bottom-6 right-6 bg-red-600 text-background px-5 py-3 rounded-lg shadow-md text-sm font-semibold animate-fade-in";
       toast.textContent = t("productPage.submitReviewFailed");
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 3500);
@@ -363,9 +407,13 @@ function ProductDetail({ slug }) {
       const formData = new FormData();
       formData.append("file", rxFile);
       formData.append("product", product.slug || product.id);
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
       const res = await fetch(`${API_URL}/api/prescriptions/upload`, {
         method: "POST",
+        headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
         body: formData,
       });
       if (res.ok) {
@@ -380,25 +428,25 @@ function ProductDetail({ slug }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+      <div className="min-h-screen bg-background">
         {/* Skeleton Header */}
-        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+        <div className="sticky top-0 z-40 bg-background border-b border-border shadow-md">
           <div className="container mx-auto px-4 py-4">
-            <div className="h-4 bg-gray-200 rounded w-1/3 mb-3 animate-pulse" />
-            <div className="h-8 bg-gray-200 rounded w-1/2 animate-pulse" />
+            <div className="h-4 bg-border rounded w-1/3 mb-3 animate-pulse" />
+            <div className="h-8 bg-border rounded w-1/2 animate-pulse" />
           </div>
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 animate-pulse">
+          <div className="bg-background rounded-xl shadow-lg p-6 animate-pulse">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-gray-200 aspect-square rounded-xl" />
+              <div className="bg-border aspect-square rounded-xl" />
               <div className="space-y-4">
-                <div className="h-6 bg-gray-200 rounded w-1/4" />
-                <div className="h-8 bg-gray-200 rounded w-3/4" />
-                <div className="h-4 bg-gray-200 rounded w-1/2" />
-                <div className="h-12 bg-gray-200 rounded" />
-                <div className="h-10 bg-gray-200 rounded w-1/3" />
+                <div className="h-6 bg-border rounded w-1/4" />
+                <div className="h-8 bg-border rounded w-3/4" />
+                <div className="h-4 bg-border rounded w-1/2" />
+                <div className="h-12 bg-border rounded" />
+                <div className="h-10 bg-border rounded w-1/3" />
               </div>
             </div>
           </div>
@@ -409,18 +457,18 @@ function ProductDetail({ slug }) {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+      <div className="min-h-screen bg-background">
         {/* Header */}
-        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+        <div className="sticky top-0 z-40 bg-background border-b border-border shadow-md">
           <div className="container mx-auto px-4 py-4">
             <nav className="mb-3" aria-label={t("breadcrumb")}>
-              <ol className="flex items-center gap-1 text-sm text-gray-500">
+              <ol className="flex items-center gap-1 text-sm text-muted-foreground">
                 <li>
                   <Link to="/" className="hover:text-emerald-600 font-medium">
                     {t("home")}
                   </Link>
                 </li>
-                <li className="px-1 text-gray-400">/</li>
+                <li className="px-1 text-muted-foreground">/</li>
                 <li>
                   <Link
                     to="/categories"
@@ -429,8 +477,8 @@ function ProductDetail({ slug }) {
                     {t("categories")}
                   </Link>
                 </li>
-                <li className="px-1 text-gray-400">/</li>
-                <li className="text-gray-900 font-bold">
+                <li className="px-1 text-muted-foreground">/</li>
+                <li className="text-foreground font-bold">
                   {t("productPage.productNotFound")}
                 </li>
               </ol>
@@ -441,15 +489,15 @@ function ProductDetail({ slug }) {
         <div className="container mx-auto px-4 py-20">
           <div className="text-center max-w-md mx-auto">
             <div className="text-6xl mb-6">🔍</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
               {t("productPage.productNotFound")}
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-muted-foreground mb-8">
               {t("productPage.productNotFoundDesc")}
             </p>
             <Link
               to="/categories"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-background rounded-lg font-medium hover:bg-emerald-700 transition-colors"
             >
               <ArrowLeftIcon className="w-5 h-5" />
               {t("productPage.browseCategories")}
@@ -468,19 +516,19 @@ function ProductDetail({ slug }) {
         })}
         description={product.description}
       />
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+      <div className="min-h-screen bg-background">
         {/* Sticky Header */}
-        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+        <div className="sticky top-0 z-40 bg-background border-b border-border shadow-md">
           <div className="container mx-auto px-4 py-4">
             {/* Professional Breadcrumbs */}
             <nav className="mb-3" aria-label={t("breadcrumb")}>
-              <ol className="flex items-center gap-1 text-sm text-gray-500">
+              <ol className="flex items-center gap-1 text-sm text-muted-foreground">
                 <li>
                   <Link to="/" className="hover:text-emerald-600 font-medium">
                     {t("home")}
                   </Link>
                 </li>
-                <li className="px-1 text-gray-400">/</li>
+                <li className="px-1 text-muted-foreground">/</li>
                 <li>
                   <Link
                     to="/categories"
@@ -489,20 +537,22 @@ function ProductDetail({ slug }) {
                     {t("categories")}
                   </Link>
                 </li>
-                <li className="px-1 text-gray-400">/</li>
+                <li className="px-1 text-muted-foreground">/</li>
                 <li>
                   <Link
-                    to={`/categories/${product.category
-                      ?.toLowerCase()
-                      .replace(/\s+/g, "-")}`}
+                    to={
+                      categorySlug
+                        ? `/categories/${categorySlug}`
+                        : "/categories"
+                    }
                     className="hover:text-emerald-600 font-medium capitalize"
                   >
-                    {product.category}
+                    {categoryName || "Uncategorized"}
                   </Link>
                 </li>
-                <li className="px-1 text-gray-400">/</li>
+                <li className="px-1 text-muted-foreground">/</li>
                 <li
-                  className="text-gray-900 font-bold truncate max-w-xs"
+                  className="text-foreground font-bold truncate max-w-xs"
                   aria-current="page"
                 >
                   {product.name}
@@ -511,17 +561,17 @@ function ProductDetail({ slug }) {
             </nav>
             {/* Header */}
             <div className="flex items-center justify-between">
-              <h1 className="text-xl md:text-2xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent truncate">
+              <h1 className="text-xl md:text-2xl font-black bg-linear-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent truncate">
                 {product.name}
               </h1>
               <div className="flex items-center gap-2">
                 {product.stockQuantity > 0 ? (
-                  <span className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                  <span className="flex items-center gap-1 px-3 py-1 bg-muted text-foreground rounded-full text-sm font-medium">
                     <div className="w-2 h-2 bg-green-500 rounded-full" />
                     {t("productPage.inStock")}
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                  <span className="flex items-center gap-1 px-3 py-1 bg-muted text-foreground rounded-full text-sm font-medium">
                     <div className="w-2 h-2 bg-red-500 rounded-full" />
                     {t("productPage.outOfStock")}
                   </span>
@@ -531,10 +581,10 @@ function ProductDetail({ slug }) {
           </div>
         </div>
         <div className="container mx-auto px-4 py-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 border border-gray-200">
+          <div className="bg-background rounded-xl shadow-lg p-6 lg:p-8 border border-border">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="relative">
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <div className="bg-background rounded-xl p-6 border border-border">
                   <img
                     src={product.images?.[0] || "/placeholder-product.jpg"}
                     alt={product.name}
@@ -547,13 +597,13 @@ function ProductDetail({ slug }) {
                   {/* Badges */}
                   <div className="absolute top-3 left-3 flex flex-col gap-2">
                     {product.requiresPrescription && (
-                      <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                      <span className="bg-red-500 text-background px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                         ℞ {t("productPage.prescriptionRequired")}
                       </span>
                     )}
                     {product.stockQuantity > 0 &&
                       product.stockQuantity < 10 && (
-                        <span className="bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                        <span className="bg-amber-500 text-background px-2 py-1 rounded-full text-xs font-bold">
                           {t("productPage.onlyLeft", {
                             count: product.stockQuantity,
                           })}
@@ -564,21 +614,21 @@ function ProductDetail({ slug }) {
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
-                    🏷️ {product.category}
+                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-muted text-foreground rounded-full text-sm font-medium">
+                    🏷️ {categoryName || "Uncategorized"}
                   </span>
                   <button
                     onClick={() => setIsWishlisted(!isWishlisted)}
-                    className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                    className="p-2 rounded-full hover:bg-muted transition-colors"
                   >
                     {isWishlisted ? (
                       <HeartSolidIcon className="w-6 h-6 text-red-500" />
                     ) : (
-                      <HeartIcon className="w-6 h-6 text-gray-400 hover:text-red-500" />
+                      <HeartIcon className="w-6 h-6 text-muted-foreground hover:text-red-500" />
                     )}
                   </button>
                 </div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-4 leading-tight">
                   {product.name}
                 </h2>
                 <div className="flex items-center gap-3 mb-5">
@@ -589,32 +639,32 @@ function ProductDetail({ slug }) {
                         className={`w-5 h-5 ${
                           i < Math.round(averageRating)
                             ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
+                            : "text-muted"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600 font-medium">
+                  <span className="text-sm text-muted-foreground font-medium">
                     {averageRating.toFixed(1)} ({totalReviews}{" "}
                     {t("productPage.reviews")})
                   </span>
                 </div>
-                <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="mb-6 p-4 bg-background rounded-lg border border-border">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900">
+                    <span className="text-3xl font-bold text-foreground">
                       ৳{product.price}
                     </span>
-                    <span className="text-gray-500">
+                    <span className="text-muted-foreground">
                       / {t("productPage.unit")}
                     </span>
                   </div>
                   {product.originalPrice &&
                     product.originalPrice > product.price && (
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-gray-500 line-through">
+                        <span className="text-muted-foreground line-through">
                           ৳{product.originalPrice}
                         </span>
-                        <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">
+                        <span className="px-2 py-1 bg-red-500 text-background text-xs font-bold rounded">
                           {Math.round(
                             ((product.originalPrice - product.price) /
                               product.originalPrice) *
@@ -628,11 +678,11 @@ function ProductDetail({ slug }) {
                 {(product.brand ||
                   product.manufacturer ||
                   product.requiresPrescription) && (
-                  <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <div className="mb-6 p-4 bg-muted rounded-lg border border-border">
+                    <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                       🛡️ {t("productPage.productInfo")}
                     </h3>
-                    <div className="space-y-2 text-sm text-gray-700">
+                    <div className="space-y-2 text-sm text-foreground">
                       {product.brand && (
                         <div className="flex items-center gap-2">
                           <span className="font-medium">
@@ -651,7 +701,7 @@ function ProductDetail({ slug }) {
                       )}
                       {product.requiresPrescription && (
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">
+                          <span className="px-2 py-1 bg-red-500 text-background text-xs font-bold rounded">
                             ℞
                           </span>
                           <span>
@@ -664,19 +714,19 @@ function ProductDetail({ slug }) {
                 )}
                 {product.stockQuantity > 0 && (
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-sm font-medium text-foreground mb-3">
                       {t("productPage.quantity")}:
                     </label>
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
+                      <div className="flex items-center border border-border rounded-lg overflow-hidden bg-background">
                         <button
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="px-4 py-2 hover:bg-gray-50 font-medium text-lg transition-colors"
+                          className="px-4 py-2 hover:bg-background font-medium text-lg transition-colors"
                           disabled={quantity <= 1}
                         >
                           −
                         </button>
-                        <span className="px-4 py-2 font-medium text-lg min-w-[60px] text-center">
+                        <span className="px-4 py-2 font-medium text-lg min-w-15 text-center">
                           {quantity}
                         </span>
                         <button
@@ -685,7 +735,7 @@ function ProductDetail({ slug }) {
                               Math.min(product.stockQuantity, quantity + 1)
                             )
                           }
-                          className="px-4 py-2 hover:bg-gray-50 font-medium text-lg transition-colors"
+                          className="px-4 py-2 hover:bg-background font-medium text-lg transition-colors"
                           disabled={quantity >= product.stockQuantity}
                         >
                           +
@@ -694,14 +744,14 @@ function ProductDetail({ slug }) {
                       <div className="flex gap-3 flex-1">
                         <button
                           onClick={handleAddToCart}
-                          className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
+                          className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-background rounded-lg font-medium hover:bg-emerald-700 transition-colors"
                         >
                           <ShoppingCartIcon className="w-5 h-5" />
                           {t("productPage.addToCart")}
                         </button>
                         <button
                           onClick={handleBuyNow}
-                          className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                          className="px-6 py-3 bg-blue-600 text-background rounded-lg font-medium hover:bg-blue-700 transition-colors"
                         >
                           {t("productPage.buyNow")}
                         </button>
@@ -710,25 +760,25 @@ function ProductDetail({ slug }) {
                   </div>
                 )}
                 {product.description && (
-                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <div className="p-4 bg-background rounded-lg border border-border">
+                    <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                       📝 {t("productPage.description")}
                     </h3>
-                    <p className="text-gray-700 leading-relaxed text-sm">
+                    <p className="text-foreground leading-relaxed text-sm">
                       {product.description}
                     </p>
                   </div>
                 )}
                 <div className="mt-6 grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-white rounded-lg border border-gray-200 text-center">
+                  <div className="p-3 bg-background rounded-lg border border-border text-center">
                     <div className="text-xl mb-1">✨</div>
-                    <div className="text-xs font-medium text-gray-900">
+                    <div className="text-xs font-medium text-foreground">
                       {t("productPage.genuineProducts")}
                     </div>
                   </div>
-                  <div className="p-3 bg-white rounded-lg border border-gray-200 text-center">
+                  <div className="p-3 bg-background rounded-lg border border-border text-center">
                     <div className="text-xl mb-1">🚚</div>
-                    <div className="text-xs font-medium text-gray-900">
+                    <div className="text-xs font-medium text-foreground">
                       {t("productPage.fastDelivery")}
                     </div>
                   </div>
@@ -739,10 +789,10 @@ function ProductDetail({ slug }) {
           {relatedProducts.length > 0 && (
             <div className="mt-12">
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl font-bold text-foreground mb-2">
                   {t("productPage.relatedProducts")}
                 </h2>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {t("productPage.customersAlsoChecked")}
                 </p>
               </div>
@@ -758,16 +808,16 @@ function ProductDetail({ slug }) {
           )}
           <div className="mt-12">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-foreground">
                 {t("productPage.customerReviews")}
               </h2>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-muted-foreground">
                 {averageRating.toFixed(1)} ★ • {totalReviews}{" "}
                 {t("productPage.reviews")}
               </span>
             </div>
             {reviews.length === 0 && (
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-600">
+              <div className="p-4 bg-background rounded-lg border border-border text-sm text-muted-foreground">
                 {t("productPage.noReviews")}
               </div>
             )}
@@ -775,7 +825,7 @@ function ProductDetail({ slug }) {
               {reviews.map((r) => (
                 <div
                   key={r.id}
-                  className="p-4 bg-white rounded-lg border border-gray-200"
+                  className="p-4 bg-background rounded-lg border border-border"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
@@ -785,25 +835,25 @@ function ProductDetail({ slug }) {
                           className={`w-4 h-4 ${
                             i < r.rating
                               ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
+                              : "text-muted"
                           }`}
                         />
                       ))}
                       {r.isVerified && (
-                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">
+                        <span className="px-2 py-1 bg-muted text-foreground text-xs font-medium rounded">
                           {t("productPage.verified")}
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       {new Date(r.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <div className="text-sm font-medium text-gray-800 mb-1">
+                  <div className="text-sm font-medium text-foreground mb-1">
                     {r.user?.firstName} {r.user?.lastName}
                   </div>
                   {r.comment && (
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                    <p className="text-sm text-foreground leading-relaxed">
                       {r.comment}
                     </p>
                   )}
@@ -811,7 +861,7 @@ function ProductDetail({ slug }) {
               ))}
             </div>
             {isAuthenticated && (
-              <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="mt-8 p-6 bg-background rounded-lg border border-border">
                 <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
                   📝{" "}
                   {tf("productPage.writeReview", undefined, "Write a Review")}
@@ -823,7 +873,7 @@ function ProductDetail({ slug }) {
                         key={i}
                         onClick={() => setReviewRating(i + 1)}
                         className={`w-6 h-6 flex items-center justify-center rounded transition ${
-                          i < reviewRating ? "text-yellow-400" : "text-gray-300"
+                          i < reviewRating ? "text-yellow-400" : "text-muted"
                         }`}
                         aria-label={tf(
                           "productPage.setRating",
@@ -835,7 +885,7 @@ function ProductDetail({ slug }) {
                       </button>
                     ))}
                   </div>
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-foreground">
                     {reviewRating} / 5
                   </span>
                 </div>
@@ -847,13 +897,13 @@ function ProductDetail({ slug }) {
                     undefined,
                     "Share your experience with this product (optional)"
                   )}
-                  className="w-full border border-gray-300 rounded-lg p-3 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full border border-border rounded-lg p-3 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   rows={4}
                 />
                 <button
                   onClick={submitReview}
                   disabled={reviewSubmitting}
-                  className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                  className="px-6 py-3 bg-emerald-600 text-background rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
                   {reviewSubmitting
                     ? tf(
@@ -867,7 +917,7 @@ function ProductDetail({ slug }) {
                         "Submit Review"
                       )}
                 </button>
-                <p className="text-xs text-gray-500 mt-3">
+                <p className="text-xs text-muted-foreground mt-3">
                   {tf(
                     "productPage.reviewsModerated",
                     undefined,
@@ -877,7 +927,7 @@ function ProductDetail({ slug }) {
               </div>
             )}
             {!isAuthenticated && (
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
+              <div className="mt-6 p-4 bg-background border border-border rounded-lg text-sm text-muted-foreground">
                 {tf("productPage.pleaseLogin", undefined, "Please")}{" "}
                 <Link
                   to="/login"
@@ -897,33 +947,33 @@ function ProductDetail({ slug }) {
       </div>
       {showRxModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl p-6 w-[90%] max-w-md border-2 border-emerald-200 shadow-2xl">
+          <div className="bg-background rounded-2xl p-6 w-[90%] max-w-md border-2 border-emerald-200 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-black">
                 {t("productPage.uploadPrescription")}
               </h3>
               <button
                 onClick={() => setShowRxModal(false)}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-muted-foreground hover:text-foreground"
               >
                 ✖
               </button>
             </div>
-            <p className="text-sm text-gray-600 mb-3">
+            <p className="text-sm text-muted-foreground mb-3">
               {t("productPage.acceptedFormats")}
             </p>
             <input
               type="file"
               accept="image/jpeg,image/png,application/pdf"
               onChange={(e) => setRxFile(e.target.files?.[0] || null)}
-              className="w-full border-2 border-gray-200 rounded-lg p-2"
+              className="w-full border-2 border-border rounded-lg p-2"
             />
             <div className="mt-4 flex items-center gap-3">
               <button onClick={handleRxUpload} className="btn-primary">
                 {t("productPage.upload")}
               </button>
               {rxUploadStatus === "uploading" && (
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-foreground">
                   {t("productPage.uploading")}
                 </span>
               )}
@@ -945,7 +995,7 @@ function ProductDetail({ slug }) {
         <div className="fixed bottom-6 right-6 z-40">
           <button
             onClick={() => setShowRxModal(true)}
-            className="px-5 py-3 bg-orange-500 text-white rounded-full font-black shadow-xl hover:shadow-2xl"
+            className="px-5 py-3 bg-orange-500 text-background rounded-full font-black shadow-xl hover:shadow-2xl"
           >
             {t("productPage.uploadPrescription")}
           </button>

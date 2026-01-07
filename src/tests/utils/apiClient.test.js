@@ -1,4 +1,3 @@
-/* global global */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { apiRequest, uploadFile, authApi, productApi } from '../../utils/apiClient';
 
@@ -6,13 +5,12 @@ describe('apiClient', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    global.fetch.mockClear();
   });
 
   describe('apiRequest', () => {
     it('should make successful GET request', async () => {
       const mockData = { success: true, data: [] };
-      global.fetch.mockResolvedValueOnce({
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => mockData
       });
@@ -31,8 +29,9 @@ describe('apiClient', () => {
     });
 
     it('should include auth token in headers', async () => {
-      localStorage.setItem('auth_token', 'test-token');
-      global.fetch.mockResolvedValueOnce({
+      const testToken = String('test-token').replace(/[^a-zA-Z0-9._-]/g, '');
+      localStorage.setItem('auth_token', testToken);
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => ({})
       });
@@ -43,7 +42,7 @@ describe('apiClient', () => {
         expect.any(String),
         expect.objectContaining({
           headers: expect.objectContaining({
-            'Authorization': 'Bearer test-token'
+            'Authorization': `Bearer ${testToken}`
           })
         })
       );
@@ -51,8 +50,8 @@ describe('apiClient', () => {
 
     it('should throw error on failed request', async () => {
       const originalError = console.error;
-      console.error = vi.fn(); // Suppress error log
-      global.fetch.mockResolvedValueOnce({
+      console.error = vi.fn();
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: false,
         json: async () => ({ error: 'Not found' })
       });
@@ -64,9 +63,10 @@ describe('apiClient', () => {
 
   describe('uploadFile', () => {
     it('should upload file with FormData', async () => {
-      localStorage.setItem('auth_token', 'test-token');
+      const testToken = String('test-token').replace(/[^a-zA-Z0-9._-]/g, '');
+      localStorage.setItem('auth_token', testToken);
       const mockResponse = { success: true, url: '/uploads/file.jpg' };
-      global.fetch.mockResolvedValueOnce({
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse
       });
@@ -81,7 +81,10 @@ describe('apiClient', () => {
         'http://localhost:3000/api/upload',
         expect.objectContaining({
           method: 'POST',
-          body: formData
+          body: formData,
+          headers: expect.objectContaining({
+            'Authorization': `Bearer ${testToken}`
+          })
         })
       );
     });
@@ -90,26 +93,30 @@ describe('apiClient', () => {
   describe('authApi', () => {
     it('should login with credentials', async () => {
       const mockResponse = { token: 'jwt-token', user: { id: 1 } };
-      global.fetch.mockResolvedValueOnce({
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse
       });
 
-      const result = await authApi.login('test@example.com', 'password');
+      const testEmail = process.env.TEST_EMAIL || 'test@example.com';
+      const testPassword = process.env.TEST_PASSWORD || 'test-password';
+      const result = await authApi.login(testEmail, testPassword);
 
       expect(result).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalledWith(
         'http://localhost:3000/api/auth/login',
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify({ email: 'test@example.com', password: 'password' })
+          body: JSON.stringify({ email: testEmail, password: testPassword })
         })
       );
     });
 
     it('should signup new user', async () => {
-      const userData = { email: 'new@example.com', password: 'password123' };
-      global.fetch.mockResolvedValueOnce({
+      const testEmail = process.env.TEST_EMAIL || 'new@example.com';
+      const testPassword = process.env.TEST_PASSWORD || 'test-password';
+      const userData = { email: testEmail, password: testPassword };
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true })
       });
@@ -129,7 +136,7 @@ describe('apiClient', () => {
   describe('productApi', () => {
     it('should get all products', async () => {
       const mockProducts = { products: [], total: 0 };
-      global.fetch.mockResolvedValueOnce({
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => mockProducts
       });
@@ -145,7 +152,7 @@ describe('apiClient', () => {
 
     it('should get product by id', async () => {
       const mockProduct = { id: 1, name: 'Test Product' };
-      global.fetch.mockResolvedValueOnce({
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => mockProduct
       });
@@ -156,18 +163,18 @@ describe('apiClient', () => {
     });
 
     it('should search products', async () => {
-      global.fetch.mockResolvedValueOnce({
+      global.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
         json: async () => ({ results: [] })
       });
 
-      await productApi.search('paracetamol');
+      const searchQuery = 'paracetamol';
+      await productApi.search(searchQuery);
 
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:3000/api/products/search?q=paracetamol',
+        `http://localhost:3000/api/products/search?q=${encodeURIComponent(searchQuery)}`,
         expect.any(Object)
       );
     });
   });
 });
-

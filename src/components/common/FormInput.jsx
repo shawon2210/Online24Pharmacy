@@ -12,7 +12,7 @@ export default function FormInput({
   return (
     <div className={className}>
       {label && (
-        <label className="block text-sm font-bold text-gray-700 mb-2">
+        <label className="block text-sm font-bold text-foreground mb-2">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -22,7 +22,7 @@ export default function FormInput({
         className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm sm:text-base ${
           error 
             ? 'border-red-500 hover:border-red-600' 
-            : 'border-gray-300 hover:border-emerald-300'
+            : 'border-border hover:border-emerald-300'
         }`}
       />
       {error && (

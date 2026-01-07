@@ -143,7 +143,7 @@ router.post(
     body('categoryId').notEmpty().withMessage('Category is required'),
     body('subcategoryId').notEmpty().withMessage('Subcategory is required'),
     body('stockQuantity').isInt({ min: 0 }).withMessage('Stock must be non-negative'),
-    body('maxOrderQuantity').isInt({ min: 1 }).withMessage('Max order must be positive'),
+    body('maxOrderQuantity').optional().isInt({ min: 1 }).withMessage('Max order must be positive'),
   ],
   async (req, res) => {
     try {
@@ -162,7 +162,9 @@ router.post(
       const product = await prisma.product.create({
         data: {
           ...data,
+          images: Array.isArray(data.images) ? JSON.stringify(data.images) : data.images,
           stockQuantity: data.stockQuantity || 0,
+          maxOrderQuantity: data.maxOrderQuantity || 10,
         },
         include: { category: true, subcategory: true },
       });
@@ -230,7 +232,10 @@ router.put(
       // Update product
       const updated = await prisma.product.update({
         where: { id },
-        data: updateData,
+        data: {
+          ...updateData,
+          images: updateData.images ? (Array.isArray(updateData.images) ? JSON.stringify(updateData.images) : updateData.images) : undefined,
+        },
         include: { category: true, subcategory: true },
       });
 

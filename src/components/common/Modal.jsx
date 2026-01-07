@@ -39,7 +39,7 @@ export default function Modal({
       onClick={closeOnOverlay ? onClose : undefined}
     >
       <div
-        className={`bg-white rounded-lg shadow-xl w-full ${sizes[size]} max-h-[90vh] overflow-y-auto`}
+        className={`bg-background rounded-lg shadow-xl w-full ${sizes[size]} max-h-[90vh] overflow-y-auto`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -48,13 +48,13 @@ export default function Modal({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
           {title && (
-            <h2 id="modal-title" className="text-xl font-bold text-gray-900">
+            <h2 id="modal-title" className="text-xl font-bold text-foreground">
               {title}
             </h2>
           )}
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-muted rounded-lg transition-colors"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -66,7 +66,7 @@ export default function Modal({
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 p-6 border-t bg-gray-50">
+          <div className="flex items-center justify-end gap-3 p-6 border-t bg-background">
             {footer}
           </div>
         )}

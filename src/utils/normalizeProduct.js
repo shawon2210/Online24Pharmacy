@@ -15,11 +15,27 @@ export function generateSlugFromName(name) {
 
 export function normalizeProduct(raw = {}) {
   const slug = raw.slug || raw.id || generateSlugFromName(raw.name);
-  const images = Array.isArray(raw.images)
-    ? raw.images
-    : raw.image
-    ? [raw.image]
-    : [];
+
+  let images = [];
+  if (Array.isArray(raw.images)) {
+    images = raw.images;
+  } else if (typeof raw.images === 'string') {
+    try {
+      const parsed = JSON.parse(raw.images);
+      if (Array.isArray(parsed)) {
+        images = parsed;
+      } else if (parsed) {
+        images = [parsed];
+      }
+    } catch (_e) {
+      // Fall back to treating the string as a single URL
+      images = [raw.images];
+    }
+  } else if (raw.image) {
+    images = [raw.image];
+  }
+
+  images = images.filter(Boolean);
 
   return {
     id: raw.id || slug,

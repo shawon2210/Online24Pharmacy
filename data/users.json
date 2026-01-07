@@ -1,14 +1,14 @@
 [
   {
+    "_id": "admin-001",
     "id": "admin-001",
     "email": "admin@online24pharmacy.com",
-    "passwordHash": "$2a$10$uNpodTQKf/i06bvtfBrWpeyUWqmC9lY2Qo95xN1hYRw8rvMm91FJK",
     "firstName": "Admin",
     "lastName": "User",
+    "passwordHash": "$2a$12$K8h8.qdwX8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8",
     "role": "ADMIN",
-    "phone": "+8801700000000",
-    "isVerified": true,
     "isActive": true,
-    "createdAt": "2025-12-23T10:32:01.651Z"
+    "isVerified": true,
+    "createdAt": "2024-01-01T00:00:00Z"
   }
 ]

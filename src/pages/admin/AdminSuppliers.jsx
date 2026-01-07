@@ -51,10 +51,10 @@ export default function AdminSuppliers() {
         description="Admin — manage suppliers for Online24 Pharmacy."
         url="/admin/suppliers"
       />
-      <div className="min-h-screen bg-gray-50 py-6 md:py-10">
+      <div className="min-h-screen bg-background py-6 md:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-foreground">
               {t("adminSuppliers.title")}
             </h1>
             <button
@@ -71,15 +71,15 @@ export default function AdminSuppliers() {
             {suppliers?.map((supplier) => (
               <div
                 key={supplier.id}
-                className="bg-white rounded-lg shadow-md p-6"
+                className="bg-background rounded-lg shadow-md p-6"
               >
                 <div className="flex items-center mb-4">
                   <BuildingOfficeIcon className="w-8 h-8 text-blue-600 mr-3" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-foreground">
                       {supplier.name}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {supplier.contactPerson}
                     </p>
                   </div>
@@ -131,8 +131,8 @@ export default function AdminSuppliers() {
 
           {/* Add/Edit Form Modal */}
           {(showAddForm || editingSupplier) && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="fixed inset-0 bg-muted-foreground bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-background rounded-lg p-6 max-w-md w-full mx-4">
                 <h3 className="text-lg font-semibold mb-4">
                   {editingSupplier
                     ? t("adminSuppliers.edit")
@@ -141,7 +141,7 @@ export default function AdminSuppliers() {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       {t("adminSuppliers.supplierName")}
                     </label>
                     <input
@@ -153,7 +153,7 @@ export default function AdminSuppliers() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       {t("adminSuppliers.contactPerson")}
                     </label>
                     <input
@@ -165,7 +165,7 @@ export default function AdminSuppliers() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       {t("adminSuppliers.email")}
                     </label>
                     <input
@@ -178,7 +178,7 @@ export default function AdminSuppliers() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       {t("adminSuppliers.phone")}
                     </label>
                     <input
@@ -190,7 +190,7 @@ export default function AdminSuppliers() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       {t("adminSuppliers.address")}
                     </label>
                     <textarea
@@ -209,7 +209,7 @@ export default function AdminSuppliers() {
                       defaultChecked={editingSupplier?.isActive ?? true}
                       className="mr-2"
                     />
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-foreground">
                       {t("adminSuppliers.status")}
                     </label>
                   </div>

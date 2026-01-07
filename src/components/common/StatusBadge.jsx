@@ -10,7 +10,7 @@ const colorMap = {
   red: "bg-red-50 text-red-600 border-red-200",
   purple: "bg-purple-50 text-purple-600 border-purple-200",
   orange: "bg-orange-50 text-orange-600 border-orange-200",
-  gray: "bg-gray-50 text-gray-600 border-gray-200",
+  gray: "bg-background text-muted-foreground border-border",
 };
 
 export default function StatusBadge({

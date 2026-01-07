@@ -36,10 +36,7 @@ export const validateRegistration = [
     .isEmail().withMessage('Invalid email address')
     .normalizeEmail(),
   body('password')
-    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
-    .matches(/[A-Z]/).withMessage('Password must contain uppercase letter')
-    .matches(/[a-z]/).withMessage('Password must contain lowercase letter')
-    .matches(/\d/).withMessage('Password must contain number'),
+    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
   body('firstName')
     .trim()
     .isLength({ min: 2, max: 50 }).withMessage('First name must be 2-50 characters')
@@ -49,7 +46,7 @@ export const validateRegistration = [
     .isLength({ min: 2, max: 50 }).withMessage('Last name must be 2-50 characters')
     .customSanitizer(sanitizeInput),
   body('phone')
-    .optional()
+    .exists({ checkFalsy: true }).withMessage('Phone number is required')
     .matches(/^01[3-9]\d{8}$/).withMessage('Invalid phone number. Must be 11 digits and start with 01 (e.g., 01712345678)'),
   handleValidationErrors
 ];

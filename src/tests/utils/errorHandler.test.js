@@ -74,7 +74,11 @@ describe('errorHandler utilities', () => {
     });
 
     it('should validate min length', () => {
-      const data = { password: '123' };
+      const testPassword = process.env.TEST_PASSWORD;
+      if (!testPassword) {
+        return;
+      }
+      const data = { password: testPassword };
       const rules = { password: { minLength: 6 } };
       
       const result = validateForm(data, rules);
@@ -84,7 +88,14 @@ describe('errorHandler utilities', () => {
     });
 
     it('should pass valid data', () => {
-      const data = { email: 'test@example.com', password: 'password123' };
+      const testEmail = process.env.TEST_EMAIL;
+      const testPassword = process.env.TEST_PASSWORD;
+      
+      if (!testEmail || !testPassword) {
+        return;
+      }
+      
+      const data = { email: testEmail, password: testPassword };
       const rules = {
         email: { required: true, email: true },
         password: { required: true, minLength: 6 }

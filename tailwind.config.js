@@ -1,4 +1,8 @@
-/** @type {import('tailwindcss').Config} */
+import tailwindForms from '@tailwindcss/forms';
+import tailwindTypography from '@tailwindcss/typography';
+import tailwindAspectRatio from '@tailwindcss/aspect-ratio';
+import flowbitePlugin from 'flowbite/plugin';
+
 export default {
   darkMode: 'class',
   content: [
@@ -6,6 +10,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     container: {
       center: true,
       padding: {
@@ -18,15 +30,15 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        primary: 'var(--primary)',
+        card: 'var(--card)',
+        border: 'var(--border)',
+        muted: 'var(--muted)',
+        'muted-foreground': 'var(--muted-foreground)',
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -35,10 +47,6 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
@@ -46,10 +54,6 @@ export default {
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
         },
       },
       fontFamily: {
@@ -129,9 +133,9 @@ export default {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
-    require('flowbite/plugin'),
+    tailwindForms,
+    tailwindTypography,
+    tailwindAspectRatio,
+    flowbitePlugin,
   ],
 }

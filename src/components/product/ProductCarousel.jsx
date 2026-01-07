@@ -42,12 +42,12 @@ const ProductCarousel = memo(({ products = [] }) => {
         ))}
       </div>
       {canPrev && (
-        <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-3 shadow-lg transition-all">
+        <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-background rounded-full p-3 shadow-lg transition-all">
           <ChevronLeftIcon className="w-6 h-6" />
         </button>
       )}
       {canNext && (
-        <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-3 shadow-lg transition-all">
+        <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-background rounded-full p-3 shadow-lg transition-all">
           <ChevronRightIcon className="w-6 h-6" />
         </button>
       )}

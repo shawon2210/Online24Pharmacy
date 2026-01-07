@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars, react-refresh/only-export-components */
+/* @refresh reload */
+/* eslint-disable no-unused-vars */
 import { createContext, useContext, useReducer, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const AuthContext = createContext();
+const AuthContext = createContext(undefined);
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -60,7 +60,7 @@ const loadPersistedState = () => {
   return { ...initialState, loading: false };
 };
 
-export const AuthProvider = ({ children }) => {
+function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(authReducer, loadPersistedState());
 
   // Set up axios interceptor
@@ -69,6 +69,26 @@ export const AuthProvider = ({ children }) => {
       (config) => {
         if (state.accessToken) {
           config.headers.Authorization = `Bearer ${state.accessToken}`;
+        }
+        // Attach CSRF token for all state-changing requests (POST, PUT, DELETE, PATCH)
+        const method = config.method?.toUpperCase();
+        if (["POST", "PUT", "DELETE", "PATCH"].includes(method)) {
+          // Securely retrieve CSRF token from cookie or meta tag
+          let csrfToken = null;
+          // Try meta tag first
+          csrfToken = document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute("content");
+          // Fallback: Try to get from cookies if not found in meta
+          if (!csrfToken) {
+            const match = document.cookie.match(
+              new RegExp("(^| )csrf_token=([^;]+)")
+            );
+            if (match) csrfToken = match[2];
+          }
+          if (csrfToken) {
+            config.headers["X-CSRF-Token"] = csrfToken;
+          }
         }
         return config;
       },
@@ -87,7 +107,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const API_URL = import.meta?.env?.VITE_API_URL || "http://localhost:3000";
       const response = await axios.post(
         `${API_URL}/api/auth/login`,
         { email, password },
@@ -114,7 +134,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (userData) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const API_URL = import.meta?.env?.VITE_API_URL || "http://localhost:3000";
       const response = await axios.post(
         `${API_URL}/api/auth/signup`,
         userData,
@@ -135,26 +155,31 @@ export const AuthProvider = ({ children }) => {
       return response.data;
     } catch (error) {
       const errorData = error.response?.data;
-      console.error("Signup error details:", JSON.stringify(errorData, null, 2));
-      
       let errorMessage = "Signup failed";
-      
-      if (errorData?.details && Array.isArray(errorData.details)) {
-        console.log("Validation details:", errorData.details);
-        errorMessage = errorData.details.map(d => d.message || d.msg || d.error || JSON.stringify(d)).join(", ");
+
+      if (errorData?.details) {
+        if (Array.isArray(errorData.details)) {
+          errorMessage = errorData.details
+            .map((d) => d.msg || d.message || "Invalid input")
+            .join(", ");
+        } else if (typeof errorData.details === "string") {
+          errorMessage = errorData.details;
+        } else {
+          errorMessage = JSON.stringify(errorData.details);
+        }
       } else if (errorData?.error) {
         errorMessage = errorData.error;
-      } else if (errorData?.message) {
-        errorMessage = errorData.message;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
-      
+
       throw new Error(errorMessage);
     }
   };
 
   const logout = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const API_URL = import.meta?.env?.VITE_API_URL || "http://localhost:3000";
       await axios.post(
         `${API_URL}/api/auth/logout`,
         {},
@@ -191,12 +216,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
-export const useAuth = () => {
+function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
-};
+}
+
+export { AuthProvider, useAuth };

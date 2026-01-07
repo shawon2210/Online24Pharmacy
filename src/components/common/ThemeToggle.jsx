@@ -1,44 +1,56 @@
-import React from "react";
-import useThemeMode from "../../hooks/useThemeMode";
-import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
+import { useTheme } from '../../hooks/useTheme';
+import { useResponsiveTheme } from '../../hooks/useResponsiveTheme';
+import { SunIcon, MoonIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline';
+import { useCallback } from 'react';
 
-export default function ThemeToggle({ className = "" }) {
-  const { mode, computedMode, setMode } = useThemeMode();
-  const theme = computedMode;
+export default function ThemeToggle() {
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const { isMobile } = useResponsiveTheme();
 
-  // Cycle through: auto -> dark -> light -> auto
-  const onToggle = () => {
-    if (mode === "auto") setMode("dark");
-    else if (mode === "dark") setMode("light");
-    else setMode("auto");
-  };
+  const cycleTheme = useCallback(() => {
+    if (theme === 'light') {
+      setTheme('dark');
+    } else if (theme === 'dark') {
+      setTheme('system');
+    } else {
+      setTheme('light');
+    }
+  }, [theme, setTheme]);
+
+  const currentIcon = resolvedTheme === 'dark' ? (
+    <MoonIcon className="w-5 h-5 text-indigo-400" />
+  ) : (
+    <SunIcon className="w-5 h-5 text-yellow-500" />
+  );
+
+  const nextThemeLabel =
+    theme === 'light' ? 'Dark Mode' : theme === 'dark' ? 'System Theme' : 'Light Mode';
+
+  const nextThemeIcon = 
+    theme === 'light' ? <MoonIcon className="w-4 h-4" /> :
+    theme === 'dark' ? <ComputerDesktopIcon className="w-4 h-4" /> :
+    <SunIcon className="w-4 h-4" />;
 
   return (
     <button
-      onClick={onToggle}
-      aria-label={`Toggle theme, current: ${mode}`}
-      title={`Theme: ${mode}${mode === "auto" ? ` (computed: ${theme})` : ""}`}
-      className={`flex items-center gap-2 p-2 rounded-md hover:bg-neutral transition-colors ${className}`}
+      onClick={cycleTheme}
+      className={`
+        group relative flex items-center justify-center
+        ${isMobile ? 'w-10 h-10' : 'w-11 h-11'}
+        rounded-2xl transition-all duration-300
+        hover:scale-110 active:scale-95
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400
+        bg-muted border border-border text-foreground
+      `}
+      aria-label={`Switch to ${nextThemeLabel}`}
+      title={`Current: ${resolvedTheme === 'dark' ? 'Dark' : 'Light'} Mode (Preference: ${theme})`}
     >
-      <div className="relative">
-        {/* Primary icon: reflects computedMode (what the UI currently shows) */}
-        {theme === "dark" ? (
-          <MoonIcon className="h-5 w-5 text-gray-100" />
-        ) : (
-          <SunIcon className="h-5 w-5 text-yellow-400" />
-        )}
-        {/* 'Auto' badge overlay */}
-        {mode === "auto" && (
-          <span className="absolute -top-2 -right-2 bg-emerald-500 text-white h-4 w-4 rounded-full text-[10px] flex items-center justify-center">
-            A
-          </span>
-        )}
-      </div>
-
-      {/* Small text label showing active mode and computed mode when in auto */}
-      <span className="hidden sm:inline text-xs text-gray-600 dark:text-gray-300">
-        {mode === "auto" ? `Auto (${theme})` : mode}
-      </span>
+      {currentIcon}
+      {!isMobile && (
+        <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl bg-card border border-border text-foreground flex items-center gap-1">
+          {nextThemeIcon} {nextThemeLabel}
+        </span>
+      )}
     </button>
   );
 }

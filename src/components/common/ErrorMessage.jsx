@@ -9,7 +9,7 @@ export default function ErrorMessage({ message, onRetry, className = '' }) {
   return (
     <div className={`bg-red-50 border-l-4 border-red-500 rounded-lg p-4 ${className}`}>
       <div className="flex items-start">
-        <span className="text-red-500 text-xl mr-3 flex-shrink-0">⚠️</span>
+        <span className="text-red-500 text-xl mr-3 shrink-0">⚠️</span>
         <div className="flex-1 min-w-0">
           <p className="text-sm text-red-700 font-medium break-words">
             {message}

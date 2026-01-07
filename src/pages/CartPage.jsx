@@ -17,7 +17,7 @@ export default function CartPage() {
     return (
       <>
         <SEOHead title={t("cartPage.title") + " - Online24 Pharma"} />
-        <div className="w-full bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+        <div className="w-full bg-background dark:bg-card min-h-screen py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <CartHeader itemCount={0} />
             <EmptyCart />
@@ -49,7 +49,7 @@ export default function CartPage() {
   return (
     <>
       <SEOHead title={t("cartPage.title") + " - Online24 Pharma"} />
-      <div className="w-full bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+      <div className="w-full bg-background dark:bg-card min-h-screen py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CartHeader itemCount={cart.length} />
 

@@ -1,41 +1,14 @@
-/**
- * ============================================
- * ELITE PRISMA CLIENT CONFIGURATION
- * ============================================
- * 
- * Features:
- * ✓ Connection pooling with configurable limits
- * ✓ Query logging for development
- * ✓ Graceful shutdown on process termination
- * ✓ Error handling & retry logic
- * ✓ Performance monitoring hooks
- * ✓ Security: Never expose sensitive fields
- * 
- * Usage in routes:
- * 
- * CORRECT - With field selection:
- * const user = await prisma.user.findUnique({
- *   where: { id: userId },
- *   select: { id: true, email: true, firstName: true } // No password!
- * });
- * 
- * WRONG - Without field selection:
- * const user = await prisma.user.findUnique({ where: { id: userId } }); // Returns password!
- * 
- * ============================================
- */
-
-import { PrismaClient } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 
 const prismaClientSingleton = () => {
   const connectionString = process.env.DATABASE_URL;
-  const pool = new pg.Pool({ connectionString });
-  const adapter = new PrismaPg(pool);
+  if (!connectionString) {
+    throw new Error('DATABASE_URL environment variable is not set');
+  }
+  console.log('prisma:init DATABASE_URL length', connectionString.length);
   
   return new PrismaClient({
-    adapter,
     log: process.env.NODE_ENV === 'development' 
       ? [
           { emit: 'stdout', level: 'warn' },
@@ -54,42 +27,15 @@ if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma;
 }
 
-/**
- * ============================================
- * GRACEFUL SHUTDOWN
- * ============================================
- */
-
-// Handle server shutdown gracefully
 const gracefulShutdown = async (signal) => {
   console.log(`\n[${signal}] Gracefully shutting down...`);
   await prisma.$disconnect();
   process.exit(0);
 };
 
-// Graceful shutdown handlers
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
-/**
- * ============================================
- * MIDDLEWARE & HOOKS
- * ============================================
- */
-
-// Note: Middleware ($use) is not supported with PrismaPg adapter
-// Use application-level logging instead
-
-/**
- * ============================================
- * TYPE-SAFE QUERY HELPERS
- * ============================================
- */
-
-/**
- * Get user without sensitive fields
- * Safe to return to frontend
- */
 export const getUserSafe = async (userId) => {
   return prisma.user.findUnique({
     where: { id: userId },
@@ -108,19 +54,12 @@ export const getUserSafe = async (userId) => {
   });
 };
 
-/**
- * Get user by email for authentication
- * Includes password for verification
- */
 export const getUserByEmailWithPassword = async (email) => {
   return prisma.user.findUnique({
     where: { email },
   });
 };
 
-/**
- * Create audit log entry
- */
 export const createAuditLog = async (
   userId,
   action,
@@ -143,9 +82,6 @@ export const createAuditLog = async (
   });
 };
 
-/**
- * Get user's orders with filtering
- */
 export const getUserOrdersSafe = async (
   userId,
   options
@@ -166,12 +102,6 @@ export const getUserOrdersSafe = async (
   });
 };
 
-/**
- * Get order details with items
-/**
- * Get order details with items
- * Validates user ownership
- */
 export const getOrderDetails = async (
   orderId,
   userId
@@ -179,7 +109,7 @@ export const getOrderDetails = async (
   return prisma.order.findFirst({
     where: {
       id: orderId,
-      userId, // Row-level security: user can only access own orders
+      userId,
     },
     include: {
       orderItems: {
@@ -200,9 +130,6 @@ export const getOrderDetails = async (
   });
 };
 
-/**
- * Get user's prescriptions
- */
 export const getUserPrescriptions = async (userId) => {
   return prisma.prescription.findMany({
     where: { userId },
@@ -219,9 +146,6 @@ export const getUserPrescriptions = async (userId) => {
   });
 };
 
-/**
- * Get active products by category
- */
 export const getProductsByCategory = async (
   categoryId,
   options
@@ -247,8 +171,6 @@ export const getProductsByCategory = async (
       requiresPrescription: true,
       stockQuantity: true,
       images: true,
-      rating: true,
-      reviewCount: true,
     },
     orderBy,
     skip: options?.skip,
@@ -256,9 +178,6 @@ export const getProductsByCategory = async (
   });
 };
 
-/**
- * Check product availability
- */
 export const checkProductAvailability = async (productId) => {
   return prisma.product.findUnique({
     where: { id: productId },
@@ -272,9 +191,6 @@ export const checkProductAvailability = async (productId) => {
   });
 };
 
-/**
- * Validate prescription for order
- */
 export const validatePrescriptionForOrder = async (
   prescriptionId,
   userId
@@ -285,15 +201,12 @@ export const validatePrescriptionForOrder = async (
       userId,
       status: 'APPROVED',
       expiresAt: {
-        gt: new Date(), // Not expired
+        gt: new Date(),
       },
     },
   });
 };
 
-/**
- * Get user's active sessions
- */
 export const getUserActiveSessions = async (userId) => {
   return prisma.session.findMany({
     where: {
@@ -306,10 +219,6 @@ export const getUserActiveSessions = async (userId) => {
   });
 };
 
-/**
- * Revoke all user sessions
- * Useful for logout all devices
- */
 export const revokeAllUserSessions = async (userId) => {
   return prisma.session.updateMany({
     where: { userId },
@@ -317,23 +226,12 @@ export const revokeAllUserSessions = async (userId) => {
   });
 };
 
-/**
- * ============================================
- * TRANSACTION HELPERS
- * ============================================
- */
-
-/**
- * Atomic order creation with inventory update
- * If any operation fails, entire transaction rolls back
- */
 export const createOrderWithInventoryUpdate = async (
   userId,
   items,
   orderData
 ) => {
   return prisma.$transaction(async (tx) => {
-    // 1. Create order
     const order = await tx.order.create({
       data: {
         userId,
@@ -350,7 +248,6 @@ export const createOrderWithInventoryUpdate = async (
       include: { orderItems: true },
     });
 
-    // 2. Update product inventory for each item
     for (const item of items) {
       await tx.product.update({
         where: { id: item.productId },
@@ -362,7 +259,6 @@ export const createOrderWithInventoryUpdate = async (
       });
     }
 
-    // 3. Create audit log
     await tx.auditLog.create({
       data: {
         userId,

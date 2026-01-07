@@ -38,19 +38,19 @@ export default function AdminProductTable({
   };
 
   return (
-    <div className="bg-white shadow rounded-lg">
-      <div className="px-6 py-4 border-b border-gray-200">
+    <div className="bg-background shadow rounded-lg">
+      <div className="px-6 py-4 border-b border-border">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-900">Products</h3>
+          <h3 className="text-lg font-medium text-foreground">Products</h3>
           <div className="flex space-x-3">
             <input
               type="text"
               placeholder="Search products..."
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            <button className="bg-blue-600 text-background px-4 py-2 rounded-md hover:bg-blue-700">
               Add Product
             </button>
           </div>
@@ -59,43 +59,43 @@ export default function AdminProductTable({
 
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-background">
             <tr>
               <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider cursor-pointer"
                 onClick={() => handleSort("name")}
               >
                 Product Name
               </th>
               <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider cursor-pointer"
                 onClick={() => handleSort("sku")}
               >
                 SKU
               </th>
               <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider cursor-pointer"
                 onClick={() => handleSort("price")}
               >
                 Price
               </th>
               <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider cursor-pointer"
                 onClick={() => handleSort("stock_quantity")}
               >
                 Stock
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-background divide-y divide-gray-200">
             {sortedProducts.map((product) => (
-              <tr key={product.id} className="hover:bg-gray-50">
+              <tr key={product.id} className="hover:bg-background">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <img
@@ -107,29 +107,29 @@ export default function AdminProductTable({
                       alt={product.name}
                     />
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-foreground">
                         {product.name}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-background0">
                         {product.brand}
                       </div>
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                   {product.sku}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                   <div>
                     ৳{product.discount_price || product.price}
                     {product.discount_price && (
-                      <div className="text-xs text-gray-500 line-through">
+                      <div className="text-xs text-background0 line-through">
                         ৳{product.price}
                       </div>
                     )}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                       product.stock_quantity > 10
@@ -183,7 +183,7 @@ export default function AdminProductTable({
 
       {sortedProducts.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No products found</p>
+          <p className="text-background0">No products found</p>
         </div>
       )}
     </div>

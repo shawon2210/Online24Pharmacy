@@ -55,14 +55,14 @@ export default function LiveChat({ language = "en" }) {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-20 right-6 z-[9999] w-14 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-full shadow-md flex items-center justify-center transition-all duration-300"
       >
-        <PhoneIcon className="w-6 h-6 text-white" />
+        <PhoneIcon className="w-6 h-6 text-background" />
       </button>
 
       {/* Live Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-28 right-6 z-[9999] w-80 max-w-[calc(100vw-3rem)] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col">
+        <div className="fixed bottom-28 right-6 z-[9999] w-80 max-w-[calc(100vw-3rem)] bg-background rounded-xl shadow-2xl border border-border flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-emerald-600 text-white rounded-t-2xl">
+          <div className="flex items-center justify-between p-4 border-b bg-emerald-600 text-background rounded-t-2xl">
             <div>
               <h3 className="font-semibold">
                 {language === "en" ? "Customer Support" : "গ্রাহক সহায়তা"}
@@ -82,12 +82,12 @@ export default function LiveChat({ language = "en" }) {
           </div>
 
           {/* Contact Options */}
-          <div className="p-4 bg-gray-50 border-b space-y-2">
+          <div className="p-4 bg-background border-b space-y-2">
             <a
               href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-3 p-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
+              className="flex items-center space-x-3 p-3 bg-green-500 hover:bg-green-600 text-background rounded-lg transition-colors"
             >
               <span className="text-xl">📱</span>
               <div className="flex-1">
@@ -100,7 +100,7 @@ export default function LiveChat({ language = "en" }) {
 
             <a
               href={`tel:${phoneNumber}`}
-              className="flex items-center space-x-3 p-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
+              className="flex items-center space-x-3 p-3 bg-emerald-500 hover:bg-emerald-600 text-background rounded-lg transition-colors"
             >
               <PhoneIcon className="w-5 h-5" />
               <div className="flex-1">
@@ -113,7 +113,7 @@ export default function LiveChat({ language = "en" }) {
 
             <a
               href={`mailto:${email}`}
-              className="flex items-center space-x-3 p-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+              className="flex items-center space-x-3 p-3 bg-muted-foreground hover:bg-foreground text-background rounded-lg transition-colors"
             >
               <EnvelopeIcon className="w-5 h-5" />
               <div className="flex-1">
@@ -137,8 +137,8 @@ export default function LiveChat({ language = "en" }) {
                 <div
                   className={`max-w-[80%] px-4 py-2 rounded-lg ${
                     msg.type === "user"
-                      ? "bg-emerald-600 text-white"
-                      : "bg-gray-100 text-gray-800"
+                      ? "bg-emerald-600 text-background"
+                      : "bg-muted text-foreground"
                   }`}
                 >
                   {msg.text}
@@ -160,11 +160,11 @@ export default function LiveChat({ language = "en" }) {
                     ? "Type your message..."
                     : "আপনার বার্তা লিখুন..."
                 }
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="flex-1 px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
               <button
                 onClick={handleSend}
-                className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+                className="p-2 bg-emerald-600 hover:bg-emerald-700 text-background rounded-lg transition-colors"
               >
                 <PaperAirplaneIcon className="w-5 h-5" />
               </button>

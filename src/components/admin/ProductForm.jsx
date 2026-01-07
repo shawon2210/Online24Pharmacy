@@ -272,14 +272,14 @@ export default function ProductForm({ product, onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-lg max-w-3xl w-full my-8">
-        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <div className="bg-background rounded-lg max-w-3xl w-full my-8">
+        <div className="px-6 py-4 border-b border-border flex justify-between items-center">
           <h2 className="text-xl font-bold">
             {product ? "Edit Product" : "Add New Product"}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-background0 hover:text-foreground"
           >
             ✕
           </button>
@@ -291,7 +291,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
         >
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Product Name *
               </label>
               <input
@@ -300,12 +300,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Slug *
               </label>
               <input
@@ -314,12 +314,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.slug}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 SKU *
               </label>
               <input
@@ -328,12 +328,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.sku}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Category *
               </label>
               <select
@@ -341,7 +341,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.categoryId}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
@@ -353,14 +353,14 @@ export default function ProductForm({ product, onClose, onSuccess }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Subcategory
               </label>
               <select
                 name="subcategoryId"
                 value={formData.subcategoryId}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={!formData.categoryId}
               >
                 <option value="">Select Subcategory (Optional)</option>
@@ -375,7 +375,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Price (৳) *
               </label>
               <input
@@ -385,12 +385,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 onChange={handleChange}
                 required
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Discount Price (৳)
               </label>
               <input
@@ -399,12 +399,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.discountPrice}
                 onChange={handleChange}
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Stock Quantity *
               </label>
               <input
@@ -413,12 +413,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.stockQuantity}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Brand
               </label>
               <input
@@ -426,12 +426,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 name="brand"
                 value={formData.brand}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Manufacturer
               </label>
               <input
@@ -439,12 +439,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 name="manufacturer"
                 value={formData.manufacturer}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Generic Name
               </label>
               <input
@@ -452,12 +452,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 name="genericName"
                 value={formData.genericName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Strength
               </label>
               <input
@@ -466,12 +466,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.strength}
                 onChange={handleChange}
                 placeholder="e.g., 500mg"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Dosage Form
               </label>
               <input
@@ -480,12 +480,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.dosageForm}
                 onChange={handleChange}
                 placeholder="e.g., Tablet, Capsule"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Pack Size
               </label>
               <input
@@ -494,12 +494,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.packSize}
                 onChange={handleChange}
                 placeholder="e.g., 10 tablets"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Short Description
               </label>
               <input
@@ -507,12 +507,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 name="shortDescription"
                 value={formData.shortDescription}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-foreground mb-1">
                 Description
               </label>
               <textarea
@@ -520,13 +520,13 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 value={formData.description}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {/* Image Upload Section */}
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Product Images
               </label>
 
@@ -538,12 +538,12 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                       <img
                         src={url}
                         alt={`Preview ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                        className="w-full h-32 object-cover rounded-lg border-2 border-border"
                       />
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-1 right-1 bg-red-500 text-background rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         <svg
                           className="w-4 h-4"
@@ -560,7 +560,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                         </svg>
                       </button>
                       {index === 0 && (
-                        <span className="absolute bottom-1 left-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                        <span className="absolute bottom-1 left-1 bg-blue-500 text-background text-xs px-2 py-1 rounded">
                           Primary
                         </span>
                       )}
@@ -571,10 +571,10 @@ export default function ProductForm({ product, onClose, onSuccess }) {
 
               {/* Upload Button */}
               <div className="flex items-center justify-center w-full">
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-border border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <svg
-                      className="w-8 h-8 mb-2 text-gray-500"
+                      className="w-8 h-8 mb-2 text-background0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -586,11 +586,11 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                         d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                       />
                     </svg>
-                    <p className="mb-2 text-sm text-gray-500">
+                    <p className="mb-2 text-sm text-background0">
                       <span className="font-semibold">Click to upload</span> or
                       drag and drop
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-background0">
                       PNG, JPG, JPEG (MAX. 5MB)
                     </p>
                   </div>
@@ -603,7 +603,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                   />
                 </label>
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-background0 mt-2">
                 First image will be the primary product image
               </p>
             </div>
@@ -617,7 +617,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                   onChange={handleChange}
                   className="mr-2"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-foreground">
                   Requires Prescription
                 </span>
               </label>
@@ -630,7 +630,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                   onChange={handleChange}
                   className="mr-2"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-foreground">
                   OTC (Over The Counter)
                 </span>
               </label>
@@ -643,7 +643,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                   onChange={handleChange}
                   className="mr-2"
                 />
-                <span className="text-sm text-gray-700">Active</span>
+                <span className="text-sm text-foreground">Active</span>
               </label>
             </div>
           </div>
@@ -652,14 +652,14 @@ export default function ProductForm({ product, onClose, onSuccess }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-border rounded-md text-foreground hover:bg-background"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={uploading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-blue-600 text-background rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading
                 ? "Uploading..."

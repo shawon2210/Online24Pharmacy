@@ -15,10 +15,10 @@ export default function LoyaltyPoints() {
   if (!isAuthenticated || !loyalty) return null;
 
   return (
-    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-lg">
+    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-background p-4 rounded-lg">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="bg-white bg-opacity-20 p-2 rounded-full">
+          <div className="bg-background bg-opacity-20 p-2 rounded-full">
             <StarIcon className="w-6 h-6" />
           </div>
           <div>
@@ -37,7 +37,7 @@ export default function LoyaltyPoints() {
           <GiftIcon className="w-4 h-4" />
           <span className="text-sm">Next reward at {loyalty.nextReward} points</span>
         </div>
-        <button className="bg-white bg-opacity-20 px-3 py-1 rounded text-sm hover:bg-opacity-30">
+        <button className="bg-background bg-opacity-20 px-3 py-1 rounded text-sm hover:bg-opacity-30">
           Redeem
         </button>
       </div>

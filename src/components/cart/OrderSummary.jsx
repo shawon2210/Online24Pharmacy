@@ -35,29 +35,29 @@ export default function OrderSummary({
 
   return (
     <div
-      className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8 sticky top-0"
+      className="bg-background rounded-2xl shadow-lg border border-border p-6 sm:p-8 sticky top-0"
       style={{ top: `${headerOffset + 1.5 * 16}px` }}
     >
       <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-emerald-500">
         <div className="p-2 sm:p-3 bg-emerald-100 rounded-lg">
           <ShoppingCartIcon className="w-5 sm:w-6 h-5 sm:h-6 text-emerald-600" />
         </div>
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+        <h2 className="text-lg sm:text-xl font-bold text-foreground">
           {t("cartPage.orderSummary")}
         </h2>
       </div>
 
       <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
         <div className="flex justify-between items-center">
-          <span className="text-sm sm:text-base text-gray-600">
+          <span className="text-sm sm:text-base text-muted-foreground">
             {t("cartPage.subtotal")}
           </span>
-          <span className="font-bold text-gray-900">
+          <span className="font-bold text-foreground">
             ৳{safeSubtotal.toFixed(2)}
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm sm:text-base text-gray-600">
+          <span className="text-sm sm:text-base text-muted-foreground">
             {t("cartPage.deliveryFee")}
           </span>
           <span className="font-bold text-emerald-600">
@@ -67,12 +67,12 @@ export default function OrderSummary({
           </span>
         </div>
         {safeSubtotal < DELIVERY.FREE_SHIPPING_THRESHOLD && (
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-background0">
             {t('cartPage.addMoreForFreeShipping', { amount: (DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(2) })}
           </div>
         )}
-        <div className="border-t-2 border-gray-200 pt-3 sm:pt-4 flex justify-between items-center">
-          <span className="text-base sm:text-lg font-bold text-gray-900">
+        <div className="border-t-2 border-border pt-3 sm:pt-4 flex justify-between items-center">
+          <span className="text-base sm:text-lg font-bold text-foreground">
             {t("cartPage.totalPrice")}
           </span>
           <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
@@ -86,8 +86,8 @@ export default function OrderSummary({
         disabled={!canCheckout}
         className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 ${
           canCheckout
-            ? "bg-gradient-to-r from-emerald-600 to-green-600 text-white hover:from-emerald-700 hover:to-green-700 active:scale-95"
-            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            ? "bg-gradient-to-r from-emerald-600 to-green-600 text-background hover:from-emerald-700 hover:to-green-700 active:scale-95"
+            : "bg-border text-background0 cursor-not-allowed"
         }`}
       >
         <span>{t("cartPage.proceedCheckout")}</span>

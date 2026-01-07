@@ -37,7 +37,7 @@ export default function SmartPrescriptionRecorderPage() {
         description="Upload your prescription and get verified by licensed pharmacists with free delivery"
       />
       <div
-        className="w-full min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50"
+        className="w-full min-h-screen bg-linear-to-br from-gray-50 via-blue-50/30 to-gray-50"
         style={{
           marginTop: `-${headerOffset}px`,
           paddingTop: `calc(${headerOffset}px + 2rem)`,
@@ -59,7 +59,7 @@ export default function SmartPrescriptionRecorderPage() {
               </video>
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/60 group-hover:from-black/50 group-hover:via-black/40 group-hover:to-black/50 transition-all duration-500" />
+              <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/50 to-black/60 group-hover:from-black/50 group-hover:via-black/40 group-hover:to-black/50 transition-all duration-500" />
 
               {/* Shine Effect */}
               <div
@@ -71,7 +71,7 @@ export default function SmartPrescriptionRecorderPage() {
               />
 
               {/* Content */}
-              <div className="relative p-8 sm:p-12 md:p-16 lg:p-20 xl:p-24 flex flex-col justify-center text-white min-h-[400px] sm:min-h-[500px] md:min-h-[600px]">
+              <div className="relative p-8 sm:p-12 md:p-16 lg:p-20 xl:p-24 flex flex-col justify-center text-background min-h-100 sm:min-h-125 md:min-h-150">
                 {/* Decorative Top Icon */}
                 <div className="mb-4 sm:mb-6 flex items-center">
                   <div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 hover:border-emerald-400/50 transition-all duration-300">
@@ -88,7 +88,7 @@ export default function SmartPrescriptionRecorderPage() {
                 </h1>
 
                 {/* Description */}
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-10 drop-shadow-lg max-w-3xl leading-relaxed text-white/95 group-hover:text-white transition-colors duration-300">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-10 drop-shadow-lg max-w-3xl leading-relaxed text-white/95 group-hover:text-background transition-colors duration-300">
                   Our licensed pharmacists will review your prescription and
                   deliver your medicines to your doorstep. All information is
                   kept confidential and secure.
@@ -97,19 +97,19 @@ export default function SmartPrescriptionRecorderPage() {
                 {/* Benefits List */}
                 <div className="mb-8 sm:mb-10 lg:mb-12 flex flex-wrap gap-4 sm:gap-5">
                   <div className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-semibold">
-                    <span className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+                    <span className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-500 rounded-full flex items-center justify-center text-background">
                       ✓
                     </span>
                     <span>Quick Verification</span>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-semibold">
-                    <span className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+                    <span className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-500 rounded-full flex items-center justify-center text-background">
                       ✓
                     </span>
                     <span>Free Delivery</span>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-semibold">
-                    <span className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+                    <span className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-500 rounded-full flex items-center justify-center text-background">
                       ✓
                     </span>
                     <span>Secure & Confidential</span>
@@ -147,34 +147,34 @@ export default function SmartPrescriptionRecorderPage() {
 
             {/* Additional Info Section */}
             <div className="mt-12 sm:mt-16 lg:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-emerald-100 hover:border-emerald-300 transition-all">
+              <div className="bg-background rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-emerald-100 hover:border-emerald-300 transition-all">
                 <div className="text-4xl mb-4">🔒</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold text-foreground mb-2">
                   100% Secure
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Your prescription and personal information are encrypted and
                   kept completely confidential.
                 </p>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-blue-100 hover:border-blue-300 transition-all">
+              <div className="bg-background rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-blue-100 hover:border-blue-300 transition-all">
                 <div className="text-4xl mb-4">⚡</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold text-foreground mb-2">
                   Fast Processing
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Licensed pharmacists verify your prescription within 2-4 hours
                   during business hours.
                 </p>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-purple-100 hover:border-purple-300 transition-all">
+              <div className="bg-background rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-purple-100 hover:border-purple-300 transition-all">
                 <div className="text-4xl mb-4">🚚</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold text-foreground mb-2">
                   Free Delivery
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Get your medicines delivered to your doorstep with free
                   delivery on all prescription orders.
                 </p>

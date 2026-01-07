@@ -23,7 +23,7 @@ export default function CategoryProductGrid({
       <div className="space-y-12">
         {[...Array(3)].map((_, i) => (
           <div key={i}>
-            <div className="h-8 bg-gray-200 rounded w-48 mb-4 animate-pulse" />
+            <div className="h-8 bg-border rounded w-48 mb-4 animate-pulse" />
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6 auto-rows-fr">
               {[...Array(4)].map((_, j) => (
                 <div key={j} className="flex">
@@ -51,7 +51,7 @@ export default function CategoryProductGrid({
         return (
           <div key={category}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">{category}</h2>
+              <h2 className="text-2xl font-bold text-foreground">{category}</h2>
               <Link
                 to={`/categories/${category.toLowerCase()}`}
                 className="text-sm font-semibold text-primary hover:underline"

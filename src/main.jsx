@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import "./i18n";
 import ThemeInit from "./components/common/ThemeInit";
+import { ThemeProvider } from "./contexts/ThemeProvider";
 import i18next from "i18next";
 
 // Expose a global tf helper for legacy references that expect `tf` in scope.
@@ -61,22 +62,19 @@ class ErrorBoundary extends Component {
   }
 }
 
-if (import.meta.hot) {
-  import.meta.hot.accept();
-}
-
 console.log("🚀 Starting app...");
 
 const rootElement = document.getElementById("root");
 console.log("✅ Root found:", !!rootElement);
 
 const root = createRoot(rootElement);
-
 root.render(
   <StrictMode>
     <ErrorBoundary>
-      <ThemeInit />
-      <App />
+      <ThemeProvider>
+        <ThemeInit />
+        <App />
+      </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>
 );

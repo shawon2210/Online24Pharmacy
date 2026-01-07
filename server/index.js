@@ -1,7 +1,7 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
 import { apiLimiter, authLimiter } from './middleware/rateLimiter.js';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
@@ -21,8 +21,6 @@ import chatbotRoutes from './routes/chatbot.js';
 import savedKitsRoutes from './routes/savedKits.js';
 import pickupRoutes from './routes/pickup.js';
 import notificationRoutes from './routes/notifications.js';
-
-dotenv.config();
 
 // Load cron jobs (side-effect imports)
 import './cron/reminders.js';

@@ -14,12 +14,12 @@ await fs.mkdir(uploadDir, { recursive: true }).catch(() => {});
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => {
-    const uniqueName = `product-${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
+    const uniqueName = `product-${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
     cb(null, uniqueName);
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -31,81 +31,136 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-// Get all products with filters
+const normalizeImages = (images) => {
+  if (!images) return [];
+  if (Array.isArray(images)) return images;
+  try {
+    const parsed = JSON.parse(images);
+    if (Array.isArray(parsed)) return parsed;
+    return [String(parsed)];
+  } catch (_err) {
+    return [images];
+  }
+};
+
+// Get all products with filters (public catalog)
 router.get('/', async (req, res) => {
   try {
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const filePath = path.resolve(process.cwd(), 'server', 'data', 'products.json');
-    try {
-      const data = await fs.readFile(filePath, 'utf8');
-      const products = JSON.parse(data || '[]');
-      res.json({ products, pagination: { page: 1, limit: 20, total: products.length, pages: 1 } });
-    } catch (e) {
-      res.json({ products: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } });
+    const {
+      page = 1,
+      limit = 20,
+      search = '',
+      categoryId,
+      subcategoryId,
+      requiresPrescription,
+      isOTC,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = req.query;
+
+    const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
+    const take = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+    const skip = (pageNumber - 1) * take;
+
+    const where = { isActive: true };
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { brand: { contains: search, mode: 'insensitive' } },
+        { sku: { contains: search, mode: 'insensitive' } },
+      ];
     }
+
+    if (categoryId) where.categoryId = categoryId;
+    if (subcategoryId) where.subcategoryId = subcategoryId;
+
+    if (requiresPrescription === 'true') where.requiresPrescription = true;
+    if (requiresPrescription === 'false') where.requiresPrescription = false;
+
+    if (isOTC === 'true') where.isOTC = true;
+    if (isOTC === 'false') where.isOTC = false;
+
+    const orderBy = { [sortBy]: sortOrder === 'asc' ? 'asc' : 'desc' };
+
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        include: {
+          category: { select: { id: true, name: true, slug: true } },
+          subcategory: { select: { id: true, name: true, slug: true } },
+        },
+        orderBy,
+        skip,
+        take,
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    const normalized = products.map((product) => {
+      const images = normalizeImages(product.images);
+      return {
+        ...product,
+        images,
+        image: images[0] || null,
+      };
+    });
+
+    res.json({
+      products: normalized,
+      total,
+      page: pageNumber,
+      limit: take,
+      pages: Math.ceil(total / take),
+    });
   } catch (error) {
-    console.error(error);
-    res.json({ products: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } });
+    console.error('Failed to fetch products:', error);
+    res.json({ products: [], total: 0, page: 1, limit: 20, pages: 0 });
   }
 });
 
-// Get all categories (from data file) - MUST BE BEFORE /:slug route
-router.get('/categories', async (req, res) => {
+// Get all categories (public)
+router.get('/categories', async (_req, res) => {
   try {
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const filePath = path.resolve(process.cwd(), 'server', 'data', 'categories.json');
-    try {
-      const data = await fs.readFile(filePath, 'utf8');
-      const categories = JSON.parse(data || '[]');
-      res.json({ categories });
-    } catch (e) {
-      res.json({ categories: [] });
-    }
+    const categories = await prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+      },
+    });
+
+    res.json({ categories });
   } catch (error) {
-    console.error(error);
+    console.error('Failed to fetch categories:', error);
     res.json({ categories: [] });
   }
 });
 
-// Get all subcategories (from data file) - MUST BE BEFORE /:slug route
-router.get('/subcategories', async (req, res) => {
+// Get all subcategories (public)
+router.get('/subcategories', async (_req, res) => {
   try {
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const filePath = path.resolve(process.cwd(), 'server', 'data', 'subcategories.json');
-    try {
-      const data = await fs.readFile(filePath, 'utf8');
-      const subcategories = JSON.parse(data || '[]');
-      res.json({ subcategories });
-    } catch (e) {
-      res.json({ subcategories: [] });
-    }
+    const subcategories = await prisma.subcategory.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        categoryId: true,
+      },
+    });
+
+    res.json({ subcategories });
   } catch (error) {
-    console.error(error);
+    console.error('Failed to fetch subcategories:', error);
     res.json({ subcategories: [] });
-  }
-});
-
-// Get single product by slug
-router.get('/:slug', async (req, res) => {
-  try {
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const filePath = path.resolve(process.cwd(), 'server', 'data', 'products.json');
-    const data = await fs.readFile(filePath, 'utf8');
-    const products = JSON.parse(data || '[]');
-    const product = products.find(p => p.slug === req.params.slug);
-
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
-    res.json(product);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch product' });
   }
 });
 
@@ -121,70 +176,48 @@ router.post('/upload', upload.single('image'), (req, res) => {
   }
 });
 
-// Create product
-router.post('/', async (req, res) => {
+// Get single product by slug or id
+router.get('/:slug', async (req, res) => {
   try {
-    const { name, category, price, stock, image, description } = req.body;
-    const product = { id: Date.now().toString(), name, category, price: parseFloat(price), stock: parseInt(stock), image, description };
-    
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const filePath = path.resolve(process.cwd(), 'server', 'data', 'products.json');
-    
-    let products = [];
-    try {
-      const data = await fs.readFile(filePath, 'utf8');
-      products = JSON.parse(data || '[]');
-    } catch (e) { console.error(e); /* intentionally ignored fallback read error */ }
-    
-    products.push(product);
-    await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-    res.json(product);
+    const product = await prisma.product.findFirst({
+      where: {
+        isActive: true,
+        OR: [{ slug: req.params.slug }, { id: req.params.slug }],
+      },
+      include: {
+        category: { select: { id: true, name: true, slug: true } },
+        subcategory: { select: { id: true, name: true, slug: true } },
+      },
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    const images = normalizeImages(product.images);
+    res.json({
+      ...product,
+      images,
+      image: images[0] || null,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to create product' });
+    console.error('Failed to fetch product:', error);
+    res.status(500).json({ error: 'Failed to fetch product' });
   }
 });
 
-// Update product
-router.put('/:id', async (req, res) => {
-  try {
-    const { name, category, price, stock, image, description } = req.body;
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const filePath = path.resolve(process.cwd(), 'server', 'data', 'products.json');
-    
-    const data = await fs.readFile(filePath, 'utf8');
-    let products = JSON.parse(data || '[]');
-    const index = products.findIndex(p => p.id === req.params.id);
-    
-    if (index === -1) return res.status(404).json({ error: 'Product not found' });
-    
-    products[index] = { ...products[index], name, category, price: parseFloat(price), stock: parseInt(stock), image, description };
-    await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-    res.json(products[index]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to update product' });
-  }
+// Restrict direct mutations on public products API
+router.post('/', (_req, res) => {
+  res.status(403).json({ error: 'Product creation is restricted. Use /api/admin/products.' });
 });
 
-// Delete product (admin only)
-router.delete('/:id', async (req, res) => {
-  try {
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const filePath = path.resolve(process.cwd(), 'server', 'data', 'products.json');
-    
-    const data = await fs.readFile(filePath, 'utf8');
-    let products = JSON.parse(data || '[]');
-    products = products.filter(p => p.id !== req.params.id);
-    await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-    res.json({ message: 'Product deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to delete product' });
-  }
+router.put('/:id', (_req, res) => {
+  res.status(403).json({ error: 'Product updates are restricted. Use /api/admin/products/:id.' });
+});
+
+router.delete('/:id', (_req, res) => {
+  res.status(403).json({ error: 'Product deletion is restricted. Use /api/admin/products/:id.' });
 });
 
 export default router;
+

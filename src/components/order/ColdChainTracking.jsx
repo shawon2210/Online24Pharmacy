@@ -28,7 +28,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
   const isTemperatureOk = currentTemp >= 2 && currentTemp <= 8;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+    <div className="bg-background rounded-lg shadow-md p-6 mt-6">
       <div className="flex items-center mb-4">
         <ThermometerIcon className="w-6 h-6 text-blue-600 mr-2" />
         <h3 className="text-lg font-semibold">Cold Chain Monitoring</h3>
@@ -36,9 +36,9 @@ export default function ColdChainTracking({ hasColdChainItems }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Current Temperature */}
-        <div className="bg-gray-50 rounded-lg p-4">
+        <div className="bg-background rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-600">
+            <span className="text-sm font-medium text-muted-foreground">
               Current Temperature
             </span>
             {!isTemperatureOk && (
@@ -52,12 +52,12 @@ export default function ColdChainTracking({ hasColdChainItems }) {
           >
             {currentTemp ? `${currentTemp.toFixed(1)}°C` : "--"}
           </div>
-          <div className="text-sm text-gray-500 mt-1">Target: 2-8°C</div>
+          <div className="text-sm text-background0 mt-1">Target: 2-8°C</div>
         </div>
 
         {/* Status */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <div className="text-sm font-medium text-gray-600 mb-2">
+        <div className="bg-background rounded-lg p-4">
+          <div className="text-sm font-medium text-muted-foreground mb-2">
             Cold Chain Status
           </div>
           <div
@@ -69,7 +69,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
           >
             {isTemperatureOk ? "✓ Maintained" : "⚠ Alert"}
           </div>
-          <div className="text-xs text-gray-500 mt-2">
+          <div className="text-xs text-background0 mt-2">
             Last updated: {new Date().toLocaleTimeString()}
           </div>
         </div>
@@ -77,10 +77,10 @@ export default function ColdChainTracking({ hasColdChainItems }) {
 
       {/* Temperature History */}
       <div className="mt-6">
-        <h4 className="text-sm font-medium text-gray-600 mb-3">
+        <h4 className="text-sm font-medium text-muted-foreground mb-3">
           Temperature History
         </h4>
-        <div className="h-32 bg-gray-50 rounded-lg p-4 flex items-end space-x-1">
+        <div className="h-32 bg-background rounded-lg p-4 flex items-end space-x-1">
           {temperatureData.map((data, index) => (
             <div
               key={index}
@@ -94,7 +94,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
             />
           ))}
         </div>
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-background0 mt-1">
           <span>10 readings ago</span>
           <span>Now</span>
         </div>
@@ -116,7 +116,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
         </div>
       )}
 
-      <div className="mt-4 text-xs text-gray-500">
+      <div className="mt-4 text-xs text-background0">
         <p>• Cold chain items require temperature control during transport</p>
         <p>• Temperature is monitored continuously during delivery</p>
         <p>• Items will be replaced if temperature requirements are not met</p>

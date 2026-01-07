@@ -47,11 +47,13 @@ const PickupLocationsAdmin = () => {
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) throw new Error("No admin token");
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       const res = await fetch("/api/admin/pickup-locations/start-geocode-job", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          ...(csrfToken && { 'X-CSRF-Token': csrfToken })
         },
         body: JSON.stringify({}),
       });
@@ -123,6 +125,7 @@ const PickupLocationsAdmin = () => {
     }
 
     try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       const url = editingLocation
         ? `/api/admin/pickup-locations/${editingLocation.id}`
         : "/api/admin/pickup-locations";
@@ -135,6 +138,7 @@ const PickupLocationsAdmin = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          ...(csrfToken && { 'X-CSRF-Token': csrfToken })
         },
         body: JSON.stringify(formData),
       });
@@ -190,10 +194,14 @@ const PickupLocationsAdmin = () => {
     }
 
     try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       console.log("Deleting location:", id);
       const response = await fetch(`/api/admin/pickup-locations/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(csrfToken && { 'X-CSRF-Token': csrfToken })
+        },
       });
       console.log("Delete response status:", response.status);
 
@@ -219,7 +227,7 @@ const PickupLocationsAdmin = () => {
     <div className="p-4 sm:p-6 max-w-full overflow-x-hidden">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground">
             Pickup Locations Management
           </h2>
           <div className="mt-2 flex flex-col gap-1">
@@ -227,7 +235,7 @@ const PickupLocationsAdmin = () => {
               <button
                 onClick={handleStartGeocodeJob}
                 disabled={geocodeLoading}
-                className={`bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                className={`bg-blue-600 hover:bg-blue-700 text-background px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
                   geocodeLoading ? "opacity-60 cursor-not-allowed" : ""
                 }`}
               >
@@ -235,7 +243,7 @@ const PickupLocationsAdmin = () => {
               </button>
               <button
                 onClick={fetchGeocodeStatus}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-2 py-1 rounded text-xs font-medium"
+                className="bg-border hover:bg-border text-foreground px-2 py-1 rounded text-xs font-medium"
               >
                 Refresh Status
               </button>
@@ -253,10 +261,10 @@ const PickupLocationsAdmin = () => {
                   {geocodeStatus.running ? (
                     <span className="text-blue-700 font-semibold">Running</span>
                   ) : (
-                    <span className="text-gray-700">Idle</span>
+                    <span className="text-foreground">Idle</span>
                   )}
                   {geocodeStatus.lastRun && (
-                    <span className="ml-2 text-gray-500">
+                    <span className="ml-2 text-background0">
                       Last: {geocodeStatus.lastRun.status} (
                       {geocodeStatus.lastRun.updatedAt
                         ? new Date(
@@ -267,12 +275,12 @@ const PickupLocationsAdmin = () => {
                     </span>
                   )}
                   {typeof geocodeStatus.pending === "number" && (
-                    <span className="ml-2 text-gray-500">
+                    <span className="ml-2 text-background0">
                       Pending: {geocodeStatus.pending}
                     </span>
                   )}
                   {typeof geocodeStatus.completed === "number" && (
-                    <span className="ml-2 text-gray-500">
+                    <span className="ml-2 text-background0">
                       Completed: {geocodeStatus.completed}
                     </span>
                   )}
@@ -283,14 +291,14 @@ const PickupLocationsAdmin = () => {
                   )}
                 </span>
               ) : (
-                <span className="text-gray-400">Loading...</span>
+                <span className="text-muted-foreground">Loading...</span>
               )}
             </div>
           </div>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
+          className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-background px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
         >
           <PlusIcon className="w-5 h-5" />
           Add Location
@@ -299,13 +307,13 @@ const PickupLocationsAdmin = () => {
 
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-background p-4 sm:p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-bold mb-4">
               {editingLocation ? "Edit Location" : "Add New Location"}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-foreground mb-1">
                   Name
                 </label>
                 <input
@@ -314,12 +322,12 @@ const PickupLocationsAdmin = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                  className="mt-1 block w-full border border-border rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-foreground mb-1">
                   Address
                 </label>
                 <textarea
@@ -327,14 +335,14 @@ const PickupLocationsAdmin = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, address: e.target.value })
                   }
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                  className="mt-1 block w-full border border-border rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
                   rows={3}
                   required
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Latitude
                   </label>
                   <input
@@ -344,12 +352,12 @@ const PickupLocationsAdmin = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, lat: e.target.value })
                     }
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                    className="mt-1 block w-full border border-border rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Longitude
                   </label>
                   <input
@@ -359,13 +367,13 @@ const PickupLocationsAdmin = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, lng: e.target.value })
                     }
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                    className="mt-1 block w-full border border-border rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-foreground mb-1">
                   Opening Hours
                 </label>
                 <input
@@ -374,7 +382,7 @@ const PickupLocationsAdmin = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, open_hours: e.target.value })
                   }
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                  className="mt-1 block w-full border border-border rounded-md px-3 py-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="9:00 AM – 9:00 PM"
                   required
                 />
@@ -386,16 +394,16 @@ const PickupLocationsAdmin = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, is_active: e.target.checked })
                   }
-                  className="mr-2 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                  className="mr-2 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-border rounded"
                 />
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-foreground">
                   Active
                 </label>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 pt-4">
                 <button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-background px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
                   {editingLocation ? "Update" : "Create"}
                 </button>
@@ -413,7 +421,7 @@ const PickupLocationsAdmin = () => {
                       is_active: true,
                     });
                   }}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  className="bg-background0 hover:bg-muted-foreground text-background px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
@@ -423,45 +431,45 @@ const PickupLocationsAdmin = () => {
         </div>
       )}
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="bg-background shadow rounded-lg overflow-hidden">
         {/* Desktop Table View */}
         <div className="hidden lg:block">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-background">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                   Address
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                   Coordinates
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                   Hours
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-background divide-y divide-gray-200">
               {locations.map((location) => (
                 <tr key={location.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                     {location.name}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                  <td className="px-6 py-4 text-sm text-background0 max-w-xs truncate">
                     {location.address}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                     {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
                     {location.open_hours}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -502,10 +510,10 @@ const PickupLocationsAdmin = () => {
               <div key={location.id} className="p-4">
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex-1">
-                    <h3 className="text-sm font-medium text-gray-900">
+                    <h3 className="text-sm font-medium text-foreground">
                       {location.name}
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-background0 mt-1">
                       {location.address}
                     </p>
                   </div>
@@ -519,7 +527,7 @@ const PickupLocationsAdmin = () => {
                     {location.is_active ? "Active" : "Inactive"}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500 space-y-1 mb-3">
+                <div className="text-xs text-background0 space-y-1 mb-3">
                   <p>
                     <span className="font-medium">Coordinates:</span>{" "}
                     {location.lat.toFixed(4)}, {location.lng.toFixed(4)}

@@ -10,7 +10,8 @@ export const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ error: 'Access token required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
+    const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret';
+    const decoded = jwt.verify(token, JWT_SECRET);
     console.log('AUTH: Looking for userId:', decoded.userId);
     
     let user = null;

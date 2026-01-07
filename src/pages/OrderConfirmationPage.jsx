@@ -52,15 +52,15 @@ export default function OrderConfirmationPage() {
         <h1 className="text-3xl font-bold mb-4">
           {t("orderConfirmationPage.thankYou")}
         </h1>
-        <p className="text-xl text-gray-600 mb-8">
+        <p className="text-xl text-muted-foreground mb-8">
           {t("orderConfirmationPage.orderConfirmed")} #{order.orderNumber}
         </p>
 
-        <div className="bg-white rounded-lg shadow p-6 mb-8 text-left">
+        <div className="bg-background rounded-lg shadow p-6 mb-8 text-left">
           <h2 className="text-lg font-bold mb-4">
             {t("orderConfirmationPage.orderDetails")}
           </h2>
-          <div className="space-y-2 text-gray-600">
+          <div className="space-y-2 text-muted-foreground">
             <p>
               <span className="font-semibold">
                 {t("orderConfirmationPage.orderNumber")}:
@@ -93,19 +93,19 @@ export default function OrderConfirmationPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to={`/track-order?orderId=${order.orderNumber}`}
-            className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700"
+            className="bg-emerald-600 text-background px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700"
           >
             {t("orderConfirmationPage.trackOrder")}
           </Link>
           <Link
             to="/"
-            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300"
+            className="bg-border text-foreground px-6 py-3 rounded-lg font-semibold hover:bg-border"
           >
             {t("orderConfirmationPage.continueShopping")}
           </Link>
         </div>
 
-        <p className="text-sm text-gray-500 mt-8">
+        <p className="text-sm text-background0 mt-8">
           {t("orderConfirmationPage.confirmationSent")}
         </p>
       </div>

@@ -102,8 +102,14 @@ export default function ProfilePage() {
 
     setLoading(true);
     try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const headers = {};
+      if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken;
+      }
       const response = await axios.patch(`${API_URL}/api/users/me`, formData, {
         withCredentials: true,
+        headers,
       });
       if (response.data?.user && updateUser) {
         updateUser(response.data.user);
@@ -124,15 +130,15 @@ export default function ProfilePage() {
     return (
       <>
         <SEOHead title={t("profilePage.seoTitle")} />
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-background dark:bg-card px-4">
           <div className="text-center">
-            <UserCircleIcon className="w-20 h-20 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <UserCircleIcon className="w-20 h-20 mx-auto text-muted mb-4" />
+            <p className="text-muted-foreground dark:text-muted-foreground mb-6">
               {t("profilePage.loginPrompt")}
             </p>
             <a
               href="/login"
-              className="inline-block bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
+              className="inline-block bg-emerald-600 text-background px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
             >
               {t("profilePage.signIn")}
             </a>
@@ -145,14 +151,14 @@ export default function ProfilePage() {
   return (
     <>
       <SEOHead title={t("profilePage.seoTitle")} />
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 sm:py-6 lg:py-8">
+      <div className="min-h-screen bg-background dark:bg-card py-4 sm:py-6 lg:py-8">
         <div className="w-full h-full px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-4 sm:mb-6 lg:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-background">
               {t("profilePage.title")}
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-sm sm:text-base text-muted-foreground dark:text-muted-foreground mt-1">
               {t("profilePage.description")}
             </p>
           </div>
@@ -167,9 +173,9 @@ export default function ProfilePage() {
               }`}
             >
               {message.type === "success" ? (
-                <CheckCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <CheckCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               ) : (
-                <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               )}
               <p className="font-medium">{t(message.text) || message.text}</p>
             </div>
@@ -178,7 +184,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Left Sidebar - Profile Card */}
             <div className="lg:col-span-1">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 lg:sticky lg:top-6">
+              <div className="bg-background dark:bg-card rounded-xl shadow-sm p-4 sm:p-6 lg:sticky lg:top-6">
                 <div className="text-center">
                   <div className="relative inline-block mb-3 sm:mb-4">
                     {profilePicturePreview || user.profilePicture ? (
@@ -188,15 +194,15 @@ export default function ProfilePage() {
                         className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-emerald-100 dark:border-emerald-900"
                       />
                     ) : (
-                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center border-4 border-emerald-100 dark:border-emerald-900">
-                        <span className="text-3xl sm:text-4xl font-bold text-white">
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-emerald-600 flex items-center justify-center border-4 border-emerald-100 dark:border-emerald-900">
+                        <span className="text-3xl sm:text-4xl font-bold text-background">
                           {user.firstName?.charAt(0)}
                           {user.lastName?.charAt(0)}
                         </span>
                       </div>
                     )}
                     <label className="absolute bottom-0 right-0 w-8 h-8 sm:w-10 sm:h-10 bg-emerald-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-emerald-700 transition-colors shadow-lg">
-                      <CameraIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                      <CameraIcon className="w-4 h-4 sm:w-5 sm:h-5 text-background" />
                       <input
                         type="file"
                         accept="image/*"
@@ -205,17 +211,17 @@ export default function ProfilePage() {
                       />
                     </label>
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-lg sm:text-xl font-bold text-foreground dark:text-background">
                     {user.firstName} {user.lastName}
                   </h2>
-                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">
+                  <p className="text-xs sm:text-sm text-background0 dark:text-muted-foreground mt-1 truncate">
                     {user.email}
                   </p>
-                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border dark:border-foreground">
+                    <p className="text-xs text-background0 dark:text-muted-foreground">
                       {t("profilePage.memberSince")}
                     </p>
-                    <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-xs sm:text-sm font-medium text-foreground dark:text-background">
                       {new Date(
                         user.createdAt || Date.now()
                       ).toLocaleDateString()}
@@ -227,10 +233,10 @@ export default function ProfilePage() {
 
             {/* Right Content - Form */}
             <div className="lg:col-span-3">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+              <div className="bg-background dark:bg-card rounded-xl shadow-sm">
                 {/* Header */}
-                <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+                <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border dark:border-foreground flex items-center justify-between">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground dark:text-background">
                     {t("profilePage.personalInfo")}
                   </h3>
                   <button
@@ -240,8 +246,8 @@ export default function ProfilePage() {
                     }}
                     className={`px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-lg font-medium transition-colors ${
                       isEditing
-                        ? "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                        : "bg-emerald-600 text-white hover:bg-emerald-700"
+                        ? "bg-muted dark:bg-foreground text-foreground dark:text-muted hover:bg-border dark:hover:bg-muted-foreground"
+                        : "bg-emerald-600 text-background hover:bg-emerald-700"
                     }`}
                   >
                     {isEditing
@@ -258,7 +264,7 @@ export default function ProfilePage() {
                   {/* Basic Info */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
                         <UserCircleIcon className="w-4 h-4 inline mr-1" />
                         {t("profilePage.fullName")}
                       </label>
@@ -270,12 +276,12 @@ export default function ProfilePage() {
                         }
                         disabled={!isEditing}
                         required
-                        className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
                         <PhoneIcon className="w-4 h-4 inline mr-1" />
                         {t("profilePage.phoneNumber")}
                       </label>
@@ -290,12 +296,12 @@ export default function ProfilePage() {
                         }
                         disabled={!isEditing}
                         placeholder="+8801XXXXXXXXX"
-                        className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
                         <CalendarIcon className="w-4 h-4 inline mr-1" />
                         {t("profilePage.dateOfBirth")}
                       </label>
@@ -309,12 +315,12 @@ export default function ProfilePage() {
                           })
                         }
                         disabled={!isEditing}
-                        className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
                         {t("profilePage.gender")}
                       </label>
                       <select
@@ -323,7 +329,7 @@ export default function ProfilePage() {
                           setFormData({ ...formData, gender: e.target.value })
                         }
                         disabled={!isEditing}
-                        className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       >
                         <option value="">
                           {t("profilePage.selectGender")}
@@ -338,14 +344,14 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Address Section */}
-                  <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <div className="pt-6 border-t border-border dark:border-foreground">
+                    <h4 className="text-base font-semibold text-foreground dark:text-background mb-4 flex items-center gap-2">
                       <MapPinIcon className="w-5 h-5 text-emerald-600" />
                       {t("profilePage.shippingAddress")}
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="sm:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
                           {t("profilePage.streetAddress")}
                         </label>
                         <input
@@ -358,12 +364,12 @@ export default function ProfilePage() {
                           placeholder={t(
                             "profilePage.streetAddressPlaceholder"
                           )}
-                          className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                          className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
                           {t("profilePage.area")}
                         </label>
                         <select
@@ -372,7 +378,7 @@ export default function ProfilePage() {
                             setFormData({ ...formData, area: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                          className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         >
                           <option value="">
                             {t("profilePage.selectArea")}
@@ -386,7 +392,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
                           {t("profilePage.postalCode")}
                         </label>
                         <input
@@ -400,7 +406,7 @@ export default function ProfilePage() {
                           }
                           disabled={!isEditing}
                           placeholder="1200"
-                          className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-50 dark:disabled:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                          className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         />
                       </div>
                     </div>
@@ -408,15 +414,15 @@ export default function ProfilePage() {
 
                   {/* Save Button */}
                   {isEditing && (
-                    <div className="pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div className="pt-4 sm:pt-6 border-t border-border dark:border-foreground">
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full px-6 py-2.5 sm:py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+                        className="w-full px-6 py-2.5 sm:py-3 bg-emerald-600 text-background rounded-lg font-semibold hover:bg-emerald-700 disabled:bg-muted-foreground disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
                       >
                         {loading ? (
                           <>
-                            <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                             {t("profilePage.saving")}
                           </>
                         ) : (

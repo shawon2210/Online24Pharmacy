@@ -57,7 +57,7 @@ export default function AdminSidebar({ isCollapsed, setCollapsed }) {
             isCollapsed ? "justify-center" : ""
           }`}
         >
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shrink-0">
             <span className="text-primary-foreground font-bold text-xl">
               ⚕️
             </span>
@@ -87,7 +87,7 @@ export default function AdminSidebar({ isCollapsed, setCollapsed }) {
               } ${isCollapsed ? "justify-center" : ""}`}
             >
               <Icon
-                className={`h-6 w-6 flex-shrink-0 ${
+                className={`h-6 w-6 shrink-0 ${
                   !isCollapsed ? "mr-4" : ""
                 }`}
               />
@@ -120,7 +120,7 @@ export default function AdminSidebar({ isCollapsed, setCollapsed }) {
             isCollapsed ? "justify-center" : ""
           }`}
         >
-          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shrink-0">
             <span className="text-lg font-bold text-primary-foreground">
               {user?.firstName?.[0]}
             </span>

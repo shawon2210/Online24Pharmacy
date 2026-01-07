@@ -19,23 +19,23 @@ export default function OrderStatusTimeline({ status }) {
               {index <= currentStatusIndex ? (
                 <div className="flex items-center">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600">
-                    <CheckIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                    <CheckIcon className="h-6 w-6 text-background" aria-hidden="true" />
                   </span>
-                  <span className="ml-4 text-sm font-medium text-gray-900">{s.name}</span>
+                  <span className="ml-4 text-sm font-medium text-foreground">{s.name}</span>
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-300">
-                    <span className="text-gray-500">{index + 1}</span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-border">
+                    <span className="text-background0">{index + 1}</span>
                   </span>
-                  <span className="ml-4 text-sm font-medium text-gray-500">{s.name}</span>
+                  <span className="ml-4 text-sm font-medium text-background0">{s.name}</span>
                 </div>
               )}
 
               {index < statuses.length - 1 ? (
                 <div
                   className={`absolute left-4 top-4 -ml-px mt-0.5 h-full w-0.5 ${
-                    index < currentStatusIndex ? "bg-emerald-600" : "bg-gray-300"
+                    index < currentStatusIndex ? "bg-emerald-600" : "bg-border"
                   }`}
                   aria-hidden="true"
                 />

@@ -29,11 +29,12 @@ export default function AdminCustomers() {
   };
 
   const toggleUserStatus = async (id, isActive) => {
+    if (!id || typeof id !== 'string') throw new Error('Invalid customer ID');
     if (!confirm(`${isActive ? "Enable" : "Disable"} this customer?`)) return;
     try {
       const token = localStorage.getItem("auth_token");
       await axios.put(
-        `${API_URL}/api/admin/customers/${id}/status`,
+        `${API_URL}/api/admin/customers/${encodeURIComponent(id)}/status`,
         { isActive },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -63,8 +64,13 @@ export default function AdminCustomers() {
     if (!confirm("Revoke this session?")) return;
     try {
       const token = localStorage.getItem("auth_token");
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const headers = { Authorization: `Bearer ${token}` };
+      if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken;
+      }
       await axios.delete(`${API_URL}/api/admin/sessions/${sessionId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers,
       });
       viewSessions(selectedUser);
     } catch {
@@ -79,36 +85,36 @@ export default function AdminCustomers() {
     <>
       <SEOHead title="Admin - Customers" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-background shadow rounded-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Customers</h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-background0">
               Manage customer accounts and sessions
             </p>
           </div>
 
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-background">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-background divide-y divide-gray-200">
                 {customers.map((c) => (
                   <tr key={c.id}>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm text-foreground">
                       {c.firstName} {c.lastName}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm text-foreground">
                       {c.email}
                     </td>
                     <td className="px-6 py-4 text-sm space-x-2">
@@ -141,29 +147,29 @@ export default function AdminCustomers() {
           </div>
 
           {selectedUser && (
-            <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+            <div className="mt-8 bg-background p-6 rounded-lg">
               <h2 className="text-xl font-bold mb-4">User Sessions</h2>
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
+                <thead className="bg-muted">
                   <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-background0">
                       IP Address
                     </th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-background0">
                       Device
                     </th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-background0">
                       Status
                     </th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-background0">
                       Created
                     </th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-background0">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-background divide-y divide-gray-200">
                   {sessions.map((s) => (
                     <tr key={s.id}>
                       <td className="px-4 py-2 text-sm">
@@ -202,7 +208,7 @@ export default function AdminCustomers() {
               </table>
               <button
                 onClick={() => setSelectedUser(null)}
-                className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                className="mt-4 px-4 py-2 bg-border rounded hover:bg-border"
               >
                 Close
               </button>

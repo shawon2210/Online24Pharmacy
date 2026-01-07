@@ -34,8 +34,12 @@ export default function AdminPromotions() {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      // Try server, fallback to local update
-      await axios.post(`${API_URL}/admin/promotions`, form);
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const headers = {};
+      if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken;
+      }
+      await axios.post(`${API_URL}/admin/promotions`, form, { headers });
       fetchPromotions();
       setForm({ title: "", discount: "", active: true });
     } catch (e) {
@@ -48,10 +52,10 @@ export default function AdminPromotions() {
     <>
       <SEOHead title="Admin - Promotions" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-background shadow rounded-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Promotions</h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-background0">
               Create and manage site promotions
             </p>
           </div>
@@ -95,29 +99,29 @@ export default function AdminPromotions() {
 
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-background">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Title
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Discount
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-background divide-y divide-gray-200">
                 {promotions.map((p) => (
                   <tr key={p.id}>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm text-foreground">
                       {p.title}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-6 py-4 text-sm text-foreground">
                       {p.discount}
                     </td>
                     <td className="px-6 py-4 text-sm">
@@ -125,7 +129,7 @@ export default function AdminPromotions() {
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           p.active
                             ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
+                            : "bg-muted text-foreground"
                         }`}
                       >
                         {p.active ? "Active" : "Inactive"}

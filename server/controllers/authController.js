@@ -49,6 +49,9 @@ async function readUsersFile() {
  * @param {string} email - User's email address
  * @returns {{accessToken: string, refreshToken: string}} Token pair
  */
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret';
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'dev-jwt-refresh-secret';
+
 const generateTokens = (userId, role, email) => {
   const payload = {
     id: userId,
@@ -61,13 +64,13 @@ const generateTokens = (userId, role, email) => {
   
   const accessToken = jwt.sign(
     payload,
-    process.env.JWT_SECRET,
+    JWT_SECRET,
     { expiresIn: role === 'ADMIN' ? '12h' : '24h' }
   );
   
   const refreshToken = jwt.sign(
     { ...payload, type: 'refresh' },
-    process.env.JWT_REFRESH_SECRET,
+    JWT_REFRESH_SECRET,
     { expiresIn: role === 'ADMIN' ? '7d' : '30d' }
   );
   
@@ -196,41 +199,53 @@ export const signup = async (req, res) => {
     const ipAddress = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
     console.info('Signup attempt', { email, ipAddress, userAgent });
+    console.info('Signup payload', { email, phone, firstName, lastName });
 
-    try {
-      const existingUser = await prisma.user.findFirst({
-        where: { OR: [{ email }, { phone }] },
-        select: { id: true }
-      });
-      if (existingUser) return res.status(400).json({ error: 'User already exists' });
-
-      // Hash password with bcrypt (12 rounds for security)
-      const passwordHash = await bcrypt.hash(password, 12);
-      
-      // Auto-assign role based on email pattern
-      const role = email.includes('admin') ? 'ADMIN' : email.includes('delivery') ? 'DELIVERY_PARTNER' : 'USER';
-      const user = await prisma.user.create({
-        data: { email, phone, passwordHash, firstName, lastName, role },
-        select: { id: true, email: true, firstName: true, lastName: true, role: true }
-      });
-
-      const { accessToken, refreshToken } = generateTokens(user.id, user.role, user.email);
-
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: (role === 'ADMIN' ? 7 : 30) * 24 * 60 * 60 * 1000
-      });
-
-      return res.status(201).json({ user, accessToken });
-    } catch (e) {
-      console.error('Signup database error:', e);
-      return res.status(500).json({ error: 'Database error' });
+    // Check if user already exists
+    const existingUser = await prisma.user.findFirst({
+      where: { OR: [{ email }, { phone }] },
+      select: { id: true }
+    });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email or phone already registered' });
     }
+
+    // Hash password with bcrypt (12 rounds for security)
+    const passwordHash = await bcrypt.hash(password, 12);
+    
+    // Auto-assign role based on email pattern
+    const role = email.includes('admin') ? 'ADMIN' : email.includes('delivery') ? 'DELIVERY_PARTNER' : 'USER';
+    
+    const user = await prisma.user.create({
+      data: { email, phone, passwordHash, firstName, lastName, role },
+      select: { id: true, email: true, firstName: true, lastName: true, role: true }
+    });
+
+    const { accessToken, refreshToken } = generateTokens(user.id, user.role, user.email);
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: (role === 'ADMIN' ? 7 : 30) * 24 * 60 * 60 * 1000
+    });
+
+    return res.status(201).json({ user, accessToken });
   } catch (error) {
     console.error('Signup error:', error);
-    res.status(500).json({ error: 'Registration failed' });
+    if (error.code === 'P2002') {
+      // Prisma unique constraint violation
+      return res.status(400).json({ error: 'Email or phone already registered' });
+    }
+
+    const safeMessage = error?.message || 'Registration failed';
+    res.status(500).json({
+      error: 'Registration failed',
+      details: safeMessage,
+      code: error?.code,
+      name: error?.name,
+      stack: error?.stack,
+    });
   }
 };
 

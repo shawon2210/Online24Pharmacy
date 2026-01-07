@@ -17,7 +17,7 @@ export default function AnimatedButton({
 
       <span
         className={`relative font-ubuntu font-bold text-base ${
-          disabled ? "text-gray-400" : "text-white"
+          disabled ? "text-muted-foreground" : "text-background"
         }`}
       >
         {children}
@@ -29,7 +29,7 @@ export default function AnimatedButton({
         viewBox="0 0 13 10"
         className={`ml-3 relative transform -translate-x-1 transition-transform duration-300 ${
           disabled ? "" : "group-hover:translate-x-0"
-        } stroke-current text-white`}
+        } stroke-current text-background`}
       >
         <path
           d="M1,5 L11,5"

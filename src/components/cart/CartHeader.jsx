@@ -15,12 +15,12 @@ export default function CartHeader({ itemCount }) {
           <span>{t("cartPage.badge")}</span>
         </span>
       </div>
-      <h1 className="font-black text-gray-900 mb-2 sm:mb-3 tracking-tight leading-tight">
+      <h1 className="font-black text-foreground mb-2 sm:mb-3 tracking-tight leading-tight">
         <span className="bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
           {t("cartPage.title")}
         </span>
       </h1>
-      <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-3xl">
+      <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-3xl">
         {itemCount > 0
           ? t("cartPage.itemsCount", { count: itemCount })
           : t("cartPage.emptyCartDesc")}

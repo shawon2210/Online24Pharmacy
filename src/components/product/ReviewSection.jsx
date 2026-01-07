@@ -44,7 +44,7 @@ export default function ReviewSection({ productId }) {
       return (
         <StarComponent
           key={index}
-          className={`w-5 h-5 ${filled ? "text-yellow-400" : "text-gray-300"} ${
+          className={`w-5 h-5 ${filled ? "text-yellow-400" : "text-muted"} ${
             interactive ? "cursor-pointer hover:text-yellow-400" : ""
           }`}
           onClick={interactive ? () => onRate(index + 1) : undefined}
@@ -63,7 +63,7 @@ export default function ReviewSection({ productId }) {
               <div className="flex">
                 {renderStars(Math.round(reviewData.averageRating))}
               </div>
-              <span className="ml-2 text-sm text-gray-600">
+              <span className="ml-2 text-sm text-muted-foreground">
                 {reviewData.averageRating.toFixed(1)} ({reviewData.totalReviews}{" "}
                 reviews)
               </span>
@@ -85,23 +85,23 @@ export default function ReviewSection({ productId }) {
       {showReviewForm && (
         <form
           onSubmit={handleSubmitReview}
-          className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-6 border border-gray-200 dark:border-gray-700"
+          className="bg-background dark:bg-card p-4 rounded-lg mb-6 border border-border dark:border-foreground"
         >
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2">
               Rating
             </label>
             <div className="flex">{renderStars(rating, true, setRating)}</div>
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2">
               Comment
             </label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-border rounded-md"
               rows="3"
               placeholder="Share your experience with this product..."
             />
@@ -144,18 +144,18 @@ export default function ReviewSection({ productId }) {
                 </div>
                 <div className="flex mt-1">{renderStars(review.rating)}</div>
               </div>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-background0">
                 {new Date(review.createdAt).toLocaleDateString()}
               </span>
             </div>
             {review.comment && (
-              <p className="text-gray-700">{review.comment}</p>
+              <p className="text-foreground">{review.comment}</p>
             )}
           </div>
         ))}
 
         {reviewData?.reviews?.length === 0 && (
-          <p className="text-gray-500 text-center py-8">
+          <p className="text-background0 text-center py-8">
             No reviews yet. Be the first to review this product!
           </p>
         )}

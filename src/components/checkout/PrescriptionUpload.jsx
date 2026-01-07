@@ -47,16 +47,24 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
 
     try {
       // Upload to Cloudinary or your storage service
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       const uploadPromises = validFiles.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", "prescriptions"); // Cloudinary preset
+
+        const headers = {};
+        if (csrfToken) {
+          headers["X-CSRF-Token"] = csrfToken;
+        }
 
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
           {
             method: "POST",
             body: formData,
+            headers,
+            credentials: "include",
           }
         );
 
@@ -87,7 +95,7 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
 
   return (
     <div className="w-full">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-foreground mb-2">
         Upload Prescription{" "}
         {required && <span className="text-red-500">*</span>}
       </label>
@@ -96,7 +104,7 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
         className={`relative border-2 border-dashed rounded-lg p-6 text-center ${
           dragActive
             ? "border-emerald-400 bg-emerald-50"
-            : "border-gray-300 hover:border-gray-400"
+            : "border-border hover:border-muted-foreground"
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -112,26 +120,26 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
           disabled={uploading}
         />
 
-        <CloudArrowUpIcon className="mx-auto h-12 w-12 text-gray-400" />
-        <p className="mt-2 text-sm text-gray-600">
+        <CloudArrowUpIcon className="mx-auto h-12 w-12 text-muted-foreground" />
+        <p className="mt-2 text-sm text-muted-foreground">
           {uploading
             ? "Uploading..."
             : "Drop prescription images here, or click to select"}
         </p>
-        <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 5MB each</p>
+        <p className="text-xs text-background0 mt-1">PNG, JPG up to 5MB each</p>
       </div>
 
       {files.length > 0 && (
         <div className="mt-4 space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">Uploaded Files:</h4>
+          <h4 className="text-sm font-medium text-foreground">Uploaded Files:</h4>
           {files.map((file, index) => (
             <div
               key={index}
-              className="flex items-center justify-between p-2 bg-gray-50 rounded"
+              className="flex items-center justify-between p-2 bg-background rounded"
             >
               <div className="flex items-center space-x-2">
-                <DocumentIcon className="h-5 w-5 text-gray-400" />
-                <span className="text-sm text-gray-700">
+                <DocumentIcon className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm text-foreground">
                   {file.original_name}
                 </span>
               </div>
@@ -146,7 +154,7 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
         </div>
       )}
 
-      <div className="mt-3 text-xs text-gray-500">
+      <div className="mt-3 text-xs text-background0">
         <p>• Ensure prescription is clearly visible and readable</p>
         <p>• Include doctor's name and signature</p>
         <p>• Prescription should be recent (within 30 days)</p>

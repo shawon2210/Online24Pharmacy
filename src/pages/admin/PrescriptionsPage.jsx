@@ -9,12 +9,12 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+      <div className="bg-background rounded-lg shadow-xl w-full max-w-md">
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-800 text-2xl"
+            className="text-background0 hover:text-foreground text-2xl"
           >
             &times;
           </button>
@@ -27,7 +27,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 const Button = ({ children, onClick, className = "", ...props }) => (
   <button
     onClick={onClick}
-    className={`px-4 py-2 rounded-md font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition disabled:bg-gray-400 ${className}`}
+    className={`px-4 py-2 rounded-md font-semibold text-background bg-emerald-600 hover:bg-emerald-700 transition disabled:bg-muted-foreground ${className}`}
     {...props}
   >
     {children}
@@ -43,10 +43,19 @@ const fetchPrescriptions = ({ queryKey }) => {
     .get(`${API_URL}/api/admin/prescriptions?status=${status}`)
     .then((res) => res.data);
 };
-const approvePrescription = (id) =>
-  axios.post(`${API_URL}/api/admin/prescriptions/${id}/approve`);
-const rejectPrescription = ({ id, notes }) =>
-  axios.post(`${API_URL}/api/admin/prescriptions/${id}/reject`, { notes });
+const approvePrescription = (id) => {
+  if (!id || typeof id !== 'string') throw new Error('Invalid prescription ID');
+  return axios.post(`${API_URL}/api/admin/prescriptions/${encodeURIComponent(id)}/approve`);
+};
+const rejectPrescription = ({ id, notes }) => {
+  if (!id || typeof id !== 'string') throw new Error('Invalid prescription ID');
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  const headers = {};
+  if (csrfToken) {
+    headers['X-CSRF-Token'] = csrfToken;
+  }
+  return axios.post(`${API_URL}/api/admin/prescriptions/${encodeURIComponent(id)}/reject`, { notes }, { headers });
+};
 
 const RejectNoteModal = ({ onSubmit, onCancel, isPending }) => {
   const [notes, setNotes] = useState("");
@@ -64,7 +73,7 @@ const RejectNoteModal = ({ onSubmit, onCancel, isPending }) => {
         <div className="flex justify-end space-x-3">
           <Button
             onClick={onCancel}
-            className="bg-gray-300 text-gray-800 hover:bg-gray-400"
+            className="bg-border text-foreground hover:bg-muted-foreground"
           >
             Cancel
           </Button>
@@ -133,7 +142,7 @@ const AdminPrescriptionsPage = () => {
     <div>
       <h1 className="text-3xl font-bold mb-6">Review Prescriptions</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-1 bg-white shadow-md rounded-lg p-4 h-fit">
+        <div className="md:col-span-1 bg-background shadow-md rounded-lg p-4 h-fit">
           <h2 className="font-bold text-lg mb-2">
             Pending Inbox ({prescriptions.length})
           </h2>
@@ -144,25 +153,25 @@ const AdminPrescriptionsPage = () => {
               <li
                 key={p.id}
                 onClick={() => setSelectedPrescription(p)}
-                className={`p-2 cursor-pointer hover:bg-gray-100 ${
+                className={`p-2 cursor-pointer hover:bg-muted ${
                   selectedPrescription?.id === p.id ? "bg-emerald-50" : ""
                 }`}
               >
                 <p className="font-semibold">
                   {p.user.firstName} {p.user.lastName}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {new Date(p.createdAt).toLocaleString()}
                 </p>
               </li>
             ))}
           </ul>
         </div>
-        <div className="md:col-span-2 bg-white shadow-md rounded-lg p-6">
+        <div className="md:col-span-2 bg-background shadow-md rounded-lg p-6">
           {selectedPrescription ? (
             <div>
               <h2 className="font-bold text-xl mb-4">Details</h2>
-              <div className="mb-4 p-2 border rounded-md bg-gray-50">
+              <div className="mb-4 p-2 border rounded-md bg-background">
                 <img
                   src={selectedPrescription.prescriptionImage}
                   alt="Prescription"
@@ -186,7 +195,7 @@ const AdminPrescriptionsPage = () => {
               </div>
             </div>
           ) : (
-            <div className="text-center py-20 text-gray-500">
+            <div className="text-center py-20 text-background0">
               <p>Select a prescription from the inbox to review it.</p>
             </div>
           )}

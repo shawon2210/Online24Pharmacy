@@ -34,10 +34,10 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
   };
 
   return (
-    <div className="bg-gray-50 p-4 rounded-lg">
+    <div className="bg-background p-4 rounded-lg">
       <div className="flex items-center mb-3">
-        <TagIcon className="w-5 h-5 text-gray-600 mr-2" />
-        <h3 className="font-medium text-gray-900">
+        <TagIcon className="w-5 h-5 text-muted-foreground mr-2" />
+        <h3 className="font-medium text-foreground">
           {t("promoCode", "Promo Code")}
         </h3>
       </div>
@@ -49,12 +49,12 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
             placeholder={t("enterCoupon", "Enter coupon code")}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="flex-1 px-3 py-2 border border-border rounded-md text-sm"
           />
           <button
             type="submit"
             disabled={!couponCode.trim() || applyCouponMutation.isPending}
-            className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:opacity-50 text-sm"
+            className="px-4 py-2 bg-emerald-600 text-background rounded-md hover:bg-emerald-700 disabled:opacity-50 text-sm"
           >
             {applyCouponMutation.isPending
               ? t("applying", "Applying...")
@@ -89,7 +89,7 @@ export default function CouponSystem({ cartTotal, onCouponApplied }) {
 
       {/* Popular Coupons */}
       <div className="mt-4">
-        <p className="text-sm text-gray-600 mb-2">
+        <p className="text-sm text-muted-foreground mb-2">
           {t("popularOffers", "Popular offers:")}
         </p>
         <div className="flex flex-wrap gap-2">

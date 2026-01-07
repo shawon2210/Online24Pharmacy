@@ -9,9 +9,11 @@ describe('Form Validation', () => {
     };
 
     it('should validate valid login data', () => {
+      const testEmail = process.env.TEST_EMAIL || 'user@example.com';
+      const testPassword = process.env.TEST_PASSWORD || 'password123';
       const data = {
-        email: 'user@example.com',
-        password: 'password123'
+        email: testEmail,
+        password: testPassword
       };
 
       const result = validateForm(data, loginRules);
@@ -21,9 +23,10 @@ describe('Form Validation', () => {
     });
 
     it('should reject empty email', () => {
+      const testPassword = process.env.TEST_PASSWORD || 'password123';
       const data = {
         email: '',
-        password: 'password123'
+        password: testPassword
       };
 
       const result = validateForm(data, loginRules);
@@ -45,8 +48,9 @@ describe('Form Validation', () => {
     });
 
     it('should reject short password', () => {
+      const testEmail = process.env.TEST_EMAIL || 'user@example.com';
       const data = {
-        email: 'user@example.com',
+        email: testEmail,
         password: '123'
       };
 
@@ -66,9 +70,11 @@ describe('Form Validation', () => {
     };
 
     it('should validate complete signup data', () => {
+      const testEmail = process.env.TEST_EMAIL || 'newuser@example.com';
+      const testPassword = process.env.TEST_PASSWORD || 'securepass123';
       const data = {
-        email: 'newuser@example.com',
-        password: 'securepass123',
+        email: testEmail,
+        password: testPassword,
         firstName: 'John',
         lastName: 'Doe'
       };
@@ -79,9 +85,10 @@ describe('Form Validation', () => {
     });
 
     it('should reject missing required fields', () => {
+      const testEmail = process.env.TEST_EMAIL || 'user@example.com';
       const data = {
-        email: 'user@example.com',
-        password: 'password123'
+        email: testEmail,
+        password: process.env.TEST_PASSWORD || 'password123'
       };
 
       const result = validateForm(data, signupRules);

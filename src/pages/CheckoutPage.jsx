@@ -14,12 +14,12 @@ const Input = ({ label, ...props }) => {
   const { t } = useTranslation();
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-900">
+      <label className="text-sm font-medium text-foreground">
         {t(label, label)}
       </label>
       <input
         {...props}
-        className="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-gray-400"
+        className="w-full px-4 py-3 bg-background border-0 rounded-xl focus:bg-background focus:ring-2 focus:ring-primary transition-all placeholder:text-muted-foreground"
       />
     </div>
   );
@@ -29,7 +29,7 @@ const RadioGroup = ({ label, children }) => {
   const { t } = useTranslation();
   return (
     <div>
-      <label className="block text-sm font-semibold text-gray-700 mb-4">
+      <label className="block text-sm font-semibold text-foreground mb-4">
         {t(label, label)}
       </label>
       <div className="space-y-3">{children}</div>
@@ -58,31 +58,30 @@ const RadioOption = ({
     />
     <label
       htmlFor={`${name}-${value}`}
-      className={`flex items-center p-3 sm:p-4 bg-white border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all hover:border-gray-300 hover:shadow-md ${
+      className={`flex items-center p-3 sm:p-4 bg-background dark:bg-card border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all hover:border-border hover:shadow-md ${
         checked
-          ? "border-emerald-500 bg-emerald-50 shadow-lg"
-          : "border-gray-200"
+          ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-lg"
+          : "border-border dark:border-gray-700"
       }`}
     >
       <div className="flex items-center gap-3 sm:gap-4 w-full">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center text-lg sm:text-2xl flex-shrink-0">
-          {icon}
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-muted dark:bg-muted rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0">          {icon}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium sm:font-semibold text-gray-900 text-sm sm:text-base">
+          <div className="font-medium sm:font-semibold text-foreground dark:text-foreground text-sm sm:text-base">
             {children}
           </div>
-          <div className="text-xs sm:text-sm text-gray-500 truncate">
+          <div className="text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground truncate">
             {description}
           </div>
         </div>
         <div
-          className={`w-4 h-4 sm:w-5 sm:h-5 border-2 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
-            checked ? "border-emerald-500 bg-emerald-500" : "border-gray-300"
+          className={`w-4 h-4 sm:w-5 sm:h-5 border-2 rounded-full flex items-center justify-center shrink-0 transition-all ${
+            checked ? "border-primary bg-primary" : "border-border"
           }`}
         >
           {checked && (
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></div>
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-background rounded-full"></div>
           )}
         </div>
       </div>
@@ -152,28 +151,37 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+    <div className="min-h-screen bg-background">
       <SEOHead title={t("checkoutPage.seoTitle")} />
 
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md">
+      <div className="sticky top-0 z-40 bg-card/95 dark:bg-card/95 backdrop-blur-md shadow-md border-b border-border dark:border-gray-800">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
           <nav className="mb-3" aria-label={t("breadcrumb")}>
-            <ol className="flex items-center gap-1 text-sm text-gray-500">
+            <ol className="flex items-center gap-1 text-sm text-foreground dark:text-muted-foreground">
               <li>
-                <a href="/" className="hover:text-emerald-600 font-medium">
+                <a
+                  href="/"
+                  className="hover:text-primary dark:hover:text-primary font-medium"
+                >
                   {t("home")}
                 </a>
               </li>
-              <li className="px-1 text-gray-400">/</li>
+              <li className="px-1 text-muted-foreground">/</li>
               <li>
-                <a href="/cart" className="hover:text-emerald-600 font-medium">
+                <a
+                  href="/cart"
+                  className="hover:text-primary dark:hover:text-primary font-medium"
+                >
                   {t("cart")}
                 </a>
               </li>
-              <li className="px-1 text-gray-400">/</li>
-              <li className="text-gray-900 font-bold" aria-current="page">
+              <li className="px-1 text-muted-foreground">/</li>
+              <li
+                className="text-foreground dark:text-foreground font-bold"
+                aria-current="page"
+              >
                 {t("checkout")}
               </li>
             </ol>
@@ -182,14 +190,14 @@ export default function CheckoutPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-1">
+              <h1 className="text-2xl md:text-3xl font-black text-primary dark:text-primary mb-1">
                 {t("checkout")}
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground dark:text-muted-foreground">
                 {t("checkoutPage.reviewOrder")}
               </p>
             </div>
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-100 to-cyan-100 border-2 border-emerald-200 text-emerald-700 rounded-full text-sm font-bold">
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary/10 dark:bg-primary/20 border-2 border-primary/30 dark:border-primary/40 text-primary dark:text-primary rounded-full text-sm font-bold">
               <ShoppingCartIcon className="w-5 h-5" />
               <span>
                 {cart.length} {t("items")}
@@ -204,17 +212,16 @@ export default function CheckoutPage() {
           {/* Form Section */}
           <div className="xl:col-span-2 space-y-6">
             <form onSubmit={placeOrder} className="space-y-6">
-              {/* Shipping Information */}
-              <div className="bg-white/70 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl p-6 lg:p-8">
+              <div className="bg-card/70 dark:bg-card/70 backdrop-blur-xl rounded-2xl border border-border/50 dark:border-gray-700/50 shadow-xl p-6 lg:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 lg:mb-8">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary dark:bg-primary/80 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
                     <MapPinIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                    <h2 className="text-lg sm:text-xl font-bold text-foreground">
                       {t("checkoutPage.shippingInfo")}
                     </h2>
-                    <p className="text-sm text-gray-600 hidden sm:block">
+                    <p className="text-sm text-muted-foreground hidden sm:block">
                       {t("checkoutPage.whereDeliver")}
                     </p>
                   </div>
@@ -272,7 +279,7 @@ export default function CheckoutPage() {
                   />
                   <div className="sm:col-span-2">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-900">
+                      <label className="text-sm font-medium text-foreground">
                         {t("checkoutPage.deliveryInstructions")}
                       </label>
                       <textarea
@@ -283,7 +290,7 @@ export default function CheckoutPage() {
                         value={formData.instructions}
                         onChange={handleChange}
                         rows="3"
-                        className="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all resize-none placeholder:text-gray-400"
+                        className="w-full px-4 py-3 bg-background border-0 rounded-xl focus:bg-background focus:ring-2 focus:ring-primary transition-all resize-none placeholder:text-muted-foreground"
                       />
                     </div>
                   </div>
@@ -291,16 +298,16 @@ export default function CheckoutPage() {
               </div>
 
               {/* Payment Method */}
-              <div className="bg-white/70 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl p-6 lg:p-8">
+              <div className="bg-card/70 dark:bg-card/70 backdrop-blur-xl rounded-2xl border border-border/50 dark:border-gray-700/50 shadow-xl p-6 lg:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 lg:mb-8">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 dark:bg-blue-600/80 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
                     <CreditCardIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                    <h2 className="text-lg sm:text-xl font-bold text-foreground">
                       {t("checkoutPage.paymentMethod")}
                     </h2>
-                    <p className="text-sm text-gray-600 hidden sm:block">
+                    <p className="text-sm text-muted-foreground hidden sm:block">
                       {t("checkoutPage.choosePayment")}
                     </p>
                   </div>
@@ -346,15 +353,15 @@ export default function CheckoutPage() {
                 disabled={loading}
                 className={`group relative w-full px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-semibold text-base sm:text-lg transition-all duration-300 overflow-hidden ${
                   loading
-                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700 text-white hover:shadow-2xl hover:shadow-emerald-500/25 hover:-translate-y-0.5 active:translate-y-0"
+                    ? "bg-border dark:bg-border text-foreground/50 cursor-not-allowed"
+                    : "bg-primary hover:bg-primary/90 text-white hover:shadow-2xl hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0"
                 }`}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <div className="relative flex items-center justify-center gap-2 sm:gap-3">
                   {loading ? (
                     <>
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-muted-foreground border-t-transparent rounded-full animate-spin" />
                       <span>{t("checkoutPage.processing")}</span>
                     </>
                   ) : (
@@ -370,16 +377,16 @@ export default function CheckoutPage() {
 
           {/* Order Summary */}
           <div className="xl:col-span-1">
-            <div className="bg-white/70 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl p-6 lg:p-8 sticky top-24">
+            <div className="bg-card/70 dark:bg-card/70 backdrop-blur-xl rounded-2xl border border-border/50 dark:border-gray-700/50 shadow-xl p-6 lg:p-8 sticky top-24">
               <div className="flex flex-col sm:flex-row xl:flex-col items-start sm:items-center xl:items-start gap-3 sm:gap-4 mb-6 lg:mb-8">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary dark:bg-primary/80 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
                   <ShoppingCartIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                  <h2 className="text-lg sm:text-xl font-bold text-foreground">
                     {t("checkoutPage.orderSummary")}
                   </h2>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     {t("checkoutPage.itemsInCart", { count: cart.length })}
                   </p>
                 </div>
@@ -390,18 +397,18 @@ export default function CheckoutPage() {
                 {cart.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 rounded-xl"
+                    className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-background rounded-xl"
                   >
-                    <div className="w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm sm:text-lg font-bold text-gray-600">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 bg-muted dark:bg-muted rounded-lg sm:rounded-xl flex items-center justify-center shrink-0">
+                      <span className="text-sm sm:text-lg font-bold text-muted-foreground">
                         {item.quantity}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                      <p className="font-semibold text-foreground text-sm sm:text-base truncate">
                         {item.product?.name || item.name || t("product")}
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-500">
+                      <p className="text-xs sm:text-sm text-background0">
                         {t("checkoutPage.each", {
                           price: (
                             item.product?.price ||
@@ -411,7 +418,7 @@ export default function CheckoutPage() {
                         })}
                       </p>
                     </div>
-                    <p className="font-bold text-emerald-600 text-sm sm:text-base">
+                    <p className="font-bold text-primary text-sm sm:text-base">
                       ৳
                       {(
                         (item.product?.price || item.price || 0) *
@@ -423,41 +430,41 @@ export default function CheckoutPage() {
               </div>
 
               {/* Totals */}
-              <div className="space-y-3 sm:space-y-4 p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl sm:rounded-2xl">
+              <div className="space-y-3 sm:space-y-4 p-4 sm:p-6 bg-muted/40 dark:bg-card/40 rounded-xl sm:rounded-2xl">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm sm:text-base text-gray-600">
+                  <span className="text-sm sm:text-base text-muted-foreground">
                     {t("checkoutPage.subtotal")}
                   </span>
-                  <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                  <span className="font-semibold text-foreground text-sm sm:text-base">
                     ৳{(subtotal || 0).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm sm:text-base text-gray-600">
+                  <span className="text-sm sm:text-base text-muted-foreground">
                     {t("checkoutPage.delivery")}
                   </span>
-                  <span className="font-semibold text-emerald-600 text-sm sm:text-base">
+                  <span className="font-semibold text-primary text-sm sm:text-base">
                     {delivery === 0
                       ? t("checkoutPage.free")
                       : `৳${(delivery || 0).toFixed(2)}`}
                   </span>
                 </div>
-                <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                <div className="h-px bg-border" />
                 <div className="flex justify-between items-center">
-                  <span className="text-base sm:text-lg font-bold text-gray-900">
+                  <span className="text-base sm:text-lg font-bold text-foreground">
                     {t("checkoutPage.total")}
                   </span>
-                  <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
+                  <span className="text-xl sm:text-2xl font-black text-primary">
                     ৳{(total || 0).toFixed(2)}
                   </span>
                 </div>
               </div>
 
               {/* Info Alert */}
-              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-                <div className="flex items-center gap-2 text-blue-800 text-xs sm:text-sm font-medium">
+              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-muted/40 dark:bg-card/40 rounded-xl border border-border dark:border-border">
+                <div className="flex items-center gap-2 text-primary text-xs sm:text-sm font-medium">
                   <svg
-                    className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0"
+                    className="w-3 h-3 sm:w-4 sm:h-4 shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >

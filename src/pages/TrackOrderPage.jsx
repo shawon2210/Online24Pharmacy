@@ -10,12 +10,6 @@ import SEOHead from "../components/common/SEOHead";
 
 export default function TrackOrderPage() {
   const { t } = useTranslation();
-  // Helper for translation fallback
-  const tf = (key, options, fallback) => {
-    const translated = t(key, options);
-    if (translated === key) return fallback || translated;
-    return translated;
-  };
   const [headerOffset, setHeaderOffset] = useState(0);
   const [orderId, setOrderId] = useState("");
   const [phone, setPhone] = useState("");
@@ -23,7 +17,6 @@ export default function TrackOrderPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Compute header height dynamically
   useLayoutEffect(() => {
     const el = document.querySelector("header");
     if (!el) return;
@@ -43,9 +36,16 @@ export default function TrackOrderPage() {
       setLoading(true);
       try {
         const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+        const csrfToken = document
+          .querySelector('meta[name="csrf-token"]')
+          ?.getAttribute("content");
+        const headers = { "Content-Type": "application/json" };
+        if (csrfToken) {
+          headers["X-CSRF-Token"] = csrfToken;
+        }
         const response = await fetch(`${API_URL}/api/orders/track`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ orderId: id, phone: ph }),
         });
         const data = await response.json();
@@ -83,36 +83,42 @@ export default function TrackOrderPage() {
         description={t("trackOrderPage.seoDescription")}
         url="/track-order"
       />
+      <div className="sticky top-0 z-40 bg-background/95 dark:bg-card/95 backdrop-blur-md shadow-md border-b border-border">
+        <div className="container mx-auto px-4 py-4">
+          <nav className="mb-3" aria-label={t("breadcrumb")}>
+            <ol className="flex items-center gap-1 text-sm text-foreground">
+              <li>
+                <a href="/" className="hover:text-primary font-medium">
+                  {t("home")}
+                </a>
+              </li>
+              <li className="px-1 text-muted-foreground">/</li>
+              <li className="text-foreground font-bold" aria-current="page">
+                {t("trackOrderPage.title")}
+              </li>
+            </ol>
+          </nav>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-black text-primary mb-1">
+                {t("trackOrderPage.title")}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {t("trackOrderPage.description")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div
-        className="w-full min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#f8fafc] to-[#e0f2fe] flex flex-col items-center justify-start pb-8 sm:pb-12 lg:pb-16"
+        className="w-full min-h-screen bg-background dark:bg-slate-950 flex flex-col items-center justify-start pb-8 sm:pb-12 lg:pb-16"
         style={{
           marginTop: `-${headerOffset}px`,
           paddingTop: `${headerOffset}px`,
         }}
       >
-        <div className="w-full max-w-5xl mx-auto px-2 xs:px-4 sm:px-8 lg:px-20 py-2 xs:py-4 sm:py-7 lg:py-10 flex flex-col gap-8 xs:gap-10 md:gap-12">
-          {/* Header Section */}
-          <div className="flex flex-col items-center text-center gap-2 xs:gap-3 mb-2 xs:mb-3 w-full px-1 xs:px-2 animate-fade-in">
-            <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/80 backdrop-blur-md border border-emerald-200 text-emerald-700 rounded-full text-base font-extrabold shadow-lg animate-bounce-in">
-              <span className="text-2xl animate-bounce">📦</span>
-              <span>
-                {tf("trackOrderPage.badge", undefined, "Track Your Order")}
-              </span>
-            </span>
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-emerald-600 via-cyan-500 to-blue-600 bg-clip-text text-transparent mt-2 mb-1 drop-shadow-xl tracking-tight animate-slide-up">
-              {tf("trackOrderPage.title", undefined, "Order Tracking Portal")}
-            </h1>
-            <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto font-medium animate-fade-in delay-100">
-              {tf(
-                "trackOrderPage.description",
-                undefined,
-                "Easily track your order status by entering your Order ID and phone number. Stay updated on your delivery every step of the way!"
-              )}
-            </p>
-          </div>
-
-          {/* Search Form Card */}
-          <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 p-2 xs:p-4 sm:p-8 md:p-12 mb-6 xs:mb-8 flex flex-col gap-7 xs:gap-8 transition-all duration-500 w-full animate-fade-in">
+        <div className="w-full max-w-5xl mx-auto px-4 sm:px-8 py-8 flex flex-col gap-8">
+          <div className="bg-card border border-border rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 mb-6 xs:mb-8 flex flex-col gap-7 xs:gap-8 transition-all duration-500 w-full">
             <form
               onSubmit={handleSubmit}
               className="flex flex-col gap-7 xs:gap-8 w-full"
@@ -120,10 +126,10 @@ export default function TrackOrderPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 xs:gap-7 md:gap-10 w-full">
                 <div className="flex flex-col gap-1 xs:gap-2">
                   <label
-                    className="block text-sm font-bold text-gray-700 tracking-wide mb-1"
+                    className="block text-sm font-bold text-foreground tracking-wide mb-1"
                     htmlFor="order-id-input"
                   >
-                    {tf("trackOrderPage.orderIdLabel", undefined, "Order ID")}
+                    {t("trackOrderPage.orderIdLabel")}
                   </label>
                   <div className="relative w-full">
                     <input
@@ -131,41 +137,29 @@ export default function TrackOrderPage() {
                       type="text"
                       value={orderId}
                       onChange={(e) => setOrderId(e.target.value)}
-                      placeholder={tf(
-                        "trackOrderPage.orderIdPlaceholder",
-                        undefined,
-                        "Enter your Order ID"
-                      )}
-                      className="w-full px-3 xs:px-4 py-2 xs:py-3 border-2 border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all text-base xs:text-lg bg-white/90 hover:border-emerald-300 shadow-sm font-semibold tracking-wide"
+                      placeholder={t("trackOrderPage.orderIdPlaceholder")}
+                      className="w-full px-3 xs:px-4 py-2 xs:py-3 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600 focus:border-emerald-400 dark:focus:border-emerald-600 transition-all text-base xs:text-lg bg-background dark:bg-slate-800 text-foreground hover:border-emerald-300 dark:hover:border-emerald-600 shadow-sm font-semibold tracking-wide"
                       required
                       autoComplete="off"
                       inputMode="text"
                     />
-                    <MagnifyingGlassIcon className="absolute right-2 xs:right-3 top-2 xs:top-3 w-5 xs:w-6 h-5 xs:h-6 text-emerald-400 pointer-events-none transition-transform duration-300 group-hover:scale-110" />
+                    <MagnifyingGlassIcon className="absolute right-2 xs:right-3 top-2 xs:top-3 w-5 xs:w-6 h-5 xs:h-6 text-emerald-400 dark:text-emerald-500 pointer-events-none transition-transform duration-300" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1 xs:gap-2">
                   <label
-                    className="block text-sm font-bold text-gray-700 tracking-wide mb-1"
+                    className="block text-sm font-bold text-foreground tracking-wide mb-1"
                     htmlFor="phone-input"
                   >
-                    {tf(
-                      "trackOrderPage.phoneNumberLabel",
-                      undefined,
-                      "Phone Number"
-                    )}
+                    {t("trackOrderPage.phoneNumberLabel")}
                   </label>
                   <input
                     id="phone-input"
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder={tf(
-                      "trackOrderPage.phoneNumberPlaceholder",
-                      undefined,
-                      "Enter your phone number"
-                    )}
-                    className="w-full px-3 xs:px-4 py-2 xs:py-3 border-2 border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all text-base xs:text-lg bg-white/90 hover:border-emerald-300 shadow-sm font-semibold tracking-wide"
+                    placeholder={t("trackOrderPage.phoneNumberPlaceholder")}
+                    className="w-full px-3 xs:px-4 py-2 xs:py-3 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600 focus:border-emerald-400 dark:focus:border-emerald-600 transition-all text-base xs:text-lg bg-background dark:bg-slate-800 text-foreground hover:border-emerald-300 dark:hover:border-emerald-600 shadow-sm font-semibold tracking-wide"
                     required
                     autoComplete="off"
                     inputMode="tel"
@@ -175,84 +169,70 @@ export default function TrackOrderPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white py-2.5 xs:py-3 px-5 xs:px-8 rounded-2xl font-extrabold text-base xs:text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 xs:gap-3 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed active:scale-98 focus:ring-2 focus:ring-cyan-400"
+                className="w-full bg-primary hover:bg-primary/90 text-white py-2.5 xs:py-3 px-5 xs:px-8 rounded-2xl font-extrabold text-base xs:text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 xs:gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98"
                 tabIndex={0}
-                aria-label={tf(
-                  "trackOrderPage.trackButton",
-                  undefined,
-                  "Track Order"
-                )}
+                aria-label={t("trackOrderPage.trackButton")}
               >
-                <MagnifyingGlassIcon className="w-5 xs:w-6 h-5 xs:h-6 flex-shrink-0 animate-pulse transition-transform duration-300 group-hover:scale-110" />
+                <MagnifyingGlassIcon className="w-5 xs:w-6 h-5 xs:h-6 shrink-0 animate-pulse" />
                 {loading ? (
                   <span className="flex items-center gap-1 xs:gap-2">
                     <div className="w-4 xs:w-5 h-4 xs:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    {tf(
-                      "trackOrderPage.trackingButton",
-                      undefined,
-                      "Tracking..."
-                    )}
+                    {t("trackOrderPage.trackingButton")}
                   </span>
                 ) : (
-                  tf("trackOrderPage.trackButton", undefined, "Track Order")
+                  t("trackOrderPage.trackButton")
                 )}
               </button>
             </form>
 
-            {/* Error Message */}
             {error && (
-              <div className="mt-3 p-4 bg-red-100/90 border border-red-300 rounded-xl text-red-700 text-base xs:text-lg font-bold flex items-center gap-2 xs:gap-3 animate-shake w-full shadow-md transition-all duration-300">
+              <div className="mt-3 p-4 bg-muted dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-foreground dark:text-red-300 text-base xs:text-lg font-bold flex items-center gap-2 xs:gap-3 w-full shadow-md">
                 <span className="text-xl xs:text-2xl">⚠️</span>
-                <span>
-                  {tf(
-                    "trackOrderPage.orderNotFound",
-                    undefined,
-                    "Order not found. Please check your Order ID and phone number."
-                  )}
-                </span>
+                <span>{t("trackOrderPage.orderNotFound")}</span>
               </div>
             )}
 
-            {/* Order Results */}
             {orderData && (
-              <div className="mt-7 xs:mt-8 p-4 xs:p-6 sm:p-8 bg-gradient-to-br from-emerald-100/90 to-cyan-100/90 border border-emerald-200 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 w-full overflow-x-auto animate-fade-in">
-                <div className="flex items-center gap-2 xs:gap-3 mb-4 xs:mb-6 sm:mb-7 flex-wrap animate-slide-up">
-                  <CheckCircleIcon className="w-10 sm:w-12 h-10 sm:h-12 text-emerald-600 flex-shrink-0 animate-bounce" />
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+              <div className="mt-7 xs:mt-8 p-4 xs:p-6 sm:p-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-3xl shadow-xl w-full">
+                <div className="flex items-center gap-2 xs:gap-3 mb-4 xs:mb-6 sm:mb-7 flex-wrap">
+                  <CheckCircleIcon className="w-10 sm:w-12 h-10 sm:h-12 text-emerald-600 dark:text-emerald-400 shrink-0 animate-bounce" />
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                     Order #{orderData.orderNumber}
                   </h3>
                 </div>
 
                 <div className="space-y-2 xs:space-y-3 sm:space-y-5">
-                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-white/95 rounded-xl border border-emerald-200 shadow-sm gap-1 xs:gap-0 transition-all duration-300">
-                    <span className="text-gray-600 font-medium">Status:</span>
+                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-background dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0">
+                    <span className="text-muted-foreground font-medium">
+                      {t("trackOrderPage.status")}:
+                    </span>
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-bold ${
                         orderData.status === "delivered"
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? "bg-muted dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300"
                           : orderData.status === "out_for_delivery"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : "bg-yellow-100 text-yellow-800"
+                          ? "bg-muted dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300"
+                          : "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300"
                       }`}
                     >
                       {orderData.status.replace(/_/g, " ").toUpperCase()}
                     </span>
                   </div>
 
-                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-white/95 rounded-xl border border-emerald-200 shadow-sm gap-1 xs:gap-0 transition-all duration-300">
-                    <span className="text-gray-600 font-medium">
-                      Total Amount:
+                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-background dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0">
+                    <span className="text-muted-foreground font-medium">
+                      {t("trackOrderPage.totalAmount")}:
                     </span>
-                    <span className="font-bold text-lg text-emerald-700">
+                    <span className="font-bold text-lg text-foreground dark:text-emerald-400">
                       ৳{orderData.totalAmount}
                     </span>
                   </div>
 
-                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-white/95 rounded-xl border border-emerald-200 shadow-sm gap-1 xs:gap-0 transition-all duration-300">
-                    <span className="text-gray-600 font-medium">
-                      Order Date:
+                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-background dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0">
+                    <span className="text-muted-foreground font-medium">
+                      {t("trackOrderPage.orderDate")}:
                     </span>
-                    <span className="font-semibold">
+                    <span className="font-semibold text-foreground">
                       {new Date(orderData.createdAt).toLocaleDateString(
                         "en-US",
                         {
@@ -264,21 +244,21 @@ export default function TrackOrderPage() {
                     </span>
                   </div>
 
-                  {/* Items List */}
-                  <div className="pt-3 xs:pt-4 sm:pt-5 mt-3 xs:mt-4 sm:mt-5 border-t-2 border-emerald-200">
-                    <h4 className="font-extrabold text-gray-900 mb-2 xs:mb-3 text-base sm:text-lg flex items-center gap-2 animate-fade-in">
-                      <span className="text-xl">📋</span> Order Items:
+                  <div className="pt-3 xs:pt-4 sm:pt-5 mt-3 xs:mt-4 sm:mt-5 border-t-2 border-emerald-200 dark:border-emerald-700">
+                    <h4 className="font-extrabold text-foreground mb-2 xs:mb-3 text-base sm:text-lg flex items-center gap-2">
+                      <span className="text-xl">📋</span>{" "}
+                      {t("trackOrderPage.orderItems")}:
                     </h4>
                     <div className="space-y-1 xs:space-y-2">
                       {orderData.orderItems?.map((item) => (
                         <div
                           key={item.id}
-                          className="flex flex-col xs:flex-row justify-between items-start xs:items-center p-1.5 xs:p-2 sm:p-3 bg-white/95 rounded-xl text-xs xs:text-sm sm:text-base border border-emerald-100 shadow-sm gap-1 xs:gap-0 transition-all duration-300 animate-slide-up"
+                          className="flex flex-col xs:flex-row justify-between items-start xs:items-center p-1.5 xs:p-2 sm:p-3 bg-background dark:bg-slate-800 rounded-xl text-xs xs:text-sm sm:text-base border border-emerald-100 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0"
                         >
-                          <span className="text-gray-700 font-semibold">
+                          <span className="text-foreground font-semibold">
                             {item.product?.name}
                           </span>
-                          <span className="bg-emerald-100 text-emerald-800 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full font-bold text-xs xs:text-base">
+                          <span className="bg-muted dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full font-bold text-xs xs:text-base">
                             x{item.quantity}
                           </span>
                         </div>
@@ -289,93 +269,63 @@ export default function TrackOrderPage() {
               </div>
             )}
 
-            {/* Sign In Prompt */}
-            <div className="mt-8 xs:mt-10 text-center pt-6 xs:pt-8 border-t border-gray-200 w-full px-1 xs:px-2 animate-fade-in">
-              <p className="text-xs xs:text-sm sm:text-base text-gray-700 mb-1 xs:mb-2 font-medium tracking-wide">
-                {tf(
-                  "trackOrderPage.haveAccountForTracking",
-                  undefined,
-                  "Have an account? Sign in for full order history and faster tracking."
-                )}
+            <div className="mt-8 xs:mt-10 text-center pt-6 xs:pt-8 border-t border-border w-full px-1 xs:px-2">
+              <p className="text-xs xs:text-sm sm:text-base text-foreground mb-1 xs:mb-2 font-medium tracking-wide">
+                {t("trackOrderPage.haveAccount")}
               </p>
               <Link
                 to="/login"
-                className="inline-block bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500 text-white px-5 xs:px-7 sm:px-10 py-2 xs:py-2.5 sm:py-3 rounded-2xl font-extrabold hover:from-blue-700 hover:to-emerald-700 transition-all duration-300 active:scale-98 text-xs xs:text-sm sm:text-base shadow-lg animate-slide-up"
+                className="inline-block bg-primary hover:bg-primary/90 text-white px-5 xs:px-7 sm:px-10 py-2 xs:py-2.5 sm:py-3 rounded-2xl font-extrabold transition-all duration-300 active:scale-98 text-xs xs:text-sm sm:text-base shadow-lg"
               >
-                {tf(
-                  "trackOrderPage.signInToAccount",
-                  undefined,
-                  "Sign In to Your Account"
-                )}
+                {t("trackOrderPage.signIn")}
               </Link>
             </div>
           </div>
 
-          {/* Order Status Timeline */}
-          <div className="mb-0 mt-10 xs:mt-14 w-full animate-fade-in">
-            <h2 className="text-xl xs:text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 xs:mb-8 text-center tracking-tight w-full drop-shadow-lg animate-slide-up">
-              {tf(
-                "trackOrderPage.orderStatusTimeline",
-                undefined,
-                "Order Status Timeline"
-              )}
+          <div className="mb-0 mt-10 xs:mt-14 w-full">
+            <h2 className="text-xl xs:text-2xl md:text-3xl font-extrabold text-foreground mb-6 xs:mb-8 text-center tracking-tight w-full">
+              {t("trackOrderPage.timeline")}
             </h2>
             <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 xs:gap-6 md:gap-8 w-full">
-              <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-emerald-400 group cursor-pointer animate-fade-in">
+              <div className="bg-card border-2 border-transparent hover:border-emerald-400 dark:hover:border-emerald-600 rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer">
                 <div className="flex items-center gap-2 xs:gap-3 mb-2 xs:mb-3 sm:mb-4">
-                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <CheckCircleIcon className="w-8 sm:w-10 h-8 sm:h-10 text-emerald-600" />
+                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-muted dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                    <CheckCircleIcon className="w-8 sm:w-10 h-8 sm:h-10 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <h3 className="font-extrabold text-gray-900 text-base sm:text-lg">
-                    {tf(
-                      "trackOrderPage.orderPlaced",
-                      undefined,
-                      "Order Placed"
-                    )}
+                  <h3 className="font-extrabold text-foreground text-base sm:text-lg">
+                    {t("trackOrderPage.placed")}
                   </h3>
                 </div>
-                <p className="text-sm sm:text-base text-gray-700 font-medium">
-                  {tf(
-                    "trackOrderPage.orderConfirmedDesc",
-                    undefined,
-                    "Your order has been placed and confirmed. We'll start processing it soon."
-                  )}
+                <p className="text-sm sm:text-base text-foreground font-medium">
+                  {t("trackOrderPage.placedDesc")}
                 </p>
               </div>
 
-              <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-blue-400 group cursor-pointer animate-fade-in">
+              <div className="bg-card border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-600 rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer">
                 <div className="flex items-center gap-2 xs:gap-3 mb-2 xs:mb-3 sm:mb-4">
-                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <TruckIcon className="w-8 sm:w-10 h-8 sm:h-10 text-blue-600" />
+                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                    <TruckIcon className="w-8 sm:w-10 h-8 sm:h-10 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <h3 className="font-extrabold text-gray-900 text-base sm:text-lg">
-                    {tf("trackOrderPage.shipped", undefined, "Shipped")}
+                  <h3 className="font-extrabold text-foreground text-base sm:text-lg">
+                    {t("trackOrderPage.shipped")}
                   </h3>
                 </div>
-                <p className="text-sm sm:text-base text-gray-700 font-medium">
-                  {tf(
-                    "trackOrderPage.outForDeliveryDesc",
-                    undefined,
-                    "Your order is on the way to your address. Track its journey here."
-                  )}
+                <p className="text-sm sm:text-base text-foreground font-medium">
+                  {t("trackOrderPage.shippedDesc")}
                 </p>
               </div>
 
-              <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-green-400 group cursor-pointer animate-fade-in">
+              <div className="bg-card border-2 border-transparent hover:border-green-400 dark:hover:border-green-600 rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer">
                 <div className="flex items-center gap-2 xs:gap-3 mb-2 xs:mb-3 sm:mb-4">
-                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <CheckCircleIcon className="w-8 sm:w-10 h-8 sm:h-10 text-green-600" />
+                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-muted dark:bg-green-900/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                    <CheckCircleIcon className="w-8 sm:w-10 h-8 sm:h-10 text-green-600 dark:text-green-400" />
                   </div>
-                  <h3 className="font-extrabold text-gray-900 text-base sm:text-lg">
-                    {tf("trackOrderPage.delivered", undefined, "Delivered")}
+                  <h3 className="font-extrabold text-foreground text-base sm:text-lg">
+                    {t("trackOrderPage.delivered")}
                   </h3>
                 </div>
-                <p className="text-sm sm:text-base text-gray-700 font-medium">
-                  {tf(
-                    "trackOrderPage.deliveredDesc",
-                    undefined,
-                    "Your order has been delivered. Thank you for choosing Online24 Pharmacy!"
-                  )}
+                <p className="text-sm sm:text-base text-foreground font-medium">
+                  {t("trackOrderPage.deliveredDesc")}
                 </p>
               </div>
             </div>

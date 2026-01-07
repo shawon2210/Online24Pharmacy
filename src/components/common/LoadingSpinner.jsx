@@ -17,7 +17,7 @@ export default function LoadingSpinner({ size = 'md', text = 'Loading...' }) {
         className={`${sizeClasses[size]} border-emerald-600 border-t-transparent rounded-full animate-spin`}
       />
       {text && (
-        <p className="text-sm text-gray-600 font-medium">{text}</p>
+        <p className="text-sm text-muted-foreground font-medium">{text}</p>
       )}
     </div>
   );
