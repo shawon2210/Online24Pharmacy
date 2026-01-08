@@ -1,6 +1,12 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon, MinusIcon, PlusIcon, ShoppingBagIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  XMarkIcon,
+  MinusIcon,
+  PlusIcon,
+  ShoppingBagIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useCartStore } from "../../stores/cartStore";
 
@@ -36,9 +42,9 @@ export default function CartDrawer({ isOpen, onClose }) {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col bg-gradient-to-b from-white to-gray-50 shadow-2xl">
+                  <div className="flex h-full flex-col bg-linear-to-b from-white to-gray-50 shadow-2xl">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-emerald-600 to-cyan-600 px-6 py-4">
+                    <div className="bg-linear-to-r from-emerald-600 to-cyan-600 px-6 py-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <ShoppingBagIcon className="h-6 w-6 text-background" />
@@ -58,7 +64,6 @@ export default function CartDrawer({ isOpen, onClose }) {
 
                     {/* Cart Items */}
                     <div className="flex-1 overflow-y-auto px-6 py-4">
-
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul className="-my-6 divide-y divide-gray-200">
@@ -144,23 +149,23 @@ export default function CartDrawer({ isOpen, onClose }) {
                       <p className="mt-0.5 text-sm text-background0">
                         Shipping calculated at checkout.
                       </p>
-                        <div className="space-y-3">
-                          <Link
-                            to="/checkout"
-                            onClick={onClose}
-                            className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-background px-6 py-4 rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-cyan-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                          >
-                            <ShoppingBagIcon className="w-5 h-5" />
-                            Proceed to Checkout
-                          </Link>
-                          
-                          <button
-                            onClick={onClose}
-                            className="w-full text-emerald-600 hover:text-emerald-700 font-medium py-2 transition-colors"
-                          >
-                            Continue Shopping
-                          </button>
-                        </div>
+                      <div className="space-y-3">
+                        <Link
+                          to="/checkout"
+                          onClick={onClose}
+                          className="w-full bg-linear-to-r from-emerald-600 to-cyan-600 text-background px-6 py-4 rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-cyan-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                        >
+                          <ShoppingBagIcon className="w-5 h-5" />
+                          Proceed to Checkout
+                        </Link>
+
+                        <button
+                          onClick={onClose}
+                          className="w-full text-emerald-600 hover:text-emerald-700 font-medium py-2 transition-colors"
+                        >
+                          Continue Shopping
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>

@@ -1,11 +1,16 @@
-import { useResponsiveTheme } from '../../hooks/useResponsiveTheme';
+import { useResponsiveTheme } from "../../hooks/useResponsiveTheme";
 
-export default function ResponsiveGrid({ children, cols = 4, className = '', ...props }) {
+export default function ResponsiveGrid({
+  children,
+  cols: _cols = 4,
+  className = "",
+  ...props
+}) {
   const { isMobile, isTablet } = useResponsiveTheme();
 
-  let gridCols = 'grid-cols-4';
-  if (isMobile) gridCols = 'grid-cols-1';
-  else if (isTablet) gridCols = 'grid-cols-2';
+  let gridCols = "grid-cols-4";
+  if (isMobile) gridCols = "grid-cols-1";
+  else if (isTablet) gridCols = "grid-cols-2";
 
   return (
     <div

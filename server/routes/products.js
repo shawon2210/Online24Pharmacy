@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import express from 'express';
 import prisma from '../db/prisma.js';
 import multer from 'multer';
@@ -139,6 +138,64 @@ router.get('/categories', async (_req, res) => {
   } catch (error) {
     console.error('Failed to fetch categories:', error);
     res.json({ categories: [] });
+  }
+});
+
+// Get products grouped by category for homepage
+router.get('/categories/with-products', async (req, res) => {
+  try {
+    const { limit = 8 } = req.query;
+    const productLimit = Math.min(Math.max(parseInt(limit, 10) || 8, 1), 20);
+
+    // Get all active categories
+    const categories = await prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+      },
+    });
+
+    // For each category, fetch products
+    const categoriesWithProducts = await Promise.all(
+      categories.map(async (category) => {
+        const products = await prisma.product.findMany({
+          where: {
+            isActive: true,
+            categoryId: category.id,
+          },
+          include: {
+            category: { select: { id: true, name: true, slug: true } },
+            subcategory: { select: { id: true, name: true, slug: true } },
+          },
+          orderBy: { createdAt: 'desc' },
+          take: productLimit,
+        });
+
+        return {
+          ...category,
+          products: products.map(p => ({
+            ...p,
+            images: normalizeImages(p.images),
+          })),
+          productCount: products.length,
+        };
+      })
+    );
+
+    // Only return categories that have products
+    const categoriesWithProductsFiltered = categoriesWithProducts.filter(
+      cat => cat.productCount > 0
+    );
+
+    res.json({ categories: categoriesWithProductsFiltered });
+  } catch (error) {
+    console.error('Failed to fetch categories with products:', error);
+    res.status(500).json({ error: 'Failed to fetch categories with products' });
   }
 });
 

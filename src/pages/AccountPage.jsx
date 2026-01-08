@@ -1,6 +1,6 @@
 import { useState, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { useAuthStore } from "../stores/authStore";
 import SEOHead from "../components/common/SEOHead";
 import {

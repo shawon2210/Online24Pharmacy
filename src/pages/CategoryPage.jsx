@@ -181,7 +181,7 @@ function CategoryPage() {
       />
 
       {/* Category Hero Banner with Image (with fallback) */}
-      <div className="relative w-full h-48 sm:h-64 md:h-80 overflow-hidden bg-gradient-to-r from-emerald-600 to-cyan-600">
+      <div className="relative w-full h-48 sm:h-64 md:h-80 overflow-hidden bg-linear-to-r from-emerald-600 to-cyan-600">
         <img
           src={
             ensureAbsoluteImageUrl(currentCategory?.imageUrl) ||
@@ -200,7 +200,7 @@ function CategoryPage() {
             </span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20"></div>
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white capitalize">
             {currentCategoryName}

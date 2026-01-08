@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import SEOHead from "../components/common/SEOHead";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import useTranslation from "../hooks/useTranslation";
 import {
   CloudArrowUpIcon,
@@ -287,7 +287,7 @@ export default function PrescriptionsPage() {
                 </a>
               </li>
               <li className="px-1 text-muted-foreground">/</li>
-              <li className="text-foreground font-bold break-words max-w-xs sm:max-w-sm md:max-w-md">
+              <li className="text-foreground font-bold wrap-break-word max-w-xs sm:max-w-sm md:max-w-md">
                 {t("uploadPrescription")}
               </li>
             </ol>
@@ -295,7 +295,7 @@ export default function PrescriptionsPage() {
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-primary mb-1 break-words max-w-xs sm:max-w-sm md:max-w-md">
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-primary mb-1 wrap-break-word max-w-xs sm:max-w-sm md:max-w-md">
                 {t("uploadPrescription")}
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-muted-foreground">

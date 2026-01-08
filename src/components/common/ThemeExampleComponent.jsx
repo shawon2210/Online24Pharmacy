@@ -1,11 +1,11 @@
-import { useResponsiveTheme } from '../../hooks/useResponsiveTheme';
-import { themeClasses } from '../../utils/themeUtils';
-import ResponsiveCard from './ResponsiveCard';
-import ResponsiveContainer from './ResponsiveContainer';
-import ResponsiveGrid from './ResponsiveGrid';
+import { useResponsiveTheme } from "../../hooks/useResponsiveTheme";
+import { themeClasses } from "../../utils/themeUtils";
+import ResponsiveCard from "./ResponsiveCard";
+import ResponsiveContainer from "./ResponsiveContainer";
+import ResponsiveGrid from "./ResponsiveGrid";
 
 export default function ThemeExampleComponent() {
-  const { isDark, isMobile, isTablet, isDesktop } = useResponsiveTheme();
+  const { isDark, isMobile, isTablet } = useResponsiveTheme();
 
   return (
     <ResponsiveContainer className="py-8">
@@ -16,16 +16,19 @@ export default function ThemeExampleComponent() {
             Theme System Example
           </h1>
           <p className={`mt-2 ${themeClasses.text.secondary}`}>
-            Current theme: <span className="font-semibold">{isDark ? 'Dark' : 'Light'}</span>
+            Current theme:{" "}
+            <span className="font-semibold">{isDark ? "Dark" : "Light"}</span>
           </p>
           <p className={`mt-1 ${themeClasses.text.tertiary}`}>
-            Device: {isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop'}
+            Device: {isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop"}
           </p>
         </div>
 
         {/* Cards Grid */}
         <div>
-          <h2 className={`text-2xl font-bold mb-4 ${themeClasses.text.primary}`}>
+          <h2
+            className={`text-2xl font-bold mb-4 ${themeClasses.text.primary}`}
+          >
             Responsive Cards
           </h2>
           <ResponsiveGrid cols={3}>
@@ -44,7 +47,9 @@ export default function ThemeExampleComponent() {
 
         {/* Color Palette */}
         <div>
-          <h2 className={`text-2xl font-bold mb-4 ${themeClasses.text.primary}`}>
+          <h2
+            className={`text-2xl font-bold mb-4 ${themeClasses.text.primary}`}
+          >
             Color Palette
           </h2>
           <ResponsiveGrid cols={2}>
@@ -55,12 +60,16 @@ export default function ThemeExampleComponent() {
             </ResponsiveCard>
             <ResponsiveCard>
               <div className={`p-4 rounded ${themeClasses.bg.secondary}`}>
-                <p className={themeClasses.text.secondary}>Secondary Background</p>
+                <p className={themeClasses.text.secondary}>
+                  Secondary Background
+                </p>
               </div>
             </ResponsiveCard>
             <ResponsiveCard>
               <div className={`p-4 rounded ${themeClasses.bg.tertiary}`}>
-                <p className={themeClasses.text.tertiary}>Tertiary Background</p>
+                <p className={themeClasses.text.tertiary}>
+                  Tertiary Background
+                </p>
               </div>
             </ResponsiveCard>
             <ResponsiveCard>
@@ -73,14 +82,22 @@ export default function ThemeExampleComponent() {
 
         {/* Text Styles */}
         <div>
-          <h2 className={`text-2xl font-bold mb-4 ${themeClasses.text.primary}`}>
+          <h2
+            className={`text-2xl font-bold mb-4 ${themeClasses.text.primary}`}
+          >
             Text Styles
           </h2>
           <ResponsiveCard>
             <div className="space-y-3">
-              <p className={`text-lg ${themeClasses.text.primary}`}>Primary Text</p>
-              <p className={`text-lg ${themeClasses.text.secondary}`}>Secondary Text</p>
-              <p className={`text-lg ${themeClasses.text.tertiary}`}>Tertiary Text</p>
+              <p className={`text-lg ${themeClasses.text.primary}`}>
+                Primary Text
+              </p>
+              <p className={`text-lg ${themeClasses.text.secondary}`}>
+                Secondary Text
+              </p>
+              <p className={`text-lg ${themeClasses.text.tertiary}`}>
+                Tertiary Text
+              </p>
               <p className={`text-lg ${themeClasses.text.muted}`}>Muted Text</p>
             </div>
           </ResponsiveCard>

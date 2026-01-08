@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 import SEOHead from "../components/common/SEOHead";
 import {
@@ -102,10 +102,12 @@ export default function ProfilePage() {
 
     setLoading(true);
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
       const headers = {};
       if (csrfToken) {
-        headers['X-CSRF-Token'] = csrfToken;
+        headers["X-CSRF-Token"] = csrfToken;
       }
       const response = await axios.patch(`${API_URL}/api/users/me`, formData, {
         withCredentials: true,

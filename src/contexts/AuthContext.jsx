@@ -1,9 +1,9 @@
 /* @refresh reload */
-/* eslint-disable no-unused-vars */
-import { createContext, useContext, useReducer, useEffect } from "react";
+import { useReducer, useEffect } from "react";
+import { AuthContext } from "./AuthContextCore";
 import axios from "axios";
 
-const AuthContext = createContext(undefined);
+// AuthContext moved to AuthContextCore for fast-refresh compatibility
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -218,12 +218,4 @@ function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
-}
-
-export { AuthProvider, useAuth };
+export { AuthProvider };

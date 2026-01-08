@@ -34,20 +34,29 @@ const ProductCarousel = memo(({ products = [] }) => {
 
   return (
     <div className="relative w-full">
-      <div ref={trackRef} className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-2">
+      <div
+        ref={trackRef}
+        className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-2"
+      >
         {products.map((p) => (
-          <div key={p.id} className="snap-start shrink-0 w-48 sm:w-56 md:w-64">
-            <ProductCard product={p} />
+          <div key={p.id} className="snap-start shrink-0 w-40 sm:w-48 md:w-56">
+            <ProductCard product={p} size="xs" />
           </div>
         ))}
       </div>
       {canPrev && (
-        <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-background rounded-full p-3 shadow-lg transition-all">
+        <button
+          onClick={() => scroll(-1)}
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-background rounded-full p-3 shadow-lg transition-all"
+        >
           <ChevronLeftIcon className="w-6 h-6" />
         </button>
       )}
       {canNext && (
-        <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-background rounded-full p-3 shadow-lg transition-all">
+        <button
+          onClick={() => scroll(1)}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-emerald-600 hover:bg-emerald-700 text-background rounded-full p-3 shadow-lg transition-all"
+        >
           <ChevronRightIcon className="w-6 h-6" />
         </button>
       )}

@@ -261,7 +261,7 @@ function ProductDetail({ slug }) {
     } finally {
       setLoading(false);
     }
-  }, [slug, t]);
+  }, [slug, t, targetSlug]);
 
   useEffect(() => {
     fetchProduct();
@@ -801,6 +801,7 @@ function ProductDetail({ slug }) {
                   <ProductCard
                     key={relatedProduct.slug || relatedProduct.id}
                     product={relatedProduct}
+                    size="xs"
                   />
                 ))}
               </div>

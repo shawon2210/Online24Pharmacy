@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import {
   HomeIcon,
   ShoppingBagIcon,
@@ -87,9 +87,7 @@ export default function AdminSidebar({ isCollapsed, setCollapsed }) {
               } ${isCollapsed ? "justify-center" : ""}`}
             >
               <Icon
-                className={`h-6 w-6 shrink-0 ${
-                  !isCollapsed ? "mr-4" : ""
-                }`}
+                className={`h-6 w-6 shrink-0 ${!isCollapsed ? "mr-4" : ""}`}
               />
               {!isCollapsed && <span className="font-medium">{item.name}</span>}
               {active && !isCollapsed && (

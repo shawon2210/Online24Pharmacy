@@ -2,7 +2,7 @@ import { useState, useLayoutEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import SEOHead from "../components/common/SEOHead";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import {
   ChevronDownIcon,
   ChevronUpIcon,

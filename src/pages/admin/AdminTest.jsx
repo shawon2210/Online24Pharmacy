@@ -1,4 +1,4 @@
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from "../../hooks/useAuth";
 
 export default function AdminTest() {
   const { user, isAuthenticated, isAdmin } = useAuth();
@@ -6,17 +6,25 @@ export default function AdminTest() {
   return (
     <div className="p-8 bg-muted min-h-screen">
       <div className="max-w-2xl mx-auto bg-background rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-green-600 mb-6">✅ Admin Access Working!</h1>
-        
+        <h1 className="text-3xl font-bold text-green-600 mb-6">
+          ✅ Admin Access Working!
+        </h1>
+
         <div className="space-y-4">
           <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="font-semibold text-blue-900">Authentication Status:</p>
-            <p className="text-blue-700">Authenticated: {isAuthenticated ? '✅ Yes' : '❌ No'}</p>
+            <p className="font-semibold text-blue-900">
+              Authentication Status:
+            </p>
+            <p className="text-blue-700">
+              Authenticated: {isAuthenticated ? "✅ Yes" : "❌ No"}
+            </p>
           </div>
 
           <div className="p-4 bg-green-50 rounded-lg">
             <p className="font-semibold text-green-900">Admin Status:</p>
-            <p className="text-green-700">Is Admin: {isAdmin ? '✅ Yes' : '❌ No'}</p>
+            <p className="text-green-700">
+              Is Admin: {isAdmin ? "✅ Yes" : "❌ No"}
+            </p>
           </div>
 
           <div className="p-4 bg-purple-50 rounded-lg">
@@ -29,10 +37,12 @@ export default function AdminTest() {
           <div className="p-4 bg-yellow-50 rounded-lg">
             <p className="font-semibold text-yellow-900">LocalStorage:</p>
             <p className="text-sm text-yellow-700">
-              auth_user: {localStorage.getItem('auth_user') ? '✅ Exists' : '❌ Missing'}
+              auth_user:{" "}
+              {localStorage.getItem("auth_user") ? "✅ Exists" : "❌ Missing"}
             </p>
             <p className="text-sm text-yellow-700">
-              auth_token: {localStorage.getItem('auth_token') ? '✅ Exists' : '❌ Missing'}
+              auth_token:{" "}
+              {localStorage.getItem("auth_token") ? "✅ Exists" : "❌ Missing"}
             </p>
           </div>
         </div>

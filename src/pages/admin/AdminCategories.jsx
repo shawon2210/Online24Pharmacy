@@ -7,7 +7,7 @@ import {
   PhotoIcon,
 } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -22,7 +22,7 @@ export default function AdminCategories() {
   const {
     data: categoriesData,
     isLoading,
-    refetch,
+    refetch: _refetch,
   } = useQuery({
     queryKey: ["admin-categories"],
     queryFn: async () => {
@@ -202,7 +202,7 @@ export default function AdminCategories() {
     <div className="p-2 sm:p-4 md:p-6 lg:p-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-linear-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
             Categories
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -215,7 +215,7 @@ export default function AdminCategories() {
             setPreviewImage(null);
             setIsModalOpen(true);
           }}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded-lg font-semibold transition shadow-lg text-sm sm:text-base"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-linear-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded-lg font-semibold transition shadow-lg text-sm sm:text-base"
         >
           <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
           Add Category
@@ -233,7 +233,7 @@ export default function AdminCategories() {
               key={category.id}
               className="bg-background rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition overflow-hidden border border-gray-200"
             >
-              <div className="relative h-24 sm:h-32 bg-gradient-to-r from-emerald-500 to-blue-500 overflow-hidden">
+              <div className="relative h-24 sm:h-32 bg-linear-to-r from-emerald-500 to-blue-500 overflow-hidden">
                 {category.imageUrl ? (
                   <img
                     src={`${API_URL}${category.imageUrl}`}
@@ -300,7 +300,7 @@ export default function AdminCategories() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
           <div className="bg-background rounded-xl sm:rounded-2xl w-[95vw] max-w-2xl my-2 sm:my-4 p-3 sm:p-4 md:p-5 shadow-2xl">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 bg-linear-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent">
               {editingCategory ? "Edit Category" : "Add Category"}
             </h2>
             <form
@@ -366,7 +366,7 @@ export default function AdminCategories() {
                     }}
                   />
                   {previewImage && (
-                    <div className="relative w-full h-24 rounded overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow">
+                    <div className="relative w-full h-24 rounded overflow-hidden bg-linear-to-br from-gray-100 to-gray-200 shadow">
                       <img
                         src={previewImage}
                         alt="Preview"
@@ -488,7 +488,7 @@ export default function AdminCategories() {
                 </button>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded font-semibold transition shadow-lg hover:shadow-xl text-xs sm:text-sm"
+                  className="w-full sm:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-linear-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded font-semibold transition shadow-lg hover:shadow-xl text-xs sm:text-sm"
                 >
                   {editingCategory ? "Update" : "Create"}
                 </button>

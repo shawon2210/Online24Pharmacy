@@ -68,14 +68,18 @@ export default function OrderSummary({
         </div>
         {safeSubtotal < DELIVERY.FREE_SHIPPING_THRESHOLD && (
           <div className="text-xs text-background0">
-            {t('cartPage.addMoreForFreeShipping', { amount: (DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(2) })}
+            {t("cartPage.addMoreForFreeShipping", {
+              amount: (DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(
+                2
+              ),
+            })}
           </div>
         )}
         <div className="border-t-2 border-border pt-3 sm:pt-4 flex justify-between items-center">
           <span className="text-base sm:text-lg font-bold text-foreground">
             {t("cartPage.totalPrice")}
           </span>
-          <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+          <span className="text-xl sm:text-2xl font-black bg-linear-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
             ৳{safeTotal.toFixed(2)}
           </span>
         </div>
@@ -86,7 +90,7 @@ export default function OrderSummary({
         disabled={!canCheckout}
         className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 ${
           canCheckout
-            ? "bg-gradient-to-r from-emerald-600 to-green-600 text-background hover:from-emerald-700 hover:to-green-700 active:scale-95"
+            ? "bg-linear-to-r from-emerald-600 to-green-600 text-background hover:from-emerald-700 hover:to-green-700 active:scale-95"
             : "bg-border text-background0 cursor-not-allowed"
         }`}
       >

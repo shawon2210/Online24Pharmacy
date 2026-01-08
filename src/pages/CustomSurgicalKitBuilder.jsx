@@ -20,7 +20,7 @@ import {
   ShoppingBagIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/outline";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { useCartStore } from "../stores/cartStore";
 import axios from "axios";
 import { CSS } from "@dnd-kit/utilities";
@@ -35,12 +35,7 @@ const useCases = {
     "Medical Tape",
     "Pain Relievers",
   ],
-  "Diabetic Wound Kit": [
-    "Gauze",
-    "Antiseptic",
-    "Saline Solution",
-    "Bandages",
-  ],
+  "Diabetic Wound Kit": ["Gauze", "Antiseptic", "Saline Solution", "Bandages"],
   "First Aid for Home": [
     "Bandages",
     "Antiseptic Wipes",
@@ -71,7 +66,9 @@ const ProductItem = ({ product, onAdd }) => {
         className="flex-1 cursor-move touch-none"
       >
         <p className="font-semibold text-foreground">{product.name}</p>
-        <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
+        <p className="text-sm text-muted-foreground">
+          ${product.price.toFixed(2)}
+        </p>
       </div>
       <button
         onClick={() => onAdd(product)}
@@ -88,7 +85,9 @@ const KitItem = ({ item, onRemove }) => {
     <div className="bg-card p-3 rounded-lg shadow-sm flex justify-between items-center mb-2 border border-border hover:shadow-md transition-shadow">
       <div>
         <p className="font-semibold text-foreground">{item.name}</p>
-        <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+        <p className="text-sm text-muted-foreground">
+          ${item.price.toFixed(2)}
+        </p>
       </div>
       <button
         onClick={() => onRemove(item.instanceId)}
@@ -113,7 +112,8 @@ export default function CustomSurgicalKitBuilder() {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch(`${API_URL}/api/products`);
-      if (!response.ok) throw new Error(t("customKitBuilder.fetchProductsError"));
+      if (!response.ok)
+        throw new Error(t("customKitBuilder.fetchProductsError"));
       const data = await response.json();
       return data.products || [];
     },
@@ -282,7 +282,9 @@ export default function CustomSurgicalKitBuilder() {
             </div>
             <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary/10 border-2 border-primary/30 text-primary rounded-full text-sm font-bold">
               <ShoppingBagIcon className="w-5 h-5" />
-              <span>{kitItems.length} {t("items")}</span>
+              <span>
+                {kitItems.length} {t("items")}
+              </span>
             </div>
           </div>
         </div>
@@ -375,9 +377,7 @@ export default function CustomSurgicalKitBuilder() {
             <div
               ref={setNodeRef}
               className={`rounded-xl shadow-lg border-2 p-6 transition-all duration-300 ${
-                isOver
-                  ? "border-primary bg-primary/5"
-                  : "border-border bg-card"
+                isOver ? "border-primary bg-primary/5" : "border-border bg-card"
               }`}
             >
               <div className="flex justify-between items-center mb-4">
@@ -396,9 +396,7 @@ export default function CustomSurgicalKitBuilder() {
               </div>
               <div
                 className={`rounded-lg p-4 h-96 overflow-y-auto transition-colors border border-border ${
-                  isDragging
-                    ? "bg-primary/5"
-                    : "bg-muted"
+                  isDragging ? "bg-primary/5" : "bg-muted"
                 }`}
               >
                 {kitItems.length > 0 ? (
@@ -470,7 +468,8 @@ export default function CustomSurgicalKitBuilder() {
                 onClick={saveKit}
                 className="bg-blue-600 hover:opacity-90 text-white px-6 py-3 rounded-lg font-semibold transition-opacity flex items-center gap-2 shadow-lg hover:shadow-xl"
               >
-                <CheckCircleIcon className="w-5 h-5" /> {t("customKitBuilder.saveKit")}
+                <CheckCircleIcon className="w-5 h-5" />{" "}
+                {t("customKitBuilder.saveKit")}
               </button>
               <button
                 onClick={shareKit}

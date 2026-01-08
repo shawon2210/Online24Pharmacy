@@ -1,4 +1,4 @@
-import { useAuth as useAuthContext } from "../contexts/AuthContext";
+import { useAuth as useAuthContext } from "../contexts/AuthContextCore";
 
 /**
  * Custom hook for authentication

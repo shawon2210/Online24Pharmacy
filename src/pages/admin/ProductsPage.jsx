@@ -13,7 +13,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center overflow-auto">
       <div className="bg-background rounded-xl sm:rounded-2xl w-[95vw] max-w-2xl my-2 sm:my-4 p-3 sm:p-4 md:p-5 shadow-2xl">
         <div className="flex justify-between items-center mb-3 sm:mb-4">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold bg-linear-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent">
             {title}
           </h2>
           <button
@@ -55,9 +55,9 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 const fetchProducts = async () => {
-  const token = localStorage.getItem('auth_token');
+  const token = localStorage.getItem("auth_token");
   if (!token) {
-    throw new Error('No authentication token found');
+    throw new Error("No authentication token found");
   }
   const { data } = await axiosInstance.get(`/api/admin/products`);
   return data;
@@ -359,7 +359,7 @@ const ProductForm = ({ product, onSuccess, onCancel }) => {
         </button>
         <button
           type="submit"
-          className="w-full sm:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded font-semibold transition shadow-lg hover:shadow-xl text-xs sm:text-sm"
+          className="w-full sm:w-auto px-3 sm:px-4 py-1.5 sm:py-2 bg-linear-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded font-semibold transition shadow-lg hover:shadow-xl text-xs sm:text-sm"
         >
           {product ? "Update" : "Create"}
         </button>
@@ -437,10 +437,13 @@ const AdminProductsPage = () => {
 
   if (isLoading) return <div className="p-4">Loading products...</div>;
   if (error) {
-    console.error('Products fetch error:', error);
+    console.error("Products fetch error:", error);
     return (
       <div className="p-4 bg-red-50 border border-red-200 rounded text-red-800">
-        Error fetching products: {error.response?.status === 403 ? 'Admin access required' : error.message}
+        Error fetching products:{" "}
+        {error.response?.status === 403
+          ? "Admin access required"
+          : error.message}
       </div>
     );
   }
@@ -449,7 +452,7 @@ const AdminProductsPage = () => {
     <div className="p-2 sm:p-4 md:p-6 lg:p-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-linear-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
             Products
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -458,7 +461,7 @@ const AdminProductsPage = () => {
         </div>
         <button
           onClick={handleAddProduct}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded-lg font-semibold transition shadow-lg text-sm sm:text-base"
+          className="w-full sm:w-auto flex items-center justifycenter gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-linear-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-background rounded-lg font-semibold transition shadow-lg text-sm sm:text-base"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
           Add Product

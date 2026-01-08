@@ -25,13 +25,53 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    // Accept all common image types
+    const allowedTypes = /jpeg|jpg|png|gif|webp|svg|bmp|ico|tiff|tif/i;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    if (mimetype && extname) return cb(null, true);
-    cb(new Error('Only image files allowed'));
+    const mimetype = file.mimetype.startsWith('image/');
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    
+    // More specific error message
+    const err = new Error(`Invalid file type. Only image files are allowed. You uploaded: ${file.mimetype}`);
+    err.code = 'INVALID_FILE_TYPE';
+    cb(err);
   },
-  limits: { fileSize: 5 * 1024 * 1024 }
+  limits: { fileSize: 10 * 1024 * 1024 } // Increased to 10MB
+});
+
+// POST /api/admin/categories/upload - Upload category image (BEFORE auth middleware)
+router.post('/upload', authenticateToken, isAdmin, (req, res) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      console.error('Multer upload error:', err);
+      
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'File is too large. Maximum size is 10MB.' });
+      }
+      
+      if (err.code === 'INVALID_FILE_TYPE') {
+        return res.status(400).json({ error: err.message });
+      }
+      
+      return res.status(500).json({ error: err.message || 'Upload failed' });
+    }
+    
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+      
+      const imageUrl = `/uploads/categories/${req.file.filename}`;
+      console.log('Category image uploaded successfully:', imageUrl);
+      res.json({ imageUrl });
+    } catch (error) {
+      console.error('Upload processing failed:', error);
+      res.status(500).json({ error: error.message || 'Upload failed' });
+    }
+  });
 });
 
 // Apply auth and admin middleware ONLY to routes below this line
@@ -47,18 +87,6 @@ const validateSubcategory = [
   body('name').notEmpty().withMessage('Subcategory name is required.'),
   body('categoryId').notEmpty().withMessage('Parent category ID is required.'),
 ];
-
-// POST /api/admin/categories/upload - Upload category image
-router.post('/upload', upload.single('image'), (req, res) => {
-  try {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    const imageUrl = `/uploads/categories/${req.file.filename}`;
-    res.json({ imageUrl });
-  } catch (error) {
-    console.error('Upload failed:', error);
-    res.status(500).json({ error: 'Upload failed: ' + error.message });
-  }
-});
 
 // GET /api/admin/categories/all - Fetch all active categories for forms
 router.get('/all', async (req, res) => {
@@ -107,7 +135,7 @@ router.post('/', validateCategory, async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, slug, description, image, subcategories, brands, productTypes, variants } = req.body;
+  const { name, slug, description, image, subcategories, _brands, _productTypes, _variants } = req.body;
   try {
     const newCategory = await prisma.category.create({
       data: {
