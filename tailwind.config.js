@@ -17,6 +17,7 @@ export default {
       'lg': '1024px',
       'xl': '1280px',
       '2xl': '1536px',
+      '3xl': '1920px',
     },
     container: {
       center: true,
@@ -29,6 +30,11 @@ export default {
       },
     },
     extend: {
+      backgroundImage: {
+        'gradient-surgical': 'linear-gradient(to right, var(--tw-gradient-stops))',
+        'gradient-medicines': 'linear-gradient(to right, var(--tw-gradient-stops))',
+        'gradient-wound-care': 'linear-gradient(to right, var(--tw-gradient-stops))',
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',

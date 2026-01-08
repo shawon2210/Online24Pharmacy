@@ -6,45 +6,47 @@ export const useScrollAwareHeader = () => {
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
-    let scrollTimeout = null;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const scrollDelta = currentScrollY - lastScrollY;
 
-      // Determine if scrolled down enough
       setIsScrolled(currentScrollY > 50);
 
-      // Hide on scroll down (more than 80px delta, past 200px from top)
-      if (scrollDelta > 80 && currentScrollY > 200) {
-        setHeaderVisible(false);
+      console.log(`Scroll: current=${currentScrollY}, last=${lastScrollY}, delta=${scrollDelta}, headerVisible=${headerVisible}`);
+
+      // If scrolling up, always show the header
+      if (scrollDelta < 0) {
+        if (!headerVisible) {
+          console.log("Setting headerVisible to TRUE (scrolling up)");
+          setHeaderVisible(true);
+        }
       }
-      // Show on scroll up (any upward movement)
-      else if (scrollDelta < 0) {
-        setHeaderVisible(true);
-      }
-      // Always show when at top
+      // If at the very top, always show the header
       else if (currentScrollY < 100) {
-        setHeaderVisible(true);
+        if (!headerVisible) {
+          console.log("Setting headerVisible to TRUE (near top)");
+          setHeaderVisible(true);
+        }
+      }
+      // Otherwise, if scrolling down significantly, hide the header
+      else if (scrollDelta > 80 && currentScrollY > 200) {
+        if (headerVisible) {
+          console.log("Setting headerVisible to FALSE (scrolling down)");
+          setHeaderVisible(false);
+        }
       }
 
       lastScrollY = currentScrollY;
-
-      // Auto-show after scrolling stops (1s inactivity)
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        setHeaderVisible(true);
-      }, 1000);
     };
 
-    // Use passive listener for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
     };
-  }, []);
+  }, [headerVisible]); // Added headerVisible to dependency array to ensure logs reflect current state
 
   return { headerVisible, isScrolled };
 };
+

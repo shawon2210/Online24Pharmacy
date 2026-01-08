@@ -60,14 +60,14 @@ function ContactForm() {
   };
 
   return (
-    <section className="w-full py-20 px-4 sm:px-6 bg-background dark:bg-card">
+    <section className="w-full py-20 px-4 sm:px-6 bg-background dark:bg-background">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full text-sm font-bold mb-4">
             {tf("contactForm.badge", "Contact us")}
           </span>
-          <h2 className="text-5xl md:text-6xl font-black text-foreground dark:text-background mb-4 bg-linear-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-6xl font-black text-foreground dark:text-foreground mb-4">
             {tf("contactForm.title", "Get in touch")}
           </h2>
           <p className="text-xl text-muted-foreground dark:text-muted max-w-3xl mx-auto">
@@ -105,46 +105,46 @@ function ContactForm() {
                 </div>
 
                 <div className="space-y-5">
-                  <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
-                      <PhoneIcon className="w-6 h-6 text-background" />
+                  <div className="flex items-center gap-4 p-4 bg-muted dark:bg-muted backdrop-blur-sm rounded-2xl hover:bg-muted/80 dark:hover:bg-muted/80 transition-all">
+                    <div className="w-12 h-12 bg-muted-foreground/20 dark:bg-muted-foreground/20 rounded-xl flex items-center justify-center shrink-0">
+                      <PhoneIcon className="w-6 h-6 text-foreground dark:text-foreground" />
                     </div>
                     <div>
-                      <div className="text-background font-bold text-sm mb-1">
+                      <div className="text-foreground dark:text-foreground font-bold text-sm mb-1">
                         {tf("contactForm.callUs", "Call us")}
                       </div>
                       <a
                         href="tel:+8801700000000"
-                        className="text-emerald-100 hover:text-background transition-colors font-semibold"
+                        className="text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80 transition-colors font-semibold"
                       >
                         +880 1700-000000
                       </a>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
-                      <EnvelopeIcon className="w-6 h-6 text-background" />
+                  <div className="flex items-center gap-4 p-4 bg-muted dark:bg-muted backdrop-blur-sm rounded-2xl hover:bg-muted/80 dark:hover:bg-muted/80 transition-all">
+                    <div className="w-12 h-12 bg-muted-foreground/20 dark:bg-muted-foreground/20 rounded-xl flex items-center justify-center shrink-0">
+                      <EnvelopeIcon className="w-6 h-6 text-foreground dark:text-foreground" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-background font-bold text-sm mb-1">
+                      <div className="text-foreground dark:text-foreground font-bold text-sm mb-1">
                         {tf("contactForm.emailUs", "Email us")}
                       </div>
                       <a
                         href="mailto:support@online24pharmacy.com"
-                        className="text-emerald-100 hover:text-background transition-colors font-semibold text-sm break-all"
+                        className="text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80 transition-colors font-semibold text-sm break-all"
                       >
                         support@online24pharmacy.com
                       </a>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
-                      <MapPinIcon className="w-6 h-6 text-background" />
+                  <div className="flex items-center gap-4 p-4 bg-muted dark:bg-muted backdrop-blur-sm rounded-2xl hover:bg-muted/80 dark:hover:bg-muted/80 transition-all">
+                    <div className="w-12 h-12 bg-muted-foreground/20 dark:bg-muted-foreground/20 rounded-xl flex items-center justify-center shrink-0">
+                      <MapPinIcon className="w-6 h-6 text-foreground dark:text-foreground" />
                     </div>
                     <div>
-                      <div className="text-background font-bold text-sm mb-1">
+                      <div className="text-foreground dark:text-foreground font-bold text-sm mb-1">
                         {tf("contactForm.visitUs", "Visit us")}
                       </div>
                       <div className="text-emerald-100 font-semibold">

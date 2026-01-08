@@ -1,6 +1,11 @@
-import { memo } from "react";
+import { memo, useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 import ProductCard from "./ProductCard";
 import { useTranslation } from "react-i18next";
 
@@ -15,79 +20,321 @@ const ensureAbsoluteImageUrl = (url) => {
   return `${API_URL}/${url}`;
 };
 
-const CategoryProductSection = memo(({ category, index }) => {
+const CategoryProductSection = memo(({ category, index: _index }) => {
   const { t } = useTranslation();
+  const sliderRef = useRef(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Update scroll button states and progress
+  const updateScrollState = useCallback(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = slider;
+    setCanScrollPrev(scrollLeft > 10);
+    setCanScrollNext(scrollLeft + clientWidth < scrollWidth - 10);
+
+    // Calculate scroll progress (0-100)
+    const maxScroll = scrollWidth - clientWidth;
+    const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+    setScrollProgress(progress);
+  }, []);
+
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    updateScrollState();
+    slider.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      slider.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [category.products, updateScrollState]);
+
+  // Enhanced scroll handler with auto-scroll prevention
+  const handleScroll = useCallback(
+    (direction) => {
+      const slider = sliderRef.current;
+      if (!slider || isAutoScrolling) return;
+
+      setIsAutoScrolling(true);
+      const containerWidth = slider.clientWidth;
+      const scrollAmount =
+        direction === "left" ? -containerWidth * 0.8 : containerWidth * 0.8;
+
+      slider.scrollBy({ left: scrollAmount, behavior: "smooth" });
+
+      setTimeout(() => setIsAutoScrolling(false), 600);
+    },
+    [isAutoScrolling]
+  );
 
   if (!category || !category.products || category.products.length === 0) {
     return null;
   }
 
-  // Alternate background color for visual separation
-  const bgClass =
-    index % 2 === 0
-      ? "bg-background dark:bg-background"
-      : "bg-card dark:bg-card";
+  const categoryStyles = {
+    surgical: {
+      accent: "from-emerald-500 to-teal-500",
+      heading: "from-emerald-600 to-teal-600",
+      bg: "bg-background dark:bg-background",
+      glow: "",
+    },
+    medicines: {
+      accent: "from-blue-500 to-indigo-500",
+      heading: "from-blue-600 to-indigo-600",
+      bg: "bg-background dark:bg-background",
+      glow: "",
+    },
+    "wound-care": {
+      accent: "from-violet-500 to-purple-500",
+      heading: "from-violet-600 to-purple-600",
+      bg: "bg-background dark:bg-background",
+      glow: "",
+    },
+    default: {
+      accent: "from-gray-500 to-slate-600",
+      heading: "from-gray-600 to-slate-600",
+      bg: "bg-background dark:bg-background",
+      glow: "",
+    },
+  };
+
+  const config = categoryStyles[category.slug] || categoryStyles.default;
 
   return (
     <section
-      className={`w-full py-6 sm:py-8 md:py-10 lg:py-12 xl:py-14 ${bgClass} border-b border-border dark:border-border`}
+      className={`relative w-full py-6 sm:py-8 md:py-9 lg:py-10 xl:py-12 ${config.bg} overflow-hidden transition-all duration-700`}
     >
-      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10">
-        {/* Category Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-5 md:mb-6 lg:mb-8 gap-2 sm:gap-3 md:gap-4">
-          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+      <div className="relative w-full px-4 sm:px-5 md:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        {/* Enhanced Category Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-4 sm:mb-5 md:mb-6 lg:mb-7 gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+            {/* Category Image with Enhanced Styling */}
             {category.imageUrl && (
-              <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 rounded-full overflow-hidden bg-linear-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/20 border-2 sm:border-[3px] border-emerald-200 dark:border-emerald-700 shadow-sm">
-                <img
-                  src={ensureAbsoluteImageUrl(category.imageUrl)}
-                  alt={category.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+              <div className="relative shrink-0 group/img">
+                <div
+                  className={`absolute -inset-1 bg-linear-to-br ${config.accent} opacity-20 dark:opacity-30 blur-md rounded-full group-hover/img:opacity-30 dark:group-hover/img:opacity-40 transition-opacity duration-300`}
+                ></div>
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 rounded-full overflow-hidden bg-white dark:bg-slate-800 border-2 sm:border-3 md:border-3 border-white dark:border-slate-700 hover:shadow-lg transition-all duration-250 ring-1 ring-emerald-200/30 dark:ring-emerald-700/20">
+                  <img
+                    src={ensureAbsoluteImageUrl(category.imageUrl)}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div
+                    className={`absolute inset-0 bg-linear-to-br ${config.accent} opacity-0 group-hover/img:opacity-10 transition-opacity duration-300`}
+                  ></div>
+                </div>
               </div>
             )}
-            <div className="min-w-0 flex-1">
-              <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold text-emerald-600 dark:text-emerald-400 line-clamp-2 leading-tight">
-                {category.name}
-              </h2>
+
+            {/* Title and Description */}
+            <div className="min-w-0 flex-1 space-y-1 sm:space-y-1.5 md:space-y-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2
+                  className={`text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold bg-linear-to-r ${config.heading} bg-clip-text text-transparent line-clamp-2 leading-tight tracking-tight`}
+                >
+                  {category.name}
+                </h2>
+                <span
+                  className={`hidden sm:inline-flex items-center gap-1 px-2 md:px-2.5 py-0.5 md:py-1 rounded-full bg-linear-to-r ${config.accent} text-white text-[10px] md:text-xs font-semibold`}
+                >
+                  <SparklesIcon className="w-2.5 h-2.5 md:w-3 md:h-3" />
+                  {category.products.length}
+                </span>
+              </div>
               {category.description && (
-                <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground dark:text-muted-foreground mt-0.5 sm:mt-1 line-clamp-1 leading-snug">
+                <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed max-w-2xl">
                   {category.description}
                 </p>
               )}
             </div>
           </div>
 
-          <Link
-            to={`/categories/${category.slug}`}
-            className="hidden sm:inline-flex group items-center gap-1 md:gap-1.5 lg:gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold transition-all duration-200 whitespace-nowrap text-xs md:text-sm lg:text-base px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-          >
-            <span>{t("viewAll", { defaultValue: "View All" })}</span>
-            <ArrowRightIcon className="w-3 md:w-3.5 lg:w-4 h-3 md:h-3.5 lg:h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
-          </Link>
+          {/* Desktop Controls */}
+          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+            {/* Navigation Arrows */}
+            <div className="hidden lg:flex items-center gap-1.5 md:gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-full p-1 border border-slate-200/50 dark:border-slate-700/50">
+              <button
+                onClick={() => handleScroll("left")}
+                disabled={!canScrollPrev}
+                className={`relative inline-flex items-center justify-center w-9 h-9 xl:w-10 xl:h-10 rounded-full transition-all duration-300 ${
+                  canScrollPrev
+                    ? `bg-linear-to-br ${config.accent} text-white hover:scale-105 active:scale-95`
+                    : "bg-slate-100 dark:bg-slate-700/50 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+                }`}
+                aria-label="Previous products"
+              >
+                <ChevronLeftIcon
+                  className="w-5 h-5 xl:w-5.5 xl:h-5.5"
+                  strokeWidth={2.5}
+                />
+              </button>
+              <button
+                onClick={() => handleScroll("right")}
+                disabled={!canScrollNext}
+                className={`relative inline-flex items-center justify-center w-9 h-9 xl:w-10 xl:h-10 rounded-full transition-all duration-300 ${
+                  canScrollNext
+                    ? `bg-linear-to-br ${config.accent} text-white hover:scale-105 active:scale-95`
+                    : "bg-slate-100 dark:bg-slate-700/50 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+                }`}
+                aria-label="Next products"
+              >
+                <ChevronRightIcon
+                  className="w-5 h-5 xl:w-5.5 xl:h-5.5"
+                  strokeWidth={2.5}
+                />
+              </button>
+            </div>
+
+            {/* View All Button */}
+            <Link
+              to={`/categories/${category.slug}`}
+              className={`hidden sm:inline-flex group/btn relative items-center gap-1.5 md:gap-2 bg-linear-to-r ${config.accent} text-white font-semibold px-4 md:px-5 lg:px-6 py-2 md:py-2.5 rounded-full hover:scale-105 active:scale-95 overflow-hidden`}
+            >
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+              <span className="relative z-10">
+                {t("viewAll", { defaultValue: "View All" })}
+              </span>
+              <ArrowRightIcon
+                className="relative z-10 w-3.5 h-3.5 md:w-4 md:h-4 group-hover/btn:translate-x-1 transition-transform duration-300"
+                strokeWidth={2.5}
+              />
+            </Link>
+          </div>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 xs:gap-2.5 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-          {category.products.map((product) => (
-            <ProductCard key={product.id} product={product} size="xs" />
-          ))}
+        {/* Scroll Progress Indicator */}
+        <div className="hidden md:block mb-4 lg:mb-5">
+          <div className="w-full h-1 bg-slate-200/50 dark:bg-slate-700/50 rounded-full overflow-hidden">
+            <div
+              className={`h-full bg-linear-to-r ${config.accent} transition-all duration-300 ease-out rounded-full`}
+              style={{ width: `${scrollProgress}%` }}
+            ></div>
+          </div>
         </div>
 
-        {/* Mobile View All Button */}
-        <div className="flex justify-center mt-4 sm:hidden">
+        {/* Enhanced Products Slider */}
+        <div className="relative group/slider">
+          {/* Slider Track with Enhanced Styling */}
+          <div
+            ref={sliderRef}
+            className="flex gap-3 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-7 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4 sm:pb-5 scroll-smooth px-2 -mx-2"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            {category.products.map((product, idx) => (
+              <div
+                key={product.id}
+                className="snap-start shrink-0 w-33.75 xs:w-36.25 sm:w-38.75 md:w-41.25 lg:w-43.75 xl:w-46.25 2xl:w-50 first:ml-0 last:mr-0 transform transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1 group/card"
+                style={{
+                  animationDelay: `${idx * 40}ms`,
+                }}
+              >
+                <ProductCard product={product} size="carousel" />
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Overlay Navigation Buttons - Premium Design */}
+          {canScrollPrev && (
+            <button
+              onClick={() => handleScroll("left")}
+              className={`hidden lg:flex absolute left-2 xl:left-3 top-1/2 -translate-y-1/2 z-20 items-center justify-center w-14 h-14 xl:w-16 xl:h-16 rounded-full bg-linear-to-br ${config.accent} text-white backdrop-blur-md transition-all duration-500 opacity-0 group-hover/slider:opacity-100 hover:scale-110 active:scale-95 border-2 border-white/30 shadow-lg hover:shadow-xl`}
+              aria-label="Previous products"
+            >
+              <ChevronLeftIcon
+                className="w-7 h-7 xl:w-8 xl:h-8"
+                strokeWidth={2.5}
+              />
+            </button>
+          )}
+
+          {canScrollNext && (
+            <button
+              onClick={() => handleScroll("right")}
+              className={`hidden lg:flex absolute right-2 xl:right-3 top-1/2 -translate-y-1/2 z-20 items-center justify-center w-14 h-14 xl:w-16 xl:h-16 rounded-full bg-linear-to-br ${config.accent} text-white backdrop-blur-md transition-all duration-500 opacity-0 group-hover/slider:opacity-100 hover:scale-110 active:scale-95 border-2 border-white/30 shadow-lg hover:shadow-xl`}
+              aria-label="Next products"
+            >
+              <ChevronRightIcon
+                className="w-7 h-7 xl:w-8 xl:h-8"
+                strokeWidth={2.5}
+              />
+            </button>
+          )}
+        </div>
+
+        {/* Mobile Controls - Enhanced Design */}
+        <div className="flex items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-7 lg:hidden">
+          <button
+            onClick={() => handleScroll("left")}
+            disabled={!canScrollPrev}
+            className={`inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full transition-all duration-300 ${
+              canScrollPrev
+                ? `bg-linear-to-br ${config.accent} text-white active:scale-95`
+                : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-50"
+            }`}
+            aria-label="Scroll left"
+          >
+            <ChevronLeftIcon
+              className="w-5 h-5 sm:w-6 sm:h-6"
+              strokeWidth={2.5}
+            />
+          </button>
+
           <Link
             to={`/categories/${category.slug}`}
-            className="group inline-flex items-center gap-2 bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 text-xs active:scale-95"
+            className={`group/mobile relative inline-flex items-center gap-2 bg-linear-to-r ${config.accent} text-white font-bold px-6 sm:px-7 py-3 sm:py-3.5 rounded-full transition-all duration-300 text-sm sm:text-base active:scale-95 overflow-hidden`}
           >
-            <span>
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/mobile:translate-y-0 transition-transform duration-300"></div>
+            <span className="relative z-10">
               {t("viewAllInCategory", {
                 category: category.name,
-                defaultValue: `View All ${category.name}`,
+                defaultValue: `Explore All`,
               })}
             </span>
-            <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+            <ArrowRightIcon
+              className="relative z-10 w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover/mobile:translate-x-1 transition-transform duration-300"
+              strokeWidth={2.5}
+            />
           </Link>
+
+          <button
+            onClick={() => handleScroll("right")}
+            disabled={!canScrollNext}
+            className={`inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full transition-all duration-300 ${
+              canScrollNext
+                ? `bg-linear-to-br ${config.accent} text-white active:scale-95`
+                : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-50"
+            }`}
+            aria-label="Scroll right"
+          >
+            <ChevronRightIcon
+              className="w-5 h-5 sm:w-6 sm:h-6"
+              strokeWidth={2.5}
+            />
+          </button>
+        </div>
+
+        {/* Mobile Progress Indicator */}
+        <div className="block md:hidden mt-5 px-4">
+          <div className="w-full h-1.5 bg-slate-200/60 dark:bg-slate-700/60 rounded-full overflow-hidden">
+            <div
+              className={`h-full bg-linear-to-r ${config.accent} transition-all duration-300 ease-out rounded-full`}
+              style={{ width: `${scrollProgress}%` }}
+            ></div>
+          </div>
         </div>
       </div>
     </section>

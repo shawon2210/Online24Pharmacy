@@ -208,19 +208,19 @@ export default function HomePage() {
 
         {/* Special Offer Banner */}
         <LazySection>
-          <div className="w-full bg-card dark:bg-card border-b border-border dark:border-border">
+          <div className="w-full bg-background dark:bg-background border-b border-border dark:border-border">
             <SpecialOfferBanner />
           </div>
         </LazySection>
 
-        {/* Featured Products Section - Full Width */}
-        <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-background dark:bg-background border-b border-border dark:border-border">
-          <div className="w-full px-4 xs:px-5 sm:px-6 md:px-8">
-            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-2 sm:mb-3 lg:mb-4">
+        {/* Featured Products Section - compact, responsive height */}
+        <section className="w-full py-5 sm:py-7 md:py-8 lg:py-10 bg-background dark:bg-background border-b border-border dark:border-border">
+          <div className="w-full px-4 xs:px-5 sm:px-6 md:px-8 max-w-7xl mx-auto">
+            <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-2 sm:mb-2.5 lg:mb-3">
                 {tf("homePage.featuredProducts", "Featured Products")}
               </h2>
-              <p className="text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 {tf(
                   "homePage.popularMedicines",
                   "Popular medicines and healthcare products"
@@ -234,7 +234,7 @@ export default function HomePage() {
         </section>
 
         {/* Shop by Category – Premium slider */}
-        <section className="relative w-full overflow-hidden py-4 sm:py-5 md:py-6 lg:py-7 bg-linear-to-br from-emerald-600 via-emerald-500 to-cyan-500 text-white shadow-2xl">
+        <section className="relative w-full overflow-hidden py-2 sm:py-3 md:py-4 lg:py-5 bg-linear-to-br from-emerald-600 via-teal-500 to-cyan-500 text-white shadow-2xl">
           <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-emerald-900/40 via-transparent to-transparent opacity-50"></div>
           <div
             className="pointer-events-none absolute inset-0 opacity-30"
@@ -244,59 +244,59 @@ export default function HomePage() {
             }}
           ></div>
           <div className="w-full px-4 xs:px-5 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4 mb-4 sm:mb-5 md:mb-6">
-              <div className="space-y-2.5 max-w-3xl">
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 text-[10px] font-bold uppercase tracking-[0.15em] text-white/95 shadow-lg backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1.5 sm:gap-2 mb-2 sm:mb-3 md:mb-4">
+              <div className="space-y-1.5 max-w-3xl">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 dark:bg-white/15 text-[9px] font-bold uppercase tracking-[0.15em] text-white shadow-lg backdrop-blur-sm border border-white/30 hover:bg-white/30 dark:hover:bg-white/25 transition-all duration-300">
                   ✨ {tf("homePage.curated", "Curated")}
                 </span>
-                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight drop-shadow-lg tracking-tighter bg-linear-to-r from-white via-white/98 to-white/95 bg-clip-text text-transparent">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-tight drop-shadow-lg tracking-tighter bg-linear-to-r from-white via-white to-cyan-100 text-transparent bg-clip-text">
                   {tf("homePage.shopByCategory", "Shop by Category")}
                 </h2>
-                <p className="text-base sm:text-lg lg:text-xl text-white/90 leading-relaxed max-w-2xl font-medium opacity-90">
+                <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-2xl font-medium opacity-95">
                   {tf(
                     "homePage.exploreProducts",
                     "Discover premium healthcare products tailored for your wellness"
                   )}
                 </p>
-                <div className="flex flex-wrap items-center gap-3 pt-2">
+                <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
                   <Link
                     to="/categories"
-                    className="inline-flex items-center gap-2 bg-white text-emerald-700 font-bold px-6 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-lg hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all text-sm sm:text-base duration-200 group/btn"
+                    className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-bold px-4 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-lg hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all text-sm duration-200 group/btn border border-white/30"
                   >
-                    <span className="text-sm sm:text-base">
+                    <span className="text-sm">
                       {tf("homePage.viewAllCategories", "Explore Categories")}
                     </span>
-                    <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                    <ArrowRightIcon className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-300" />
                   </Link>
-                  <span className="text-xs sm:text-sm text-white/70 italic">
+                  <span className="text-xs text-white/80 italic">
                     {tf("homePage.dragHint", "← Swipe or use arrows →")}
                   </span>
                 </div>
               </div>
-              <div className="hidden lg:flex items-center gap-3">
+              <div className="hidden lg:flex items-center gap-2.5">
                 <button
                   type="button"
                   aria-label="Scroll categories left"
                   onClick={() => scrollCategories(-1)}
-                  className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/35 bg-white/12 hover:bg-white/22 text-white shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 backdrop-blur-md hover:-translate-x-0.5"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 backdrop-blur-md hover:-translate-x-0.5"
                 >
-                  <ArrowLeftIcon className="h-5 w-5 font-bold" />
+                  <ArrowLeftIcon className="h-4 w-4 font-bold" />
                 </button>
                 <button
                   type="button"
                   aria-label="Scroll categories right"
                   onClick={() => scrollCategories(1)}
-                  className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/35 bg-white/12 hover:bg-white/22 text-white shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 backdrop-blur-md hover:translate-x-0.5"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 backdrop-blur-md hover:translate-x-0.5"
                 >
-                  <ArrowRightIcon className="h-5 w-5 font-bold" />
+                  <ArrowRightIcon className="h-4 w-4 font-bold" />
                 </button>
               </div>
             </div>
 
-            <div className="rounded-3xl border border-white/20 bg-white/12 dark:bg-white/8 backdrop-blur-3xl shadow-2xl ring-1 ring-white/15 px-3 sm:px-4 md:px-5 py-1.5 sm:py-2.5 hover:ring-white/25 hover:border-white/30 transition-all duration-500">
+            <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-3xl ring-1 ring-white/30 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 hover:ring-white/40 hover:border-white/30 transition-all duration-500">
               <div
                 ref={categoryCarouselRef}
-                className="flex gap-3.5 sm:gap-4.5 md:gap-5 overflow-x-auto pb-2 sm:pb-2.5 snap-x snap-mandatory px-1 sm:px-2 scrollbar-hide"
+                className="flex gap-3 sm:gap-4 md:gap-4.5 overflow-x-auto pb-1.5 sm:pb-2 snap-x snap-mandatory px-1 sm:px-1.5 scrollbar-hide"
                 style={{ scrollbarWidth: "none" }}
               >
                 {displayCategories.map((category) => (
@@ -306,22 +306,22 @@ export default function HomePage() {
                   />
                 ))}
               </div>
-              <div className="mt-3 flex justify-center gap-2 lg:hidden">
+              <div className="mt-2 flex justify-center gap-2 lg:hidden">
                 <button
                   type="button"
                   aria-label="Scroll categories left"
                   onClick={() => scrollCategories(-1)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/15 hover:bg-white/25 text-white shadow-sm hover:shadow transition-all backdrop-blur"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-sm hover:shadow transition-all backdrop-blur"
                 >
-                  <ArrowLeftIcon className="h-5 w-5" />
+                  <ArrowLeftIcon className="h-4 w-4" />
                 </button>
                 <button
                   type="button"
                   aria-label="Scroll categories right"
                   onClick={() => scrollCategories(1)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/15 hover:bg-white/25 text-white shadow-sm hover:shadow transition-all backdrop-blur"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-sm hover:shadow transition-all backdrop-blur"
                 >
-                  <ArrowRightIcon className="h-5 w-5" />
+                  <ArrowRightIcon className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -382,7 +382,7 @@ export default function HomePage() {
 
         {/* Contact/Newsletter Section */}
         <LazySection>
-          <div className="w-full bg-card dark:bg-card">
+          <div className="w-full bg-background dark:bg-background">
             <ContactForm />
           </div>
         </LazySection>

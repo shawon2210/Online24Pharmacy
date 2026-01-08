@@ -90,9 +90,7 @@ export default function HeroAIGlassPremium() {
       </div>
 
       {/* Enhanced Gradient Overlay */}
-      <div className="absolute inset-0 bg-linear-to-br from-black/90 via-black/70 to-black/50" />
-      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
-      <div className="absolute inset-0 bg-linear-to-br from-emerald-900/20 via-transparent to-cyan-900/20" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex items-center py-8 sm:py-12 md:py-16">
