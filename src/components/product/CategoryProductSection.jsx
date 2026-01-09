@@ -110,11 +110,11 @@ const CategoryProductSection = memo(({ category, index: _index }) => {
 
   return (
     <section
-      className={`relative w-full py-6 sm:py-8 md:py-9 lg:py-10 xl:py-12 ${config.bg} overflow-hidden transition-all duration-700`}
+      className={`relative w-full py-4 sm:py-6 md:py-7 lg:py-8 xl:py-10 ${config.bg} overflow-hidden transition-all duration-700`}
     >
-      <div className="relative w-full px-4 sm:px-5 md:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="relative w-full px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8 2xl:px-12">
         {/* Enhanced Category Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-4 sm:mb-5 md:mb-6 lg:mb-7 gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-3 sm:mb-4 md:mb-5 lg:mb-6 gap-3 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
             {/* Category Image with Enhanced Styling */}
             {category.imageUrl && (
@@ -213,7 +213,7 @@ const CategoryProductSection = memo(({ category, index: _index }) => {
         </div>
 
         {/* Scroll Progress Indicator */}
-        <div className="hidden md:block mb-4 lg:mb-5">
+        <div className="hidden md:block mb-3 lg:mb-4">
           <div className="w-full h-1 bg-slate-200/50 dark:bg-slate-700/50 rounded-full overflow-hidden">
             <div
               className={`h-full bg-linear-to-r ${config.accent} transition-all duration-300 ease-out rounded-full`}
@@ -227,7 +227,7 @@ const CategoryProductSection = memo(({ category, index: _index }) => {
           {/* Slider Track with Enhanced Styling */}
           <div
             ref={sliderRef}
-            className="flex gap-3 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-7 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4 sm:pb-5 scroll-smooth px-2 -mx-2"
+            className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-3 sm:pb-4 scroll-smooth px-2 -mx-2"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -237,7 +237,7 @@ const CategoryProductSection = memo(({ category, index: _index }) => {
             {category.products.map((product, idx) => (
               <div
                 key={product.id}
-                className="snap-start shrink-0 w-33.75 xs:w-36.25 sm:w-38.75 md:w-41.25 lg:w-43.75 xl:w-46.25 2xl:w-50 first:ml-0 last:mr-0 transform transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1 group/card"
+                className="snap-start shrink-0 w-30 xs:w-32 sm:w-34 md:w-36 lg:w-38 xl:w-40 2xl:w-44 first:ml-0 last:mr-0 transform transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1 group/card"
                 style={{
                   animationDelay: `${idx * 40}ms`,
                 }}
@@ -276,7 +276,7 @@ const CategoryProductSection = memo(({ category, index: _index }) => {
         </div>
 
         {/* Mobile Controls - Enhanced Design */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-7 lg:hidden">
+        <div className="flex items-center justify-center gap-3 sm:gap-4 mt-4 sm:mt-5 lg:hidden">
           <button
             onClick={() => handleScroll("left")}
             disabled={!canScrollPrev}
@@ -328,7 +328,7 @@ const CategoryProductSection = memo(({ category, index: _index }) => {
         </div>
 
         {/* Mobile Progress Indicator */}
-        <div className="block md:hidden mt-5 px-4">
+        <div className="block md:hidden mt-3 px-4">
           <div className="w-full h-1.5 bg-slate-200/60 dark:bg-slate-700/60 rounded-full overflow-hidden">
             <div
               className={`h-full bg-linear-to-r ${config.accent} transition-all duration-300 ease-out rounded-full`}

@@ -90,7 +90,7 @@ export default function AboutPage() {
             {/* Mission Card */}
             <div className="bg-card rounded-2xl shadow-lg border border-border p-6 sm:p-8 hover:shadow-xl transition-shadow duration-300">
               <div className="inline-flex items-center justify-center w-12 sm:w-14 h-12 sm:h-14 rounded-full bg-primary mb-4 sm:mb-5">
-                <UserGroupIcon className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
+                <UserGroupIcon className="w-6 sm:w-7 h-6 sm:h-7 text-primary-foreground" />
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-foreground mb-3 sm:mb-4">
                 {t("aboutPage.missionTitle")}
@@ -103,7 +103,7 @@ export default function AboutPage() {
             {/* DGDA Compliance Card */}
             <div className="bg-card rounded-2xl shadow-lg border border-border p-6 sm:p-8 hover:shadow-xl transition-shadow duration-300">
               <div className="inline-flex items-center justify-center w-12 sm:w-14 h-12 sm:h-14 rounded-full bg-primary mb-4 sm:mb-5">
-                <ShieldCheckIcon className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
+                <ShieldCheckIcon className="w-6 sm:w-7 h-6 sm:h-7 text-primary-foreground" />
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-foreground mb-3 sm:mb-4">
                 {t("aboutPage.dgdaTitle")}
@@ -158,8 +158,8 @@ export default function AboutPage() {
 
               {/* Feature 3 */}
               <div className="flex items-start gap-4">
-                <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-orange-100 border-2 border-orange-300">
-                  <TruckIcon className="w-6 h-6 text-orange-600" />
+                <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/50 border-2 border-orange-300 dark:border-orange-700">
+                  <TruckIcon className="w-6 h-6 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
                   <h3 className="font-bold text-foreground mb-1 text-sm sm:text-base">
@@ -173,8 +173,8 @@ export default function AboutPage() {
 
               {/* Feature 4 */}
               <div className="flex items-start gap-4">
-                <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 border-2 border-purple-300">
-                  <UserGroupIcon className="w-6 h-6 text-purple-600" />
+                <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/50 border-2 border-purple-300 dark:border-purple-700">
+                  <UserGroupIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
                   <h3 className="font-bold text-foreground mb-1 text-sm sm:text-base">
@@ -231,13 +231,13 @@ export default function AboutPage() {
 
             <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
               {/* Address */}
-              <div className="bg-muted rounded-xl shadow-md border-2 border-border p-5 sm:p-6 hover:shadow-lg hover:border-primary transition-all duration-300">
+              <div className="bg-muted/50 dark:bg-muted/20 rounded-xl shadow-md border-2 border-border p-5 sm:p-6 group hover:shadow-lg hover:border-primary/80 hover:bg-muted transition-all duration-300">
                 <div className="flex items-start gap-4">
                   <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30">
                     <MapPinIcon className="w-6 h-6 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 text-sm sm:text-base">
                       {t("aboutPage.address")}
                     </h3>
                     <p className="text-sm sm:text-base text-foreground">
@@ -248,13 +248,13 @@ export default function AboutPage() {
               </div>
 
               {/* Phone */}
-              <div className="bg-muted rounded-xl shadow-md border-2 border-border p-5 sm:p-6 hover:shadow-lg hover:border-primary transition-all duration-300">
+              <div className="bg-muted/50 dark:bg-muted/20 rounded-xl shadow-md border-2 border-border p-5 sm:p-6 group hover:shadow-lg hover:border-primary/80 hover:bg-muted transition-all duration-300">
                 <div className="flex items-start gap-4">
                   <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30">
                     <PhoneIcon className="w-6 h-6 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 text-sm sm:text-base">
                       {t("aboutPage.phone")}
                     </h3>
                     <a
@@ -268,13 +268,13 @@ export default function AboutPage() {
               </div>
 
               {/* Email */}
-              <div className="bg-muted rounded-xl shadow-md border-2 border-border p-5 sm:p-6 hover:shadow-lg hover:border-primary transition-all duration-300">
+              <div className="bg-muted/50 dark:bg-muted/20 rounded-xl shadow-md border-2 border-border p-5 sm:p-6 group hover:shadow-lg hover:border-primary/80 hover:bg-muted transition-all duration-300">
                 <div className="flex items-start gap-4">
                   <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30">
                     <EnvelopeIcon className="w-6 h-6 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 text-sm sm:text-base">
                       {t("aboutPage.email")}
                     </h3>
                     <a
@@ -288,13 +288,13 @@ export default function AboutPage() {
               </div>
 
               {/* License */}
-              <div className="bg-muted rounded-xl shadow-md border-2 border-border p-5 sm:p-6 hover:shadow-lg hover:border-primary transition-all duration-300">
+              <div className="bg-muted/50 dark:bg-muted/20 rounded-xl shadow-md border-2 border-border p-5 sm:p-6 group hover:shadow-lg hover:border-primary/80 hover:bg-muted transition-all duration-300">
                 <div className="flex items-start gap-4">
                   <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30">
                     <BuildingOfficeIcon className="w-6 h-6 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 text-sm sm:text-base">
                       {t("aboutPage.license")}
                     </h3>
                     <p className="text-sm sm:text-base text-foreground font-mono">

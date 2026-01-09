@@ -10,6 +10,8 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { useTranslation } from "react-i18next";
+import { useCreateOrder } from "../hooks/useApi.js";
+
 const Input = ({ label, ...props }) => {
   const { t } = useTranslation();
   return (
@@ -65,7 +67,9 @@ const RadioOption = ({
       }`}
     >
       <div className="flex items-center gap-3 sm:gap-4 w-full">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-muted dark:bg-muted rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0">          {icon}
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-muted dark:bg-muted rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0">
+          {" "}
+          {icon}
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-medium sm:font-semibold text-foreground dark:text-foreground text-sm sm:text-base">
@@ -100,10 +104,10 @@ export default function CheckoutPage() {
     instructions: "",
     paymentMethod: "cod",
   });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { mutate: createOrder, isLoading: loading } = useCreateOrder();
   const cart = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
+  const navigate = useNavigate();
 
   const subtotal = cart.reduce((sum, item) => {
     const price = item.product?.price || item.price || 0;
@@ -116,9 +120,8 @@ export default function CheckoutPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const placeOrder = async (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
-
     if (
       !formData.fullName ||
       !formData.phone ||
@@ -134,20 +137,24 @@ export default function CheckoutPage() {
       return;
     }
 
-    setLoading(true);
+    const shippingAddress = {
+      fullName: formData.fullName,
+      phone: formData.phone,
+      address: formData.address,
+      area: formData.area,
+      city: formData.city,
+      instructions: formData.instructions,
+    };
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      clearCart();
-      toast.success(t("checkoutPage.orderPlaced"));
-      navigate("/orders");
-    } catch (_error) {
-      toast.error(t("checkoutPage.orderFailed"));
-    } finally {
-      setLoading(false);
-    }
+    createOrder(
+      { ...formData, items: cart, total, shippingAddress },
+      {
+        onSuccess: () => {
+          clearCart();
+          navigate("/orders");
+        },
+      }
+    );
   };
 
   return (
@@ -211,7 +218,7 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
           {/* Form Section */}
           <div className="xl:col-span-2 space-y-6">
-            <form onSubmit={placeOrder} className="space-y-6">
+            <form onSubmit={handlePlaceOrder} className="space-y-6">
               <div className="bg-card/70 dark:bg-card/70 backdrop-blur-xl rounded-2xl border border-border/50 dark:border-gray-700/50 shadow-xl p-6 lg:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 lg:mb-8">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary dark:bg-primary/80 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
@@ -357,7 +364,7 @@ export default function CheckoutPage() {
                     : "bg-primary hover:bg-primary/90 text-white hover:shadow-2xl hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0"
                 }`}
               >
-                <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <div className="relative flex items-center justify-center gap-2 sm:gap-3">
                   {loading ? (
                     <>

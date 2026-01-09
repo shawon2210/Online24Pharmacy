@@ -226,26 +226,23 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-border dark:border-card">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-5 sm:py-7">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
             {/* Copyright */}
-            <p className="text-sm text-muted-foreground dark:text-muted-foreground text-center md:text-left">
-              {t(
-                "footer.copyright",
-                "© {year} Online24 Pharmacy. All rights reserved.",
-                { year: new Date().getFullYear() }
-              )}
+            <p className="text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground text-center sm:text-left order-2 sm:order-1">
+              © {new Date().getFullYear()}{" "}
+              {t("footer.brandName", "Online24 Pharmacy")}. All rights reserved.
             </p>
 
             {/* Payment Methods */}
-            <div className="flex flex-col items-center md:flex-row gap-2 md:gap-3">
-              <span className="text-xs text-background0 dark:text-muted-foreground font-semibold tracking-wide">
+            <div className="flex flex-col items-center sm:flex-row gap-2 sm:gap-3 order-1 sm:order-2">
+              <span className="text-xs text-muted-foreground dark:text-muted-foreground font-semibold tracking-wide">
                 {t("footer.weAccept", "We Accept:")}
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
                 {paymentMethods.map((method) => (
                   <span
                     key={method.name}
-                    className={`bg-linear-to-br ${method.color} text-background px-3 py-1.5 rounded-lg text-xs font-bold shadow-md tracking-wide`}
+                    className={`bg-linear-to-br ${method.color} text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg text-xs font-bold shadow-md tracking-wide`}
                   >
                     {method.name}
                   </span>
@@ -254,14 +251,14 @@ export default function Footer() {
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center gap-2 px-2 sm:px-4 md:px-8 lg:px-12 xl:px-16">
+            <div className="flex items-center gap-2 order-3">
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-background transition-colors"
+                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-white transition-colors"
                 aria-label="Facebook"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -270,11 +267,11 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-background transition-colors"
+                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-white transition-colors"
                 aria-label="Twitter"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -283,11 +280,11 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-background transition-colors"
+                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground hover:bg-emerald-600 hover:text-white transition-colors"
                 aria-label="Instagram"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >

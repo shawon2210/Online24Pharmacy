@@ -76,6 +76,11 @@ export const removeFromCart = async (itemId) => {
   return response.data;
 };
 
+export const checkout = async (orderData) => {
+  const response = await api.post('/orders', orderData);
+  return response.data;
+}
+
 export const createOrder = async (orderData) => {
   const response = await api.post('/orders', orderData);
   return response.data;

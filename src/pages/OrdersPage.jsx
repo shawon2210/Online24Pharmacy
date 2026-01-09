@@ -71,7 +71,7 @@ export default function OrdersPage() {
     [ORDER_STATUS.PENDING]: {
       icon: ClockIcon,
       color: "text-amber-600 dark:text-amber-400",
-      bg: "bg-muted dark:bg-amber-900/30",
+      bg: "bg-amber-50 dark:bg-amber-900/30",
       label: t("ordersPage.status.pending"),
     },
     [ORDER_STATUS.CONFIRMED]: {
@@ -89,7 +89,7 @@ export default function OrdersPage() {
     [ORDER_STATUS.SHIPPED]: {
       icon: TruckIcon,
       color: "text-purple-600 dark:text-purple-400",
-      bg: "bg-muted dark:bg-purple-900/30",
+      bg: "bg-purple-50 dark:bg-purple-900/30",
       label: t("ordersPage.status.shipped"),
     },
     [ORDER_STATUS.DELIVERED]: {
@@ -114,17 +114,23 @@ export default function OrdersPage() {
           description={t("ordersPage.seoDescription")}
           url="/orders"
         />
-        <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md shadow-md border-b border-border">
+        <div className="sticky top-0 z-40 bg-background/95 dark:bg-card/95 backdrop-blur-md shadow-md border-b border-border">
           <div className="container mx-auto px-4 py-4">
             <nav className="mb-3" aria-label={t("breadcrumb")}>
               <ol className="flex items-center gap-1 text-sm text-foreground">
                 <li>
-                  <a href="/" className="hover:text-primary font-medium">
+                  <a
+                    href="/"
+                    className="hover:text-primary font-medium"
+                  >
                     {t("home")}
                   </a>
                 </li>
                 <li className="px-1 text-muted-foreground">/</li>
-                <li className="text-foreground font-bold" aria-current="page">
+                <li
+                  className="text-foreground font-bold"
+                  aria-current="page"
+                >
                   {t("ordersPage.title")}
                 </li>
               </ol>
@@ -149,8 +155,8 @@ export default function OrdersPage() {
             minHeight: "100vh",
           }}
         >
-          <div className="bg-card rounded-2xl shadow-lg border border-border p-8 sm:p-12 lg:p-16 text-center max-w-md">
-            <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-muted dark:bg-red-900/30 mx-auto mb-4 sm:mb-6">
+          <div className="bg-card rounded-2xl shadow-lg dark:shadow-2xl border border-border p-8 sm:p-12 lg:p-16 text-center max-w-md">
+            <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-red-100 dark:bg-red-900/30 mx-auto mb-4 sm:mb-6">
               <ShoppingBagIcon className="w-8 sm:w-10 h-8 sm:h-10 text-red-600 dark:text-red-400" />
             </div>
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 sm:mb-3">
@@ -161,7 +167,7 @@ export default function OrdersPage() {
             </p>
             <a
               href={ROUTES.LOGIN}
-              className="inline-block bg-primary hover:bg-primary/90 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold transition-all shadow-md hover:shadow-lg active:scale-95 text-sm sm:text-base"
+              className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold transition-all shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl active:scale-95 text-sm sm:text-base"
             >
               {t("ordersPage.signInNow")}
             </a>
@@ -179,17 +185,23 @@ export default function OrdersPage() {
           description={t("ordersPage.seoDescription")}
           url="/orders"
         />
-        <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md shadow-md border-b border-border">
+        <div className="sticky top-0 z-40 bg-background/95 dark:bg-card/95 backdrop-blur-md shadow-md border-b border-border">
           <div className="container mx-auto px-4 py-4">
             <nav className="mb-3" aria-label={t("breadcrumb")}>
               <ol className="flex items-center gap-1 text-sm text-foreground">
                 <li>
-                  <a href="/" className="hover:text-primary font-medium">
+                  <a
+                    href="/"
+                    className="hover:text-primary font-medium"
+                  >
                     {t("home")}
                   </a>
                 </li>
                 <li className="px-1 text-muted-foreground">/</li>
-                <li className="text-foreground font-bold" aria-current="page">
+                <li
+                  className="text-foreground font-bold"
+                  aria-current="page"
+                >
                   {t("ordersPage.title")}
                 </li>
               </ol>
@@ -227,33 +239,39 @@ export default function OrdersPage() {
         description={t("ordersPage.seoDescription")}
         url="/orders"
       />
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md shadow-md border-b border-border">
+      <div className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/95 backdrop-blur-md shadow-md border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <nav className="mb-3" aria-label={t("breadcrumb")}>
-            <ol className="flex items-center gap-1 text-sm text-foreground">
+            <ol className="flex items-center gap-1 text-sm text-gray-900 dark:text-gray-100">
               <li>
-                <a href="/" className="hover:text-primary font-medium">
+                <a
+                  href="/"
+                  className="hover:text-emerald-600 dark:hover:text-blue-400 font-medium transition-colors"
+                >
                   {t("home")}
                 </a>
               </li>
-              <li className="px-1 text-muted-foreground">/</li>
-              <li className="text-foreground font-bold" aria-current="page">
+              <li className="px-1 text-gray-500 dark:text-slate-400">/</li>
+              <li
+                className="text-gray-900 dark:text-slate-200 font-bold"
+                aria-current="page"
+              >
                 {t("ordersPage.title")}
               </li>
             </ol>
           </nav>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-primary mb-1">
+              <h1 className="text-2xl md:text-3xl font-black text-emerald-600 dark:text-blue-400 mb-1">
                 {t("ordersPage.title")}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-gray-600 dark:text-slate-400">
                 {t("ordersPage.description")}
               </p>
             </div>
             <button
               onClick={fetchOrders}
-              className="flex items-center gap-2 px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-card border-2 border-border hover:border-primary hover:text-primary font-bold shadow-md hover:shadow-lg transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-white dark:bg-slate-800 border-2 border-gray-300 dark:border-slate-700 hover:border-emerald-600 dark:hover:border-blue-400 hover:text-emerald-600 dark:hover:text-blue-400 font-bold shadow-sm hover:shadow-md dark:shadow-lg dark:hover:shadow-xl transition-all active:scale-95 text-gray-900 dark:text-slate-200"
               title={t("ordersPage.refresh")}
             >
               <ArrowPathIcon className="w-5 h-5" />
@@ -265,7 +283,7 @@ export default function OrdersPage() {
         </div>
       </div>
       <div
-        className="w-full min-h-screen bg-background flex flex-col items-center justify-start pb-8 sm:pb-12 lg:pb-16"
+        className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-start pb-8 sm:pb-12 lg:pb-16"
         style={{
           marginTop: `-${headerOffset}px`,
           paddingTop: `calc(${headerOffset}px + 1.5rem)`,
@@ -273,28 +291,28 @@ export default function OrdersPage() {
       >
         <div className="w-full max-w-5xl mx-auto px-4 sm:px-8 py-8 flex flex-col gap-8">
           {error && (
-            <div className="p-4 rounded-2xl bg-muted dark:bg-red-900/30 border-2 border-red-300 dark:border-red-700 flex items-start gap-3">
+            <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950 border-2 border-red-300 dark:border-red-700 flex items-start gap-3">
               <span className="text-lg shrink-0">⚠️</span>
-              <p className="text-sm sm:text-base text-red-800 dark:text-red-300 font-semibold">
+              <p className="text-sm sm:text-base text-red-800 dark:text-red-200 font-semibold">
                 {error}
               </p>
             </div>
           )}
 
           {orders.length === 0 ? (
-            <div className="bg-card rounded-3xl shadow-2xl border border-border p-8 sm:p-12 text-center">
-              <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-muted mx-auto mb-4">
-                <ShoppingBagIcon className="w-8 sm:w-10 h-8 sm:h-10 text-muted-foreground" />
+            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-md dark:shadow-2xl border border-gray-200 dark:border-gray-700 p-8 sm:p-12 text-center">
+              <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-gray-100 dark:bg-gray-700 mx-auto mb-4">
+                <ShoppingBagIcon className="w-8 sm:w-10 h-8 sm:h-10 text-slate-400 dark:text-slate-400" />
               </div>
-              <h3 className="text-xl xs:text-2xl font-bold text-foreground mb-2">
+              <h3 className="text-xl xs:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {t("ordersPage.noOrders")}
               </h3>
-              <p className="text-base xs:text-lg text-foreground mb-6 max-w-md mx-auto">
+              <p className="text-base xs:text-lg text-gray-700 dark:text-gray-300 mb-6 max-w-md mx-auto">
                 {t("ordersPage.noOrdersDesc")}
               </p>
               <a
                 href={ROUTES.PRODUCTS}
-                className="inline-block bg-primary hover:bg-primary/90 text-white px-6 xs:px-8 py-2.5 xs:py-3 rounded-2xl font-extrabold transition-all shadow-lg hover:shadow-xl active:scale-98 text-base xs:text-lg"
+                className="inline-block bg-emerald-600 dark:bg-blue-600 hover:bg-emerald-700 dark:hover:bg-blue-700 text-white px-6 xs:px-8 py-2.5 xs:py-3 rounded-2xl font-extrabold transition-all shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl active:scale-98 text-base xs:text-lg"
               >
                 {t("ordersPage.browseProducts")}
               </a>
@@ -309,15 +327,15 @@ export default function OrdersPage() {
                 return (
                   <div
                     key={order.id}
-                    className="bg-card border-2 border-border rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500"
+                    className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-3xl shadow-xl dark:shadow-2xl hover:shadow-2xl dark:hover:shadow-2xl transition-all duration-500"
                   >
                     <div className="p-4 xs:p-5 sm:p-7 lg:p-10">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 xs:gap-5">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 xs:gap-3 flex-wrap mb-2 xs:mb-3">
-                            <h3 className="font-black text-foreground text-lg xs:text-xl">
+                            <h3 className="font-black text-gray-900 dark:text-gray-100 text-lg xs:text-xl">
                               {t("ordersPage.order") + " "}
-                              <span className="text-primary">
+                              <span className="text-emerald-600 dark:text-blue-400">
                                 #{order.orderNumber}
                               </span>
                             </h3>
@@ -328,7 +346,7 @@ export default function OrdersPage() {
                               <Icon className="w-4 h-4" /> {meta.label}
                             </span>
                           </div>
-                          <div className="flex items-center flex-wrap gap-2 xs:gap-3 text-xs xs:text-sm text-muted-foreground">
+                          <div className="flex items-center flex-wrap gap-2 xs:gap-3 text-xs xs:text-sm text-gray-600 dark:text-slate-400">
                             <span className="font-medium">
                               📅 {t("ordersPage.placedOn")}{" "}
                               {new Date(order.createdAt).toLocaleDateString(
@@ -340,7 +358,7 @@ export default function OrdersPage() {
                                 }
                               )}
                             </span>
-                            <span className="hidden sm:inline text-muted-foreground">
+                            <span className="hidden sm:inline text-gray-600 dark:text-slate-400">
                               •
                             </span>
                             <span className="font-medium">
@@ -351,7 +369,7 @@ export default function OrdersPage() {
                             </span>
                             {order.shippingCost > 0 && (
                               <>
-                                <span className="hidden md:inline text-muted-foreground">
+                                <span className="hidden md:inline text-gray-600 dark:text-slate-400">
                                   •
                                 </span>
                                 <span className="hidden md:inline font-medium">
@@ -361,10 +379,10 @@ export default function OrdersPage() {
                               </>
                             )}
                           </div>
-                          <div className="mt-2 xs:mt-3 pt-2 xs:pt-3 border-t border-border">
-                            <p className="text-lg xs:text-xl font-black text-foreground">
+                          <div className="mt-2 xs:mt-3 pt-2 xs:pt-3 border-t border-gray-300 dark:border-slate-700">
+                            <p className="text-lg xs:text-xl font-black text-gray-900 dark:text-slate-100">
                               {t("ordersPage.total") + ": "}
-                              <span className="text-primary">
+                              <span className="text-emerald-600 dark:text-blue-400">
                                 ৳{order.totalAmount}
                               </span>
                             </p>
@@ -374,7 +392,7 @@ export default function OrdersPage() {
                         <div className="flex items-center gap-2 xs:gap-3 flex-wrap">
                           <button
                             onClick={() => toggleExpand(order.id)}
-                            className="flex-1 xs:flex-none px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-muted hover:bg-border font-bold flex items-center justify-center gap-2 transition-all border-2 border-border text-foreground"
+                            className="flex-1 xs:flex-none px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 font-bold flex items-center justify-center gap-2 transition-all border-2 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-slate-200"
                           >
                             {isExpanded ? (
                               <>
@@ -392,7 +410,7 @@ export default function OrdersPage() {
                             href={`/track-order?orderId=${
                               order.orderNumber
                             }&phone=${order.shippingAddress?.phone || ""}`}
-                            className="flex-1 xs:flex-none px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-primary hover:bg-primary/90 text-white font-extrabold shadow-lg hover:shadow-xl transition-all active:scale-98 text-center"
+                            className="flex-1 xs:flex-none px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-emerald-600 dark:bg-blue-600 hover:bg-emerald-700 dark:hover:bg-blue-700 text-white font-extrabold shadow-lg dark:shadow-lg hover:shadow-xl dark:hover:shadow-xl transition-all active:scale-98 text-center"
                           >
                             {t("ordersPage.trackOrder")}
                           </a>
@@ -401,14 +419,14 @@ export default function OrdersPage() {
                     </div>
 
                     {isExpanded && (
-                      <div className="border-t-2 border-border bg-muted/40 dark:bg-slate-800/40">
-                        <ul className="divide-y divide-border">
+                      <div className="border-t-2 border-gray-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                        <ul className="divide-y divide-gray-300 dark:divide-slate-700">
                           {order.orderItems?.map((item) => (
                             <li
                               key={item.id}
-                              className="flex items-start gap-3 xs:gap-5 p-4 xs:p-5 hover:bg-muted/60 dark:hover:bg-slate-700/60 transition-colors"
+                              className="flex items-start gap-3 xs:gap-5 p-4 xs:p-5 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors"
                             >
-                              <div className="w-16 xs:w-20 h-16 xs:h-20 rounded-xl bg-background dark:bg-slate-900 border-2 border-border overflow-hidden shrink-0 shadow-sm">
+                              <div className="w-16 xs:w-20 h-16 xs:h-20 rounded-xl bg-gray-50 dark:bg-slate-950 border-2 border-gray-300 dark:border-slate-700 overflow-hidden shrink-0 shadow-sm dark:shadow-md">
                                 <img
                                   src={
                                     Array.isArray(item.product.images)
@@ -421,32 +439,32 @@ export default function OrdersPage() {
                                 />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-base xs:text-lg font-bold text-foreground line-clamp-2 mb-1 xs:mb-2">
+                                <p className="text-base xs:text-lg font-bold text-gray-900 dark:text-slate-100 line-clamp-2 mb-1 xs:mb-2">
                                   {item.product.name}
                                 </p>
-                                <div className="flex items-center gap-3 xs:gap-4 text-xs xs:text-sm text-muted-foreground">
+                                <div className="flex items-center gap-3 xs:gap-4 text-xs xs:text-sm text-gray-600 dark:text-slate-400">
                                   <span className="font-medium">
                                     {t("ordersPage.qty") + ": "}
-                                    <span className="font-bold text-foreground">
+                                    <span className="font-bold text-gray-900 dark:text-slate-200">
                                       {item.quantity}
                                     </span>
                                   </span>
-                                  <span className="text-muted-foreground">
+                                  <span className="text-gray-600 dark:text-slate-400">
                                     •
                                   </span>
                                   <span className="font-medium">
                                     {t("ordersPage.unit") + ": "}
-                                    <span className="font-bold text-foreground">
+                                    <span className="font-bold text-gray-900 dark:text-slate-200">
                                       ৳{item.unitPrice}
                                     </span>
                                   </span>
                                 </div>
                               </div>
                               <div className="text-right shrink-0">
-                                <p className="text-lg xs:text-xl font-black text-primary">
+                                <p className="text-lg xs:text-xl font-black text-emerald-600 dark:text-blue-400">
                                   ৳{item.totalPrice}
                                 </p>
-                                <p className="text-xs text-muted-foreground mt-1">
+                                <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
                                   {t("ordersPage.total")}
                                 </p>
                               </div>

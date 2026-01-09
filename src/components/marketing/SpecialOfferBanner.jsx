@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 export default function SpecialOfferBanner() {
   const { t } = useTranslation();
   return (
-    <section className="w-full relative overflow-hidden min-h-22.5 xs:min-h-25 sm:min-h-27.5 md:min-h-30 bg-linear-to-r from-emerald-600 via-emerald-500 to-cyan-600 dark:from-emerald-700 dark:via-emerald-700 dark:to-cyan-700 text-white shadow-xl">
+    <section className="w-full relative overflow-hidden min-h-20 xs:min-h-24 sm:min-h-28 md:min-h-32 bg-linear-to-r from-emerald-600 via-emerald-500 to-cyan-600 dark:from-emerald-700 dark:via-emerald-700 dark:to-cyan-700 text-white shadow-xl">
       {/* Enhanced Background Pattern */}
       <div className="absolute inset-0 bg-white/10 dark:bg-foreground/10 animate-pulse"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.18),transparent_52%)]"></div>

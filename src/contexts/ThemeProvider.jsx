@@ -19,7 +19,24 @@ export const ThemeProvider = ({ children }) => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (e) => setSystemPrefersDark(e.matches);
     mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+
+    // Listen for theme changes from other tabs/windows and update state
+    const handleStorage = (e) => {
+      if (e.key !== "theme") return;
+      const val = e.newValue;
+      if (val === "light" || val === "dark" || val === "system") {
+        setTheme(val);
+      } else if (val === null) {
+        // removed -> revert to system
+        setTheme("system");
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handler);
+      window.removeEventListener('storage', handleStorage);
+    };
   }, []);
 
   const resolvedTheme = useMemo(

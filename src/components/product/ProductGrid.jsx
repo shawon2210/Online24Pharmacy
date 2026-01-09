@@ -53,7 +53,7 @@ export default function ProductGrid({
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xs:gap-3 sm:gap-4 md:gap-5 lg:gap-6">
       {products.map((product, _index) => (
         <div key={product.id || product.slug} className="relative group">
-          <ProductCard product={product} size="s" />
+          <ProductCard product={product} size="carousel" />
           {onQuickView && (
             <button
               className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 rounded-full p-2 shadow hover:bg-emerald-600 hover:text-background"

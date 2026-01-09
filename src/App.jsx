@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ThemeProvider } from "./contexts/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import {
   RequireAuth,
@@ -10,7 +9,9 @@ import {
 } from "./components/auth/ProtectedRoute";
 
 // Common Components
-import ThemeInitializer from "./components/common/ThemeInitializer";
+// ThemeProvider is provided at app root (main.jsx); do not re-wrap here
+// ThemeInitializer is executed at root (ThemeInit) so skip duplicate import
+
 import AIChatbot from "./components/chatbot/AIChatbot";
 import ScrollToTop from "./components/common/ScrollToTop";
 import Layout from "./components/layout/Layout";
@@ -66,8 +67,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider>
-          <ThemeInitializer />
           <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             <Router>
               <ScrollToTop />
@@ -250,7 +249,6 @@ function App() {
               </Routes>
             </Router>
           </div>
-        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

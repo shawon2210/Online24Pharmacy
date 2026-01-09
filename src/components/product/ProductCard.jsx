@@ -35,7 +35,7 @@ const sizeVariants = {
     priceText: "text-[clamp(13px,3.2vw,16px)] font-bold",
     iconSize: "h-5.5 w-5.5 sm:h-6 sm:w-6 md:h-6.5 md:w-6.5",
     buttonSize: "h-6.5 w-6.5 sm:h-7 sm:w-7 md:h-7.5 md:w-7.5",
-    imagePadding: "p-0.25 sm:p-0.5 md:p-0.75",
+    imagePadding: "p-0 sm:p-0 md:p-0",
   },
   md: {
     container: "rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-3.5",

@@ -234,21 +234,46 @@ export default function HomePage() {
         </section>
 
         {/* Shop by Category – Premium slider */}
-        <section className="relative w-full overflow-hidden py-2 sm:py-3 md:py-4 lg:py-5 bg-linear-to-br from-emerald-600 via-teal-500 to-cyan-500 text-white shadow-2xl">
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-emerald-900/40 via-transparent to-transparent opacity-50"></div>
+        <section className="relative w-full overflow-hidden py-2 sm:py-3 md:py-4 lg:py-5 bg-linear-to-r from-emerald-600 via-emerald-500 to-cyan-600 dark:from-emerald-700 dark:via-emerald-700 dark:to-cyan-700 text-white shadow-xl">
+          {/* Enhanced Background Pattern */}
+          <div className="absolute inset-0 bg-white/10 dark:bg-foreground/10 animate-pulse"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.18),transparent_52%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.1),transparent_52%)]"></div>
+          <div className="absolute inset-0 bg-white/8 dark:bg-white/5"></div>
+
+          {/* Floating Elements */}
+          <div className="hidden xs:block absolute top-2 xs:top-3 left-3 xs:left-6 animate-bounce">
+            <span className="text-xl xs:text-2xl animate-pulse">🏥</span>
+          </div>
           <div
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, rgba(255,255,255,0) 35%), radial-gradient(circle at 80% 10%, rgba(255,255,255,0.35) 0, rgba(255,255,255,0) 32%), radial-gradient(circle at 50% 90%, rgba(255,255,255,0.25) 0, rgba(255,255,255,0) 35%)",
-            }}
-          ></div>
+            className="hidden xs:block absolute bottom-2 xs:bottom-3 right-3 xs:right-6 animate-bounce"
+            style={{ animationDelay: "0.5s" }}
+          >
+            <span className="text-lg xs:text-xl animate-pulse">💊</span>
+          </div>
+          <div
+            className="hidden sm:block absolute top-4 right-1/4 animate-pulse"
+            style={{ animationDelay: "1s" }}
+          >
+            <span className="text-lg animate-pulse">⚕️</span>
+          </div>
           <div className="w-full px-4 xs:px-5 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1.5 sm:gap-2 mb-2 sm:mb-3 md:mb-4">
               <div className="space-y-1.5 max-w-3xl">
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 dark:bg-white/15 text-[9px] font-bold uppercase tracking-[0.15em] text-white shadow-lg backdrop-blur-sm border border-white/30 hover:bg-white/30 dark:hover:bg-white/25 transition-all duration-300">
-                  ✨ {tf("homePage.curated", "Curated")}
-                </span>
+                {/* Enhanced Content Layout */}
+                <div className="flex items-center gap-2 xs:gap-3 sm:gap-4 mb-2 xs:mb-3">
+                  <span className="text-xl xs:text-2xl sm:text-3xl animate-pulse">
+                    🏥
+                  </span>
+                  <div className="h-6 xs:h-7 sm:h-9 w-px bg-white/50"></div>
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 dark:bg-white/15 text-[9px] font-bold uppercase tracking-[0.15em] text-white shadow-lg backdrop-blur-sm border border-white/30 hover:bg-white/30 dark:hover:bg-white/25 transition-all duration-300">
+                    ✨ {tf("homePage.curated", "Curated")}
+                  </span>
+                  <div className="h-6 xs:h-7 sm:h-9 w-px bg-white/50 hidden sm:block"></div>
+                  <span className="text-lg xs:text-xl sm:text-2xl animate-pulse">
+                    💊
+                  </span>
+                </div>
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-tight drop-shadow-lg tracking-tighter bg-linear-to-r from-white via-white to-cyan-100 text-transparent bg-clip-text">
                   {tf("homePage.shopByCategory", "Shop by Category")}
                 </h2>

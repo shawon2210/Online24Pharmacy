@@ -73,7 +73,13 @@ export const authenticateToken = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    console.error('DEBUG: Full JWT Error:', error);
     console.error('AUTH: Token verification failed:', error.message);
-    return res.status(403).json({ error: 'Invalid token' });
+    console.error('AUTH: Error name:', error.name);
+    if (error.name === 'TokenExpiredError') {
+      console.error('AUTH: Token expired at:', new Date(error.expiredAt));
+      console.error('AUTH: Current time:', new Date());
+    }
+    return res.status(403).json({ error: 'Invalid token', details: error.message });
   }
 };
