@@ -16,6 +16,13 @@ await fs.promises.mkdir('screenshots', { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ colorScheme: 'light' });
 const page = await context.newPage();
+// Force light theme in localStorage and remove any `dark` class set by app
+await page.addInitScript(() => {
+  try {
+    localStorage.setItem('theme', 'light');
+    document.documentElement.classList.remove('dark');
+  } catch (e) {}
+});
 
 for (const bp of breakpoints) {
   console.log(`→ ${bp.name} (${bp.width}x${bp.height})`);

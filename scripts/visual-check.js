@@ -31,9 +31,26 @@ function contrastRatio(l1, l2) {
   const page = await context.newPage();
 
   const results = [];
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('theme', 'light');
+      document.documentElement.classList.remove('dark');
+    } catch (e) {}
+  });
+
   for (const bp of breakpoints) {
     await page.setViewportSize({ width: bp.width, height: bp.height });
     await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+    // Force light theme post-load in case the app re-evaluates theme
+    await page.evaluate(() => {
+      try {
+        localStorage.setItem('theme', 'light');
+        const root = document.documentElement;
+        root.classList.remove('dark');
+        root.classList.add('light');
+        root.style.colorScheme = 'light';
+      } catch (e) {}
+    });
     await page.waitForSelector('#order-id-input', { timeout: 8000 });
 
     const res = { bp: bp.name, issues: [] };
@@ -67,9 +84,7 @@ function contrastRatio(l1, l2) {
 
     // Contrast check for order summary card
     const contrastFail = await page.evaluate(() => {
-      const card = document.querySelector('div[aria-hidden]') || document.querySelector('.bg-emerald-50');
-      // try selector fallback
-      const target = document.querySelector('.bg-emerald-50') || document.querySelector('.rounded-3xl');
+      const target = document.querySelector('.bg-emerald-50') || document.querySelector('.rounded-3xl') || document.querySelector('.bg-card');
       if (!target) return false;
       const style = window.getComputedStyle(target);
       const bg = style.backgroundColor;
@@ -84,6 +99,38 @@ function contrastRatio(l1, l2) {
         const cr = contrastRatio(luminance(bgRgb), luminance(txtRgb));
         if (cr < 3.0) res.issues.push(`low-contrast (ratio=${cr.toFixed(2)})`);
       }
+    }
+
+    // Find visible elements with unexpectedly dark backgrounds in light mode
+    const darkBgEls = await page.evaluate(() => {
+      const els = Array.from(document.querySelectorAll('body *'));
+      const visible = el => {
+        const r = el.getBoundingClientRect();
+        const cs = window.getComputedStyle(el);
+        return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none' && cs.opacity !== '0';
+      };
+      const res = [];
+      // limit to first 500 elements for performance
+      for (const el of els.slice(0, 500)) {
+        if (!visible(el)) continue;
+        const cs = window.getComputedStyle(el);
+        const bg = cs.backgroundColor;
+        if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') continue;
+        const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (!m) continue;
+        const r = +m[1], g = +m[2], b = +m[3];
+        const srgb = [r, g, b].map(v => v / 255).map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+        const lum = 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+        // If background luminance is quite low in light mode, flag it
+        if (lum < 0.18) {
+          res.push({ tag: el.tagName, className: el.className, bg, color: cs.color, lum });
+        }
+      }
+      return res;
+    });
+
+    if (darkBgEls && darkBgEls.length) {
+      res.issues.push({ darkBgEls: darkBgEls.slice(0, 20) });
     }
 
     results.push(res);
