@@ -138,12 +138,12 @@ export default function TrackOrderPage() {
                       value={orderId}
                       onChange={(e) => setOrderId(e.target.value)}
                       placeholder={t("trackOrderPage.orderIdPlaceholder")}
-                      className="w-full px-3 xs:px-4 py-2 xs:py-3 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600 focus:border-emerald-400 dark:focus:border-emerald-600 transition-all text-base xs:text-lg bg-background dark:bg-slate-800 text-foreground hover:border-emerald-300 dark:hover:border-emerald-600 shadow-sm font-semibold tracking-wide"
+                      className="w-full pr-14 xs:pr-16 px-3 xs:px-4 py-2 xs:py-3 border-2 border-border dark:border-border rounded-xl focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/20 focus:border-primary dark:focus:border-primary transition-all text-base xs:text-lg bg-background dark:bg-slate-800 text-foreground hover:border-primary/70 dark:hover:border-primary/70 shadow-sm font-semibold tracking-wide"
                       required
                       autoComplete="off"
                       inputMode="text"
                     />
-                    <MagnifyingGlassIcon className="absolute right-2 xs:right-3 top-2 xs:top-3 w-5 xs:w-6 h-5 xs:h-6 text-emerald-400 dark:text-emerald-500 pointer-events-none transition-transform duration-300" />
+                    <MagnifyingGlassIcon className="absolute right-2 xs:right-3 top-2 xs:top-3 w-5 xs:w-6 h-5 xs:h-6 text-primary pointer-events-none transition-transform duration-300" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1 xs:gap-2">
@@ -169,7 +169,7 @@ export default function TrackOrderPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-primary/90 text-white py-2.5 xs:py-3 px-5 xs:px-8 rounded-2xl font-extrabold text-base xs:text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 xs:gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 xs:py-3 px-5 xs:px-8 rounded-2xl font-extrabold text-base xs:text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 xs:gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98"
                 tabIndex={0}
                 aria-label={t("trackOrderPage.trackButton")}
               >
@@ -193,7 +193,7 @@ export default function TrackOrderPage() {
             )}
 
             {orderData && (
-              <div className="mt-7 xs:mt-8 p-4 xs:p-6 sm:p-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-3xl shadow-xl w-full">
+              <div className="mt-7 xs:mt-8 p-4 xs:p-6 sm:p-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-3xl shadow-xl w-full ring-1 ring-emerald-100 dark:ring-0">
                 <div className="flex items-center gap-2 xs:gap-3 mb-4 xs:mb-6 sm:mb-7 flex-wrap">
                   <CheckCircleIcon className="w-10 sm:w-12 h-10 sm:h-12 text-emerald-600 dark:text-emerald-400 shrink-0 animate-bounce" />
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
@@ -255,7 +255,7 @@ export default function TrackOrderPage() {
                           key={item.id}
                           className="flex flex-col xs:flex-row justify-between items-start xs:items-center p-1.5 xs:p-2 sm:p-3 bg-background dark:bg-slate-800 rounded-xl text-xs xs:text-sm sm:text-base border border-emerald-100 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0"
                         >
-                          <span className="text-foreground font-semibold">
+                          <span className="text-foreground font-semibold break-words">
                             {item.product?.name}
                           </span>
                           <span className="bg-muted dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full font-bold text-xs xs:text-base">
@@ -296,7 +296,7 @@ export default function TrackOrderPage() {
                     {t("trackOrderPage.placed")}
                   </h3>
                 </div>
-                <p className="text-sm sm:text-base text-foreground font-medium">
+                <p className="text-sm sm:text-base text-foreground font-medium break-words">
                   {t("trackOrderPage.placedDesc")}
                 </p>
               </div>
