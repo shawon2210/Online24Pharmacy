@@ -25,6 +25,55 @@ async function main() {
   });
   console.log(`Created admin user: ${adminUser.email}`);
 
+  // Create some test customer users
+  const customer1Password = await bcrypt.hash('password123', 10);
+  const customer1 = await prisma.user.upsert({
+    where: { email: 'customer1@example.com' },
+    update: {},
+    create: {
+      email: 'customer1@example.com',
+      phone: '01712345678',
+      passwordHash: customer1Password,
+      firstName: 'John',
+      lastName: 'Doe',
+      isVerified: true,
+      role: 'USER',
+    },
+  });
+  console.log(`Created customer user: ${customer1.email}`);
+
+  const customer2Password = await bcrypt.hash('password123', 10);
+  const customer2 = await prisma.user.upsert({
+    where: { email: 'customer2@example.com' },
+    update: {},
+    create: {
+      email: 'customer2@example.com',
+      phone: '01812345678',
+      passwordHash: customer2Password,
+      firstName: 'Jane',
+      lastName: 'Smith',
+      isVerified: true,
+      role: 'USER',
+    },
+  });
+  console.log(`Created customer user: ${customer2.email}`);
+
+  const customer3Password = await bcrypt.hash('password123', 10);
+  const customer3 = await prisma.user.upsert({
+    where: { email: 'customer3@example.com' },
+    update: {},
+    create: {
+      email: 'customer3@example.com',
+      phone: '01912345678',
+      passwordHash: customer3Password,
+      firstName: 'Bob',
+      lastName: 'Johnson',
+      isVerified: false,
+      role: 'USER',
+    },
+  });
+  console.log(`Created customer user: ${customer3.email}`);
+
   // 2. Create Categories
   const surgical = await prisma.category.upsert({
     where: { slug: 'surgical-products' },
@@ -56,7 +105,15 @@ async function main() {
     },
   });
 
-  console.log('Created categories');
+  const firstAid = await prisma.category.upsert({
+    where: { slug: 'first-aid' },
+    update: {},
+    create: {
+      name: 'First Aid',
+      slug: 'first-aid',
+      description: 'Essential first aid supplies and bandages.',
+    },
+  });
 
   // 3. Create Subcategories
   const generalSurgical = await prisma.subcategory.upsert({
@@ -86,6 +143,16 @@ async function main() {
       name: 'Over-the-Counter',
       slug: 'over-the-counter',
       categoryId: painRelief.id,
+    },
+  });
+
+  const firstAidSupplies = await prisma.subcategory.upsert({
+    where: { name_categoryId: { name: 'First Aid Supplies', categoryId: firstAid.id } },
+    update: {},
+    create: {
+      name: 'First Aid Supplies',
+      slug: 'first-aid-supplies',
+      categoryId: firstAid.id,
     },
   });
 
@@ -143,6 +210,25 @@ async function main() {
       categoryId: painRelief.id,
       subcategoryId: otcPainRelief.id,
       brand: 'Generic',
+      isOTC: true,
+      requiresPrescription: false,
+      images: '["/uploads/products/placeholder.jpg"]',
+    },
+  });
+
+  await prisma.product.upsert({
+    where: { sku: 'BANDAGE-ASSORTED' },
+    update: {},
+    create: {
+      name: 'Assorted Bandages (100 pcs)',
+      slug: 'assorted-bandages-100-pcs',
+      sku: 'BANDAGE-ASSORTED',
+      description: 'Assorted sizes of adhesive bandages for first aid.',
+      price: 12.99,
+      stockQuantity: 500,
+      categoryId: firstAid.id,
+      subcategoryId: firstAidSupplies.id,
+      brand: 'MediCare',
       isOTC: true,
       requiresPrescription: false,
       images: '["/uploads/products/placeholder.jpg"]',
@@ -211,6 +297,99 @@ async function main() {
   });
 
   console.log('Created pickup locations');
+
+  // Create some test prescriptions
+  await prisma.prescription.upsert({
+    where: { referenceNumber: 'RX-001' },
+    update: {},
+    create: {
+      referenceNumber: 'RX-001',
+      patientName: 'John Doe',
+      prescriptionImage: '/uploads/prescriptions/sample1.jpg',
+      status: 'PENDING',
+      userId: customer1.id,
+    },
+  });
+
+  await prisma.prescription.upsert({
+    where: { referenceNumber: 'RX-002' },
+    update: {},
+    create: {
+      referenceNumber: 'RX-002',
+      patientName: 'Jane Smith',
+      prescriptionImage: '/uploads/prescriptions/sample2.jpg',
+      status: 'APPROVED',
+      userId: customer2.id,
+      verifiedBy: adminUser.id,
+      verifiedAt: new Date(),
+    },
+  });
+
+  await prisma.prescription.upsert({
+    where: { referenceNumber: 'RX-003' },
+    update: {},
+    create: {
+      referenceNumber: 'RX-003',
+      patientName: 'Bob Johnson',
+      prescriptionImage: '/uploads/prescriptions/sample3.jpg',
+      status: 'REJECTED',
+      userId: customer3.id,
+      adminNotes: 'Invalid prescription',
+      verifiedBy: adminUser.id,
+      verifiedAt: new Date(),
+    },
+  });
+
+  console.log('Created test prescriptions');
+
+  // Create some test admin logs
+  await prisma.adminLog.createMany({
+    data: [
+      {
+        adminId: adminUser.id,
+        action: 'APPROVE_PRESCRIPTION',
+        targetType: 'Prescription',
+        targetId: 'RX-002',
+        details: { notes: 'Approved prescription for Jane Smith' },
+        ipAddress: '192.168.1.100',
+      },
+      {
+        adminId: adminUser.id,
+        action: 'REJECT_PRESCRIPTION',
+        targetType: 'Prescription',
+        targetId: 'RX-003',
+        details: { notes: 'Rejected invalid prescription for Bob Johnson' },
+        ipAddress: '192.168.1.100',
+      },
+      {
+        adminId: adminUser.id,
+        action: 'UPDATE_PRODUCT',
+        targetType: 'Product',
+        targetId: 'prod-123',
+        details: { field: 'stockQuantity', oldValue: 10, newValue: 20 },
+        ipAddress: '192.168.1.101',
+      },
+      {
+        adminId: adminUser.id,
+        action: 'DISABLE_USER',
+        targetType: 'User',
+        targetId: customer3.id,
+        details: { reason: 'Account verification pending' },
+        ipAddress: '192.168.1.102',
+      },
+      {
+        adminId: adminUser.id,
+        action: 'CREATE_CATEGORY',
+        targetType: 'Category',
+        targetId: surgical.id,
+        details: { name: 'Surgical Products' },
+        ipAddress: '192.168.1.103',
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  console.log('Created test admin logs');
 
   console.log('Seeding finished.');
 }

@@ -139,21 +139,21 @@ export const fetchAdminCustomers = async () => {
   return response.data;
 };
 
-export const fetchAnalytics = async () => {
-  const response = await api.get('/admin/analytics');
-  return response.data;
-};
+
 
 export const fetchSuppliers = async () => {
   const response = await api.get('/admin/suppliers');
   return response.data;
 };
 
+export const fetchAnalytics = async () => {
+  const response = await api.get('/analytics/dashboard');
+  return response.data;
+};
 export const addSupplier = async (payload) => {
   const response = await api.post('/admin/suppliers', payload);
   return response.data;
 };
-
 export const updateSupplier = async (payload) => {
   if (!Number.isInteger(payload.id) || payload.id <= 0) {
     throw new Error('Invalid supplier id');

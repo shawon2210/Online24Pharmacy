@@ -47,7 +47,9 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
 
     try {
       // Upload to Cloudinary or your storage service
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
       const uploadPromises = validFiles.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
@@ -126,12 +128,16 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
             ? "Uploading..."
             : "Drop prescription images here, or click to select"}
         </p>
-        <p className="text-xs text-background0 mt-1">PNG, JPG up to 5MB each</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          PNG, JPG up to 5MB each
+        </p>
       </div>
 
       {files.length > 0 && (
         <div className="mt-4 space-y-2">
-          <h4 className="text-sm font-medium text-foreground">Uploaded Files:</h4>
+          <h4 className="text-sm font-medium text-foreground">
+            Uploaded Files:
+          </h4>
           {files.map((file, index) => (
             <div
               key={index}
@@ -154,7 +160,7 @@ export default function PrescriptionUpload({ onUpload, required = false }) {
         </div>
       )}
 
-      <div className="mt-3 text-xs text-background0">
+      <div className="mt-3 text-xs text-muted-foreground">
         <p>• Ensure prescription is clearly visible and readable</p>
         <p>• Include doctor's name and signature</p>
         <p>• Prescription should be recent (within 30 days)</p>

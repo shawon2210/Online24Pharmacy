@@ -172,36 +172,29 @@ function CategoryPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title={`${slug ? slug.replace(/[<>"']/g, "") : ""} - ${t(
           "categoryPage.title"
         )}`}
       />
 
-      {/* Category Hero Banner with Image (with fallback) */}
-      <div className="relative w-full h-48 sm:h-64 md:h-80 overflow-hidden bg-gradient-to-r from-emerald-600 to-cyan-600">
+      {/* Category Hero Banner with Image (with fallback, slightly increased size) */}
+      <div className="relative w-full h-28 sm:h-36 md:h-44 overflow-hidden bg-card border-b border-border flex items-end">
         <img
           src={
             ensureAbsoluteImageUrl(currentCategory?.imageUrl) ||
             FALLBACK_CATEGORY_BANNER
           }
           alt={currentCategoryName}
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-0"
           onError={(e) => {
             e.currentTarget.src = FALLBACK_CATEGORY_BANNER;
           }}
         />
-        {isFallbackHero && (
-          <div className="absolute top-3 right-3">
-            <span className="px-2 py-1 rounded-md text-xs font-semibold bg-background/80 text-foreground dark:bg-gray-800/80 dark:text-gray-100 backdrop-blur-sm">
-              {t("categoryPage.placeholderBanner")}
-            </span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white capitalize">
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20 z-10" />
+        <div className="relative z-20 p-4 sm:p-6 w-full">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white capitalize">
             {currentCategoryName}
           </h1>
           {currentCategory?.description && (
@@ -210,10 +203,17 @@ function CategoryPage() {
             </p>
           )}
         </div>
+        {isFallbackHero && (
+          <div className="absolute top-2 right-2 z-30">
+            <span className="px-2 py-1 rounded-md text-xs font-semibold bg-card/80 text-foreground backdrop-blur-sm">
+              {t("categoryPage.placeholderBanner")}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 bg-background/95 dark:bg-gray-900/95 backdrop-blur-md shadow-md dark:shadow-lg">
+      <div className="sticky top-0 z-40 bg-card/95 backdrop-blur-md shadow-md border-b border-border">
         <div className="container mx-auto px-4 py-4">
           {/* Professional Breadcrumbs */}
           <nav className="mb-3" aria-label={t("breadcrumb")}>
@@ -261,7 +261,7 @@ function CategoryPage() {
                     setSortBy(e.target.value);
                     setCurrentPage(1); // Reset to page 1 when sort changes
                   }}
-                  className="appearance-none bg-background dark:bg-gray-800 border-2 border-border dark:border-gray-600 rounded-lg px-4 py-2 pr-10 text-sm font-medium hover:border-emerald-400 dark:hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 transition-all text-foreground dark:text-gray-200"
+                  className="appearance-none bg-background border-2 border-border rounded-lg px-4 py-2 pr-10 text-sm font-medium hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-foreground"
                   aria-label={t("categoryPage.sortProducts")}
                 >
                   <option value="featured">{t("categoryPage.featured")}</option>
@@ -277,12 +277,12 @@ function CategoryPage() {
               {/* Mobile Filter Button */}
               <button
                 onClick={() => setMobileFiltersOpen(true)}
-                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white dark:text-gray-100 rounded-lg font-medium hover:bg-emerald-700 dark:hover:bg-emerald-500 transition-colors"
+                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
                 aria-label={t("categoryPage.openFilters")}
               >
                 <FunnelIcon className="w-5 h-5" />
                 {activeFiltersCount > 0 && (
-                  <span className="bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                  <span className="bg-background/90 text-emerald-700 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
                     {activeFiltersCount}
                   </span>
                 )}
@@ -321,7 +321,7 @@ function CategoryPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Filters Sidebar */}
           <aside className="hidden lg:block w-64 shrink-0">
             <div className="sticky top-32 bg-background rounded-xl shadow-lg p-6 space-y-6">
@@ -367,7 +367,7 @@ function CategoryPage() {
                       onChange={(e) =>
                         handleFilterChange("availability", e.target.value)
                       }
-                      className="text-emerald-600 focus:ring-emerald-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="text-emerald-600 focus:ring-emerald-500 bg-background border border-border"
                     />
                     <span className="text-sm capitalize text-foreground">
                       {t(`categoryPage.${opt}`)}
@@ -392,7 +392,7 @@ function CategoryPage() {
                         e.target.checked ? "required" : "all"
                       )
                     }
-                    className="rounded text-emerald-600 focus:ring-emerald-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="rounded text-emerald-600 focus:ring-emerald-500 bg-background border border-border"
                   />
                   <span className="text-sm text-foreground">
                     {t("categoryPage.prescriptionRequiredOnly")}
@@ -409,7 +409,7 @@ function CategoryPage() {
                 className="absolute inset-0 bg-black/50 dark:bg-black/70"
                 onClick={() => setMobileFiltersOpen(false)}
               />
-              <div className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-background dark:bg-gray-800 shadow-2xl overflow-y-auto animate-slide-in-right">
+              <div className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-background shadow-2xl overflow-y-auto animate-slide-in-right">
                 <div className="p-6 space-y-6">
                   <div className="flex items-center justify-between pb-4 mb-4 border-b border-border/70">
                     <h2 className="text-xl font-bold text-foreground">
@@ -442,7 +442,7 @@ function CategoryPage() {
                           onChange={(e) =>
                             handleFilterChange("availability", e.target.value)
                           }
-                          className="text-emerald-600 dark:bg-gray-700 dark:border-gray-600"
+                          className="text-emerald-600 bg-background border border-border"
                         />
                         <span className="text-sm capitalize text-foreground">
                           {t(`categoryPage.${opt}`)}
@@ -466,7 +466,7 @@ function CategoryPage() {
                             e.target.checked ? "required" : "all"
                           )
                         }
-                        className="rounded text-emerald-600 dark:bg-gray-700 dark:border-gray-600"
+                        className="rounded text-emerald-600 bg-background border border-border"
                       />
                       <span className="text-sm text-foreground">
                         {t("categoryPage.prescriptionRequiredOnly")}
@@ -476,7 +476,7 @@ function CategoryPage() {
 
                   <button
                     onClick={() => setMobileFiltersOpen(false)}
-                    className="w-full py-3 bg-emerald-600 text-background rounded-lg font-bold hover:bg-emerald-700 transition-colors"
+                    className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-colors"
                   >
                     {t("categoryPage.applyFilters")}
                   </button>
@@ -487,7 +487,7 @@ function CategoryPage() {
 
           {/* Products Grid */}
           <main className="flex-1">
-            <div className="mb-4 text-sm text-muted-foreground dark:text-gray-400">
+            <div className="mb-4 text-sm text-muted-foreground">
               {isLoading
                 ? t("categoryPage.loading")
                 : t("categoryPage.productsFound", {
@@ -500,39 +500,39 @@ function CategoryPage() {
                 {[...Array(8)].map((_, i) => (
                   <div
                     key={i}
-                    className="bg-background dark:bg-gray-800 rounded-xl shadow-md p-4 animate-pulse"
+                    className="bg-card rounded-xl shadow-md p-4 animate-pulse border border-border"
                   >
-                    <div className="bg-border dark:bg-gray-700 h-48 rounded-lg mb-4" />
-                    <div className="bg-border dark:bg-gray-700 h-4 rounded mb-2" />
-                    <div className="bg-border dark:bg-gray-700 h-4 rounded w-2/3" />
+                    <div className="bg-border h-48 rounded-lg mb-4" />
+                    <div className="bg-border h-4 rounded mb-2" />
+                    <div className="bg-border h-4 rounded w-2/3" />
                   </div>
                 ))}
               </div>
             ) : filteredProducts.length > 0 ? (
               <div className="transition-all duration-300">
-                <ProductGrid products={filteredProducts} />
-
-                {/* Modern Pagination */}
-                {totalPages > 1 && (
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                    hasNext={currentPage < totalPages}
-                    hasPrev={currentPage > 1}
-                  />
-                )}
-
-                {/* Page Info */}
-                {totalPages > 1 && (
-                  <div className="mt-4 text-center text-sm text-muted-foreground dark:text-gray-400">
-                    Page {currentPage} of {totalPages} ({totalProducts} total
-                    products)
-                  </div>
-                )}
+                <div className="bg-card rounded-xl shadow-lg border border-border p-4 sm:p-6 mb-8">
+                  <ProductGrid products={filteredProducts} />
+                  {/* Modern Pagination */}
+                  {totalPages > 1 && (
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={setCurrentPage}
+                      hasNext={currentPage < totalPages}
+                      hasPrev={currentPage > 1}
+                    />
+                  )}
+                  {/* Page Info */}
+                  {totalPages > 1 && (
+                    <div className="mt-4 text-center text-sm text-muted-foreground">
+                      Page {currentPage} of {totalPages} ({totalProducts} total
+                      products)
+                    </div>
+                  )}
+                </div>
               </div>
             ) : (
-              <div className="text-center py-20">
+              <div className="bg-card rounded-xl shadow-lg border border-border p-8 text-center w-full">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-xl font-bold text-foreground mb-2">
                   {t("categoryPage.noProductsFound")}
@@ -542,7 +542,7 @@ function CategoryPage() {
                 </p>
                 <Link
                   to="/categories"
-                  className="inline-block px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors"
+                  className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg active:scale-95"
                 >
                   {t("categoryPage.browseAllCategories")}
                 </Link>

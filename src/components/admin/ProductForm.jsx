@@ -279,7 +279,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
           </h2>
           <button
             onClick={onClose}
-            className="text-background0 hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground"
           >
             ✕
           </button>
@@ -574,7 +574,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-border border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <svg
-                      className="w-8 h-8 mb-2 text-background0"
+                      className="w-8 h-8 mb-2 text-muted-foreground"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -586,11 +586,11 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                         d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                       />
                     </svg>
-                    <p className="mb-2 text-sm text-background0">
+                    <p className="mb-2 text-sm text-muted-foreground">
                       <span className="font-semibold">Click to upload</span> or
                       drag and drop
                     </p>
-                    <p className="text-xs text-background0">
+                    <p className="text-xs text-muted-foreground">
                       PNG, JPG, JPEG (MAX. 5MB)
                     </p>
                   </div>
@@ -603,7 +603,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
                   />
                 </label>
               </div>
-              <p className="text-xs text-background0 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 First image will be the primary product image
               </p>
             </div>

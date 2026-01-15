@@ -7,10 +7,7 @@ const ProductCarousel = lazy(() => import("../product/ProductCarousel"));
 const Skeleton = () => (
   <div className="flex gap-4 justify-center py-8">
     {[...Array(4)].map((_, i) => (
-      <div
-        key={i}
-        className="w-48 h-64 rounded-2xl bg-border dark:bg-foreground"
-      />
+      <div key={i} className="w-48 h-64 rounded-2xl bg-border" />
     ))}
   </div>
 );

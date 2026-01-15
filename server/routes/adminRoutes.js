@@ -4,6 +4,7 @@ import { isAdmin } from '../middleware/isAdmin.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
+import { revokeSession } from '../controllers/adminController.js';
 
 // Import module-specific admin routers
 import productAdminRoutes from './admin/products.js';
@@ -11,6 +12,8 @@ import categoryAdminRoutes from './admin/categories.js';
 import orderAdminRoutes from './admin/orders.js';
 import customerAdminRoutes from './admin/customers.js';
 import prescriptionAdminRoutes from './admin/prescriptions.js';
+import shopAdminRoutes from './admin/shops.js';
+import auditLogRoutes from './admin/auditLogs.js';
 
 const router = Router();
 
@@ -41,6 +44,9 @@ const upload = multer({
 // Secure all routes in this file with authentication and admin checks
 router.use(authenticateToken, isAdmin);
 
+// DELETE /api/admin/sessions/:sessionId - Revoke user session
+router.delete('/sessions/:sessionId', revokeSession);
+
 // Health check endpoint for the admin API
 router.get('/', (req, res) => {
   res.status(200).json({
@@ -70,5 +76,7 @@ router.use('/categories', categoryAdminRoutes);
 router.use('/orders', orderAdminRoutes);
 router.use('/customers', customerAdminRoutes);
 router.use('/prescriptions', prescriptionAdminRoutes);
+router.use('/shops', shopAdminRoutes);
+router.use('/audit-logs', auditLogRoutes);
 
 export default router;

@@ -33,7 +33,7 @@ export async function getDashboard(req, res) {
       prisma.order.count(),
       prisma.prescription.count({ where: { status: 'pending' } }),
       prisma.order.aggregate({ _sum: { totalAmount: true }, where: { paymentStatus: 'completed' } }),
-      prisma.user.count({ where: { role: 'CUSTOMER' } })
+      prisma.user.count({ where: { role: 'USER' } })
     ]);
 
     const recentOrders = await prisma.order.findMany({ take: 5, orderBy: { createdAt: 'desc' }, include: { user: { select: { firstName: true, lastName: true } } } });
@@ -422,7 +422,7 @@ export async function updateSupplier(req, res) {
 export async function listCustomers(req, res) {
   try {
     const users = await prisma.user.findMany({ 
-      where: { role: 'CUSTOMER' }, 
+      where: { role: 'USER' }, 
       select: { id: true, email: true, firstName: true, lastName: true, isActive: true, lastLoginAt: true, createdAt: true } 
     });
     return res.json({ customers: users });
@@ -444,6 +444,21 @@ export async function listCustomers(req, res) {
 export async function toggleUserStatus(req, res) {
   try {
     const { isActive } = req.body;
+    
+    // Check if target user is not an admin
+    const targetUser = await prisma.user.findUnique({
+      where: { id: req.params.id },
+      select: { role: true }
+    });
+    
+    if (!targetUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    if (targetUser.role === 'ADMIN') {
+      return res.status(403).json({ error: 'Cannot modify admin account status' });
+    }
+    
     const user = await prisma.user.update({
       where: { id: req.params.id },
       data: { isActive }
@@ -485,6 +500,20 @@ export async function toggleUserStatus(req, res) {
  */
 export async function getUserSessions(req, res) {
   try {
+    // Check if target user is not an admin
+    const targetUser = await prisma.user.findUnique({
+      where: { id: req.params.id },
+      select: { role: true }
+    });
+    
+    if (!targetUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    if (targetUser.role === 'ADMIN') {
+      return res.status(403).json({ error: 'Cannot view admin sessions' });
+    }
+    
     const sessions = await prisma.session.findMany({
       where: { userId: req.params.id },
       orderBy: { createdAt: 'desc' }
@@ -506,6 +535,20 @@ export async function getUserSessions(req, res) {
  */
 export async function revokeSession(req, res) {
   try {
+    // Check if the session belongs to a non-admin user
+    const session = await prisma.session.findUnique({
+      where: { id: req.params.sessionId },
+      include: { user: { select: { role: true } } }
+    });
+    
+    if (!session) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+    
+    if (session.user.role === 'ADMIN') {
+      return res.status(403).json({ error: 'Cannot revoke admin sessions' });
+    }
+    
     await prisma.session.update({
       where: { id: req.params.sessionId },
       data: { isRevoked: true }

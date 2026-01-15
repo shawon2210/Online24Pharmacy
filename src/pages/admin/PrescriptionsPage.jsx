@@ -10,11 +10,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
       <div className="bg-background rounded-lg shadow-xl w-full max-w-md">
-        <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-semibold">{title}</h2>
+        <div className="p-4 border-b border-border flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-foreground">{title}</h2>
           <button
             onClick={onClose}
-            className="text-background0 hover:text-foreground text-2xl"
+            className="text-muted-foreground hover:text-foreground text-2xl"
           >
             &times;
           </button>
@@ -44,17 +44,25 @@ const fetchPrescriptions = ({ queryKey }) => {
     .then((res) => res.data);
 };
 const approvePrescription = (id) => {
-  if (!id || typeof id !== 'string') throw new Error('Invalid prescription ID');
-  return axios.post(`${API_URL}/api/admin/prescriptions/${encodeURIComponent(id)}/approve`);
+  if (!id || typeof id !== "string") throw new Error("Invalid prescription ID");
+  return axios.post(
+    `${API_URL}/api/admin/prescriptions/${encodeURIComponent(id)}/approve`
+  );
 };
 const rejectPrescription = ({ id, notes }) => {
-  if (!id || typeof id !== 'string') throw new Error('Invalid prescription ID');
-  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  if (!id || typeof id !== "string") throw new Error("Invalid prescription ID");
+  const csrfToken = document
+    .querySelector('meta[name="csrf-token"]')
+    ?.getAttribute("content");
   const headers = {};
   if (csrfToken) {
-    headers['X-CSRF-Token'] = csrfToken;
+    headers["X-CSRF-Token"] = csrfToken;
   }
-  return axios.post(`${API_URL}/api/admin/prescriptions/${encodeURIComponent(id)}/reject`, { notes }, { headers });
+  return axios.post(
+    `${API_URL}/api/admin/prescriptions/${encodeURIComponent(id)}/reject`,
+    { notes },
+    { headers }
+  );
 };
 
 const RejectNoteModal = ({ onSubmit, onCancel, isPending }) => {
@@ -67,7 +75,7 @@ const RejectNoteModal = ({ onSubmit, onCancel, isPending }) => {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows="4"
-          className="w-full border rounded-md p-2"
+          className="w-full border border-border bg-background text-foreground placeholder:text-muted-foreground rounded-md p-2"
           placeholder="e.g., Image is unclear, prescription is invalid..."
         />
         <div className="flex justify-end space-x-3">
@@ -195,7 +203,7 @@ const AdminPrescriptionsPage = () => {
               </div>
             </div>
           ) : (
-            <div className="text-center py-20 text-background0">
+            <div className="text-center py-20 text-muted-foreground">
               <p>Select a prescription from the inbox to review it.</p>
             </div>
           )}

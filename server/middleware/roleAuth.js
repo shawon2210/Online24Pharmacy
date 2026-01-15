@@ -18,9 +18,7 @@ async function readUsersFile() {
 export const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
-    console.log('DEBUG: Incoming Authorization header:', authHeader);
     const token = authHeader && authHeader.split(' ')[1];
-    console.log('DEBUG: Extracted token:', token);
 
     if (!token) {
       return res.status(401).json({ error: 'Access token required' });
@@ -102,4 +100,4 @@ export const authorizeRoles = (roles) => {
 
 export const requireAdmin = authorizeRoles(['ADMIN']);
 export const requireDelivery = authorizeRoles(['DELIVERY', 'ADMIN']);
-export const requireCustomer = authorizeRoles(['CUSTOMER', 'ADMIN']);
+export const requireCustomer = authorizeRoles(['USER', 'ADMIN']);

@@ -10,11 +10,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
       <div className="bg-background rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
-        <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-semibold">{title}</h2>
+        <div className="p-4 border-b border-border flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-foreground">{title}</h2>
           <button
             onClick={onClose}
-            className="text-background0 hover:text-foreground text-2xl"
+            className="text-muted-foreground hover:text-foreground text-2xl"
           >
             &times;
           </button>
@@ -45,7 +45,8 @@ const fetchCustomers = ({ queryKey }) => {
     .then((res) => res.data);
 };
 const fetchCustomerDetails = (customerId) => {
-  if (!customerId || typeof customerId !== 'string') throw new Error('Invalid customer ID');
+  if (!customerId || typeof customerId !== "string")
+    throw new Error("Invalid customer ID");
   return axios
     .get(`${API_URL}/api/admin/customers/${encodeURIComponent(customerId)}`)
     .then((res) => res.data);
@@ -161,34 +162,34 @@ const AdminCustomersPage = () => {
             placeholder="Search by name, email, phone..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 border rounded-md w-full md:w-auto"
+            className="pl-10 pr-4 py-2 border border-border bg-background text-foreground placeholder:text-muted-foreground rounded-md w-full md:w-auto"
           />
         </div>
       </div>
 
       <div className="bg-background shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-background">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Member Since
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Orders
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-background divide-y divide-gray-200">
+            <tbody className="bg-background divide-y divide-border">
               {isLoading ? (
                 <tr>
                   <td colSpan="5" className="text-center py-4">
@@ -207,13 +208,13 @@ const AdminCustomersPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                       {customer.firstName} {customer.lastName}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {customer.email}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {new Date(customer.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {customer._count.orders}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

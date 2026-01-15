@@ -41,7 +41,7 @@ export default function ProductGrid({
         <h3 className="text-lg font-medium text-foreground mb-2">
           No products found
         </h3>
-        <p className="text-background0 text-center max-w-md">
+        <p className="text-muted-foreground text-center max-w-md">
           We couldn't find any products matching your criteria. Try adjusting
           your filters or search terms.
         </p>

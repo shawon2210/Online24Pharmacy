@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, RotateCw, XCircle } from "lucide-react";
 import { useCartStore } from "../../stores/cartStore";
@@ -28,14 +28,18 @@ const sizeVariants = {
     imagePadding: "p-0.25 sm:p-0.5 md:p-0.75",
   },
   carousel: {
-    container: "rounded-sm sm:rounded-md p-0.75 sm:p-1 md:p-1.25",
-    categoryText: "text-[clamp(8px,1.9vw,10px)]",
-    nameText: "text-[clamp(12px,3vw,15px)] leading-snug font-bold",
+    container:
+      "rounded-2xl border border-white/30 dark:border-emerald-900/40 bg-white/60 dark:bg-emerald-950/60 shadow-xl hover:shadow-emerald-400/30 hover:shadow-2xl p-3 sm:p-4 md:p-5 transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03] backdrop-blur-xl",
+    categoryText:
+      "text-[clamp(9px,1.7vw,11px)] text-emerald-700 dark:text-emerald-200 truncate uppercase tracking-wide font-semibold",
+    nameText:
+      "text-[clamp(13px,2.7vw,15px)] font-extrabold leading-tight line-clamp-2 text-emerald-900 dark:text-emerald-100 drop-shadow-sm",
     nameMinHeight: "min-h-[2em] sm:min-h-[2.2em]",
-    priceText: "text-[clamp(13px,3.2vw,16px)] font-bold",
-    iconSize: "h-5.5 w-5.5 sm:h-6 sm:w-6 md:h-6.5 md:w-6.5",
-    buttonSize: "h-6.5 w-6.5 sm:h-7 sm:w-7 md:h-7.5 md:w-7.5",
-    imagePadding: "p-0 sm:p-0 md:p-0",
+    priceText:
+      "text-[clamp(14px,2.8vw,16px)] font-black bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent",
+    iconSize: "h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-8 lg:w-8",
+    buttonSize: "h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-9 lg:w-9",
+    imagePadding: "p-1 sm:p-1.5 md:p-2 lg:p-2.5",
   },
   md: {
     container: "rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-3.5",
@@ -51,47 +55,81 @@ const sizeVariants = {
   },
 };
 
-const ProductCard = memo(({ product, size = "xs" }) => {
+// Fallback SVG for product images
+const FALLBACK_PRODUCT_IMAGE =
+  "data:image/svg+xml,%3Csvg width='300' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23e5e7eb' width='300' height='400' rx='24'/%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='22' fill='%239ca3af' font-family='Arial,Helvetica,sans-serif'%3EImage%20Not%20Available%3C/text%3E%3C/svg%3E";
+
+function ProductCard({ product, size = "xs" }) {
   const variant = sizeVariants[size] || sizeVariants.md;
   const [isAdding, setIsAdding] = useState(false);
   const [imgError, setImgError] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
 
-  const name = product?.name || "Product";
-  const category =
-    product?.category?.name || product?.category || "Uncategorized";
-  const price = product?.price || 0;
-  const discountPrice = product?.discountPrice;
-  const finalPrice = discountPrice || price;
-  const stock = product?.stockQuantity || product?.stock || 0;
-  const isPrescriptionRequired = product?.isPrescriptionRequired;
-  const slug =
-    product?.slug ||
-    (product?.name || "product").toLowerCase().replace(/\s+/g, "-");
-  const inStock = stock > 0;
-  const hasDiscount = discountPrice && discountPrice < price;
+  const {
+    name,
+    category,
+    price,
+    discountPrice,
+    finalPrice,
+    stock,
+    isPrescriptionRequired,
+    slug,
+    inStock,
+    hasDiscount,
+    imgUrl,
+  } = useMemo(() => {
+    const name = product?.name || "Product";
+    const category =
+      product?.category?.name || product?.category || "Uncategorized";
+    const price = product?.price || 0;
+    const discountPrice = product?.discountPrice;
+    const finalPrice = discountPrice || price;
+    const stock = product?.stockQuantity || product?.stock || 0;
+    const isPrescriptionRequired = product?.isPrescriptionRequired;
+    const slug =
+      product?.slug ||
+      (product?.name || "product").toLowerCase().replace(/\s+/g, "-");
+    const inStock = stock > 0;
+    const hasDiscount = discountPrice && discountPrice < price;
+    const img = product?.image || product?.images?.[0];
+    const imgUrl =
+      !img || imgError
+        ? FALLBACK_PRODUCT_IMAGE
+        : img.startsWith("http")
+        ? img
+        : `${API_URL}${img}`;
 
-  const img = product?.image || product?.images?.[0];
-  const imgUrl =
-    !img || imgError
-      ? `https://via.placeholder.com/300x400?text=${encodeURIComponent(name)}`
-      : img.startsWith("http")
-      ? img
-      : `${API_URL}${img}`;
+    return {
+      name,
+      category,
+      price,
+      discountPrice,
+      finalPrice,
+      stock,
+      isPrescriptionRequired,
+      slug,
+      inStock,
+      hasDiscount,
+      imgUrl,
+    };
+  }, [product, imgError]);
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!inStock || isAdding) return;
-    setIsAdding(true);
-    addItem(product, 1);
-    setTimeout(() => setIsAdding(false), 800);
-  };
+  const handleAdd = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!inStock || isAdding) return;
+      setIsAdding(true);
+      addItem(product, 1);
+      setTimeout(() => setIsAdding(false), 800);
+    },
+    [inStock, isAdding, addItem, product]
+  );
 
   return (
     <Link
       to={`/product/${slug}`}
-      className={`group relative flex flex-col ${variant.container} border border-border/60 dark:border-gray-600/60 bg-background dark:bg-card shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 h-full overflow-hidden hover:border-emerald-300/50 dark:hover:border-emerald-500/40`}
+      className={`group relative flex flex-col p-1 sm:p-1.5 md:p-2 border border-border/60 dark:border-gray-600/60 bg-teal-800 dark:bg-emerald-800 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 h-full overflow-hidden hover:border-emerald-600/80 w-full min-w-0`}
     >
       {/* Badges */}
       <div className="absolute top-1.5 sm:top-2 left-1.5 sm:left-2 z-10 flex flex-col gap-0.5 sm:gap-1">
@@ -116,19 +154,22 @@ const ProductCard = memo(({ product, size = "xs" }) => {
         </div>
       )}
 
-      {/* Image Container with Enhanced Styling */}
+      {/* Image Container with Enhanced Styling and bg-slate-900 */}
       <div
         className={`relative ${
-          size === "carousel" ? "mb-1 sm:mb-1.5" : "mb-1.5 sm:mb-2"
-        } w-full ${
+          size === "carousel" ? "mb-1 sm:mb-1.5" : "mb-1 sm:mb-1.5"
+        } w-full min-w-0 max-w-full ${
           size === "carousel" ? "aspect-square" : "aspect-3/4"
-        } bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg overflow-hidden flex items-center justify-center group/img shadow-sm hover:shadow-md transition-shadow duration-300`}
+        } bg-stone-600 dark:bg-stone-600 rounded-md sm:rounded-lg md:rounded-xl overflow-hidden flex items-center justify-center group/img shadow-sm hover:shadow-md transition-shadow duration-300`}
+        style={{ minHeight: "5.5rem", minWidth: "5.5rem" }}
       >
         <img
           src={imgUrl}
-          alt={name}
+          alt={imgError ? "Image not available" : name}
           loading="lazy"
-          onError={() => setImgError(true)}
+          onError={(e) => {
+            if (!imgError) setImgError(true);
+          }}
           className={`w-full h-full object-cover ${variant.imagePadding} group-hover/img:scale-125 group-hover/img:brightness-110 transition-all duration-500 ease-out`}
         />
         {/* Image Overlay Gradient */}
@@ -143,14 +184,14 @@ const ProductCard = memo(({ product, size = "xs" }) => {
       >
         {/* Category */}
         <p
-          className={`${variant.categoryText} text-gray-500 dark:text-gray-400 truncate uppercase tracking-wide font-medium`}
+          className={`${variant.categoryText} text-stone-400 dark:text-stone-400 truncate uppercase tracking-wide font-medium`}
         >
           {category}
         </p>
 
         {/* Product Name */}
         <h3
-          className={`font-bold ${variant.nameText} ${variant.nameMinHeight} text-foreground dark:text-background line-clamp-2 leading-tight`}
+          className={`font-bold ${variant.nameText} ${variant.nameMinHeight} text-foreground line-clamp-2 leading-tight`}
         >
           {name}
         </h3>
@@ -209,7 +250,30 @@ const ProductCard = memo(({ product, size = "xs" }) => {
       <div className="absolute inset-0 bg-linear-to-t from-emerald-600/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg sm:rounded-xl" />
     </Link>
   );
-});
+}
 
-ProductCard.displayName = "ProductCard";
-export default ProductCard;
+function areEqual(prevProps, nextProps) {
+  if (prevProps.size !== nextProps.size) return false;
+  const p = prevProps.product || {};
+  const n = nextProps.product || {};
+  const getImg = (x) => (x?.image ? x.image : x?.images?.[0]);
+  const keys = [
+    "id",
+    "name",
+    "price",
+    "discountPrice",
+    "stockQuantity",
+    "stock",
+    "slug",
+    "isPrescriptionRequired",
+  ];
+  for (const k of keys) {
+    if ((p[k] ?? null) !== (n[k] ?? null)) return false;
+  }
+  if (getImg(p) !== getImg(n)) return false;
+  return true;
+}
+
+const MemoizedProductCard = memo(ProductCard, areEqual);
+MemoizedProductCard.displayName = "ProductCard";
+export default MemoizedProductCard;

@@ -1,3 +1,14 @@
+model Shop {
+  id         String   @id @default(cuid())
+  name       String
+  address    String
+  open_hours String?
+  lat        Float?
+  lng        Float?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@map("shops")
+}
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
@@ -385,7 +396,7 @@ model SavedKit {
   userId      String   @db.Uuid
   name        String
   description String?
-  products    String
+  products    Json
   totalPrice  Decimal? @default(0)
   isPublic    Boolean  @default(false)
   createdAt   DateTime @default(now())

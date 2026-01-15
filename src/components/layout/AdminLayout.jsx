@@ -64,9 +64,22 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/admin/shops" className={navLinkClasses}>
+                <ShoppingCart className="mr-3" size={20} />
+                Shop Upload
+              </NavLink>
+            </li>
+            {/* Pickup Locations link removed */}
+            <li>
               <NavLink to="/admin/orders" className={navLinkClasses}>
                 <ListOrdered className="mr-3" size={20} />
                 Orders
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin/prescriptions" className={navLinkClasses}>
+                <Stethoscope className="mr-3" size={20} />
+                Prescriptions
               </NavLink>
             </li>
             <li>
@@ -76,12 +89,17 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/admin/prescriptions" className={navLinkClasses}>
-                <Stethoscope className="mr-3" size={20} />
-                Prescriptions
+              <NavLink to="/admin/audit-log" className={navLinkClasses}>
+                <MessageSquare className="mr-3" size={20} />
+                Audit Log
               </NavLink>
             </li>
-            {/* Add more links as needed */}
+            <li>
+              <NavLink to="/admin/analytics" className={navLinkClasses}>
+                <Bell className="mr-3" size={20} />
+                Analytics
+              </NavLink>
+            </li>
           </ul>
         </div>
       </aside>

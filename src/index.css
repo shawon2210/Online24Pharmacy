@@ -168,7 +168,6 @@
     background-color: var(--background);
     color: var(--foreground);
     border-color: var(--border);
-    focus-ring-color: var(--primary);
   }
 
   .bg-background {
@@ -207,6 +206,7 @@
 
   .truncate-2 {
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -214,6 +214,7 @@
 
   .truncate-3 {
     display: -webkit-box;
+    line-clamp: 3;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -326,6 +327,15 @@
 
   .transition-smooth-slow {
     @apply transition-all duration-500 ease-out;
+  }
+
+  /* Safe area padding for mobile devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
   }
 }
 

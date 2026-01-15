@@ -34,10 +34,12 @@ export default function AdminPromotions() {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
       const headers = {};
       if (csrfToken) {
-        headers['X-CSRF-Token'] = csrfToken;
+        headers["X-CSRF-Token"] = csrfToken;
       }
       await axios.post(`${API_URL}/admin/promotions`, form, { headers });
       fetchPromotions();
@@ -54,8 +56,8 @@ export default function AdminPromotions() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
         <div className="bg-background shadow rounded-lg p-6">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold">Promotions</h1>
-            <p className="text-sm text-background0">
+            <h1 className="text-2xl font-bold text-foreground">Promotions</h1>
+            <p className="text-sm text-muted-foreground">
               Create and manage site promotions
             </p>
           </div>
@@ -70,7 +72,7 @@ export default function AdminPromotions() {
                 setForm((f) => ({ ...f, title: e.target.value }))
               }
               placeholder="Promotion title"
-              className="border px-3 py-2 rounded"
+              className="border border-border bg-background text-foreground placeholder:text-muted-foreground px-3 py-2 rounded"
             />
             <input
               value={form.discount}
@@ -78,7 +80,7 @@ export default function AdminPromotions() {
                 setForm((f) => ({ ...f, discount: e.target.value }))
               }
               placeholder="Discount (e.g. 15%)"
-              className="border px-3 py-2 rounded"
+              className="border border-border bg-background text-foreground placeholder:text-muted-foreground px-3 py-2 rounded"
             />
             <div className="flex items-center space-x-2">
               <label className="flex items-center space-x-2">
@@ -101,16 +103,16 @@ export default function AdminPromotions() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-background">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Title
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Discount
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Actions
                   </th>
                 </tr>

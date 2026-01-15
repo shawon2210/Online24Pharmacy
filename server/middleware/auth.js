@@ -55,7 +55,7 @@ export const authenticateToken = async (req, res, next) => {
             email: fileUser.email,
             firstName: fileUser.firstName,
             lastName: fileUser.lastName,
-            role: fileUser.role || 'CUSTOMER',
+            role: fileUser.role || 'USER',
             isActive: fileUser.isActive !== false,
             isVerified: fileUser.isVerified !== false
           };

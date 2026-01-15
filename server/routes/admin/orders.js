@@ -120,7 +120,37 @@ router.put('/:id/status', [body('status').notEmpty().withMessage('Status is requ
       ipAddress: req.ip,
     });
 
-    // TODO: Send notification to user about status update
+    // Send in-app notification to user about status update
+    try {
+      const { createNotification, NotificationType } = await import('../../utils/notificationManager.js');
+      let notifType = null;
+      switch (newStatus) {
+        case 'CONFIRMED':
+          notifType = NotificationType.ORDER_CONFIRMED;
+          break;
+        case 'SHIPPED':
+          notifType = NotificationType.ORDER_SHIPPED;
+          break;
+        case 'DELIVERED':
+          notifType = NotificationType.ORDER_DELIVERED;
+          break;
+        case 'CANCELLED':
+          notifType = NotificationType.ORDER_CANCELLED;
+          break;
+        default:
+          notifType = null;
+      }
+      if (notifType) {
+        await createNotification(order.userId, notifType, {
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          estimatedDelivery: order.estimatedDelivery,
+          totalAmount: order.totalAmount,
+        });
+      }
+    } catch (notifErr) {
+      console.error('Failed to send in-app notification:', notifErr);
+    }
 
     res.json(updatedOrder);
   } catch (_error) {

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import prisma from '../../db/prisma.js';
+import { toggleUserStatus, getUserSessions } from '../../controllers/adminController.js';
 
 const router = Router();
 
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
 
   try {
     const where = {
-      role: { in: ['USER', 'CUSTOMER'] },
+      role: 'USER',
     };
     if (search) {
       where.OR = [
@@ -36,6 +37,7 @@ router.get('/', async (req, res) => {
         isVerified: true,
         isActive: true,
         createdAt: true,
+        lastLoginAt: true,
         _count: {
           select: { orders: true },
         },
@@ -99,6 +101,12 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch customer details.' });
   }
 });
+
+// PUT /api/admin/customers/:id/status - Update customer account status
+router.put('/:id/status', toggleUserStatus);
+
+// GET /api/admin/customers/:id/sessions - Get user sessions
+router.get('/:id/sessions', getUserSessions);
 
 export default router;
 

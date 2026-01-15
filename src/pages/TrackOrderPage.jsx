@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -7,27 +7,15 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import SEOHead from "../components/common/SEOHead";
+import { getApiBaseUrl } from "../utils/apiBase";
 
 export default function TrackOrderPage() {
   const { t } = useTranslation();
-  const [headerOffset, setHeaderOffset] = useState(0);
   const [orderId, setOrderId] = useState("");
   const [phone, setPhone] = useState("");
   const [orderData, setOrderData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useLayoutEffect(() => {
-    const el = document.querySelector("header");
-    if (!el) return;
-    const compute = () => {
-      const h = Math.ceil(el.getBoundingClientRect().height);
-      setHeaderOffset(h);
-    };
-    compute();
-    window.addEventListener("resize", compute, { passive: true });
-    return () => window.removeEventListener("resize", compute);
-  }, []);
 
   const handleTrack = useCallback(
     async (id, ph) => {
@@ -35,7 +23,7 @@ export default function TrackOrderPage() {
       setOrderData(null);
       setLoading(true);
       try {
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+        const API_URL = getApiBaseUrl();
         const csrfToken = document
           .querySelector('meta[name="csrf-token"]')
           ?.getAttribute("content");
@@ -48,11 +36,39 @@ export default function TrackOrderPage() {
           headers,
           body: JSON.stringify({ orderId: id, phone: ph }),
         });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error);
+
+        const contentType = response.headers.get("content-type") || "";
+        const rawText = await response.text();
+
+        // Try to parse JSON; if we got HTML, the backend is likely down or the proxy/base URL is wrong.
+        let data = null;
+        if (contentType.includes("application/json")) {
+          data = rawText ? JSON.parse(rawText) : null;
+        } else {
+          const trimmed = (rawText || "").trim();
+          if (
+            trimmed.startsWith("<!DOCTYPE") ||
+            trimmed.startsWith("<html") ||
+            trimmed.startsWith("<")
+          ) {
+            throw new Error(
+              t(
+                "trackOrderPage.apiUnavailable",
+                "Unable to reach the order tracking service. If you're running locally, start the backend with `npm run server` and try again."
+              )
+            );
+          }
+          // Fallback: attempt JSON parse anyway.
+          data = trimmed ? JSON.parse(trimmed) : null;
+        }
+
+        if (!response.ok) {
+          throw new Error(data?.error || t("trackOrderPage.orderNotFound"));
+        }
+
         setOrderData(data);
       } catch (err) {
-        setError(err.message || t("orderNotFound"));
+        setError(err.message || t("trackOrderPage.orderNotFound"));
       } finally {
         setLoading(false);
       }
@@ -77,13 +93,14 @@ export default function TrackOrderPage() {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <SEOHead
         title={t("trackOrderPage.seoTitle")}
         description={t("trackOrderPage.seoDescription")}
         url="/track-order"
       />
-      <div className="sticky top-0 z-40 bg-background/95 dark:bg-card/95 backdrop-blur-md shadow-md border-b border-border">
+
+      <div className="sticky top-0 z-40 bg-card/95 backdrop-blur-md shadow-md border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <nav className="mb-3" aria-label={t("breadcrumb")}>
             <ol className="flex items-center gap-1 text-sm text-foreground">
@@ -107,48 +124,45 @@ export default function TrackOrderPage() {
                 {t("trackOrderPage.description")}
               </p>
             </div>
+
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary/10 border-2 border-primary/30 text-primary rounded-full text-sm font-bold">
+              <TruckIcon className="w-5 h-5" />
+              <span>{t("trackOrderPage.badge")}</span>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        className="w-full min-h-screen bg-background dark:bg-slate-950 flex flex-col items-center justify-start pb-8 sm:pb-12 lg:pb-16"
-        style={{
-          marginTop: `-${headerOffset}px`,
-          paddingTop: `${headerOffset}px`,
-        }}
-      >
-        <div className="w-full max-w-5xl mx-auto px-4 sm:px-8 py-8 flex flex-col gap-8">
-          <div className="bg-card border border-border rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 mb-6 xs:mb-8 flex flex-col gap-7 xs:gap-8 transition-all duration-500 w-full">
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-7 xs:gap-8 w-full"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 xs:gap-7 md:gap-10 w-full">
-                <div className="flex flex-col gap-1 xs:gap-2">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-5xl mx-auto flex flex-col gap-6">
+          <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="flex flex-col gap-2">
                   <label
-                    className="block text-sm font-bold text-foreground tracking-wide mb-1"
+                    className="block text-sm font-bold text-foreground"
                     htmlFor="order-id-input"
                   >
                     {t("trackOrderPage.orderIdLabel")}
                   </label>
-                  <div className="relative w-full">
+                  <div className="relative">
                     <input
                       id="order-id-input"
                       type="text"
                       value={orderId}
                       onChange={(e) => setOrderId(e.target.value)}
                       placeholder={t("trackOrderPage.orderIdPlaceholder")}
-                      className="w-full pr-14 xs:pr-16 px-3 xs:px-4 py-2 xs:py-3 border-2 border-border dark:border-border rounded-xl focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/20 focus:border-primary dark:focus:border-primary transition-all text-base xs:text-lg bg-background dark:bg-slate-800 text-foreground hover:border-primary/70 dark:hover:border-primary/70 shadow-sm font-semibold tracking-wide"
+                      className="w-full pr-12 px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-base bg-background text-foreground shadow-sm"
                       required
                       autoComplete="off"
                       inputMode="text"
                     />
-                    <MagnifyingGlassIcon className="absolute right-2 xs:right-3 top-2 xs:top-3 w-5 xs:w-6 h-5 xs:h-6 text-primary pointer-events-none transition-transform duration-300" />
+                    <MagnifyingGlassIcon className="absolute right-3 top-3.5 w-5 h-5 text-primary pointer-events-none" />
                   </div>
                 </div>
-                <div className="flex flex-col gap-1 xs:gap-2">
+
+                <div className="flex flex-col gap-2">
                   <label
-                    className="block text-sm font-bold text-foreground tracking-wide mb-1"
+                    className="block text-sm font-bold text-foreground"
                     htmlFor="phone-input"
                   >
                     {t("trackOrderPage.phoneNumberLabel")}
@@ -159,25 +173,24 @@ export default function TrackOrderPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder={t("trackOrderPage.phoneNumberPlaceholder")}
-                    className="w-full px-3 xs:px-4 py-2 xs:py-3 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600 focus:border-emerald-400 dark:focus:border-emerald-600 transition-all text-base xs:text-lg bg-background dark:bg-slate-800 text-foreground hover:border-emerald-300 dark:hover:border-emerald-600 shadow-sm font-semibold tracking-wide"
+                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-base bg-background text-foreground shadow-sm"
                     required
                     autoComplete="off"
                     inputMode="tel"
                   />
                 </div>
               </div>
+
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-emerald-800 hover:bg-emerald-700 text-white py-2.5 xs:py-3 px-5 xs:px-8 rounded-2xl font-extrabold text-base xs:text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 xs:gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98"
-                
-                tabIndex={0}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-extrabold text-base shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 aria-label={t("trackOrderPage.trackButton")}
               >
-                <MagnifyingGlassIcon className="w-5 xs:w-6 h-5 xs:h-6 shrink-0 animate-pulse" />
+                <MagnifyingGlassIcon className="w-5 h-5 shrink-0" />
                 {loading ? (
-                  <span className="flex items-center gap-1 xs:gap-2">
-                    <div className="w-4 xs:w-5 h-4 xs:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                     {t("trackOrderPage.trackingButton")}
                   </span>
                 ) : (
@@ -187,49 +200,44 @@ export default function TrackOrderPage() {
             </form>
 
             {error && (
-              <div className="mt-3 p-4 bg-muted dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-foreground dark:text-red-300 text-base xs:text-lg font-bold flex items-center gap-2 xs:gap-3 w-full shadow-md">
-                <span className="text-xl xs:text-2xl">⚠️</span>
-                <span>{t("trackOrderPage.orderNotFound")}</span>
+              <div className="mt-6 p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3">
+                <span className="text-lg shrink-0">⚠️</span>
+                <p className="text-sm sm:text-base text-destructive font-semibold">
+                  {error || t("trackOrderPage.orderNotFound")}
+                </p>
               </div>
             )}
 
             {orderData && (
-              <div className="mt-7 xs:mt-8 p-4 xs:p-6 sm:p-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-3xl shadow-xl w-full ring-1 ring-emerald-100 dark:ring-0">
-                <div className="flex items-center gap-2 xs:gap-3 mb-4 xs:mb-6 sm:mb-7 flex-wrap">
-                  <CheckCircleIcon className="w-10 sm:w-12 h-10 sm:h-12 text-emerald-600 dark:text-emerald-400 shrink-0 animate-bounce" />
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-                    Order #{orderData.orderNumber}
+              <div className="mt-6 bg-card rounded-xl shadow-lg border border-border p-6">
+                <div className="flex items-center gap-3 mb-6 flex-wrap">
+                  <CheckCircleIcon className="w-10 h-10 text-primary shrink-0" />
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-foreground">
+                    {t("ordersPage.order", { defaultValue: "Order" })} #
+                    {orderData.orderNumber}
                   </h3>
                 </div>
 
-                <div className="space-y-2 xs:space-y-3 sm:space-y-5">
-                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-background dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0">
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
                     <span className="text-muted-foreground font-medium">
                       {t("trackOrderPage.status")}:
                     </span>
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-bold ${
-                        orderData.status === "delivered"
-                          ? "bg-muted dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300"
-                          : orderData.status === "out_for_delivery"
-                          ? "bg-muted dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300"
-                          : "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300"
-                      }`}
-                    >
+                    <span className="px-3 py-1 rounded-full text-sm font-bold bg-primary/10 border border-primary/20 text-primary">
                       {orderData.status.replace(/_/g, " ").toUpperCase()}
                     </span>
                   </div>
 
-                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-background dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
                     <span className="text-muted-foreground font-medium">
                       {t("trackOrderPage.totalAmount")}:
                     </span>
-                    <span className="font-bold text-lg text-foreground dark:text-emerald-400">
+                    <span className="font-bold text-lg text-foreground">
                       ৳{orderData.totalAmount}
                     </span>
                   </div>
 
-                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center py-1.5 xs:py-2.5 sm:py-3 px-2 xs:px-3 sm:px-5 bg-background dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
                     <span className="text-muted-foreground font-medium">
                       {t("trackOrderPage.orderDate")}:
                     </span>
@@ -245,21 +253,21 @@ export default function TrackOrderPage() {
                     </span>
                   </div>
 
-                  <div className="pt-3 xs:pt-4 sm:pt-5 mt-3 xs:mt-4 sm:mt-5 border-t-2 border-emerald-200 dark:border-emerald-700">
-                    <h4 className="font-extrabold text-foreground mb-2 xs:mb-3 text-base sm:text-lg flex items-center gap-2">
-                      <span className="text-xl">📋</span>{" "}
-                      {t("trackOrderPage.orderItems")}:
+                  <div className="pt-4 border-t border-border">
+                    <h4 className="font-bold text-foreground mb-3 text-base flex items-center gap-2">
+                      <span className="text-lg">📋</span>
+                      {t("trackOrderPage.orderItems")}
                     </h4>
-                    <div className="space-y-1 xs:space-y-2">
+                    <div className="bg-muted rounded-lg p-4 border border-border space-y-3">
                       {orderData.orderItems?.map((item) => (
                         <div
                           key={item.id}
-                          className="flex flex-col xs:flex-row justify-between items-start xs:items-center p-1.5 xs:p-2 sm:p-3 bg-background dark:bg-slate-800 rounded-xl text-xs xs:text-sm sm:text-base border border-emerald-100 dark:border-emerald-700 shadow-sm gap-1 xs:gap-0"
+                          className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-card p-3 rounded-lg border border-border"
                         >
-                          <span className="text-foreground font-semibold break-words">
+                          <span className="text-foreground font-semibold">
                             {item.product?.name}
                           </span>
-                          <span className="bg-muted dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full font-bold text-xs xs:text-base">
+                          <span className="mt-2 sm:mt-0 px-3 py-1 rounded-full text-sm font-bold bg-primary/10 border border-primary/20 text-primary">
                             x{item.quantity}
                           </span>
                         </div>
@@ -270,69 +278,135 @@ export default function TrackOrderPage() {
               </div>
             )}
 
-            <div className="mt-8 xs:mt-10 text-center pt-6 xs:pt-8 border-t border-border w-full px-1 xs:px-2">
-              <p className="text-xs xs:text-sm sm:text-base text-foreground mb-1 xs:mb-2 font-medium tracking-wide">
-                {t("trackOrderPage.haveAccount")}
+            <div className="mt-6 text-center pt-6 border-t border-border">
+              <p className="text-sm text-muted-foreground mb-3 font-medium">
+                {t("trackOrderPage.haveAccountForTracking")}
               </p>
-              <Link
-                to="/login"
-                className="inline-block bg-emerald-800 hover:bg-emerald-700 text-white px-5 xs:px-7 sm:px-10 py-2 xs:py-2.5 sm:py-3 rounded-2xl font-extrabold transition-all duration-300 active:scale-98 text-xs xs:text-sm sm:text-base shadow-lg"
-              >
-                {t("trackOrderPage.signIn")}
-              </Link>
+              <div className="flex justify-center">
+                <Link
+                  to="/login"
+                  className="w-full sm:w-auto max-w-sm inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-extrabold transition-colors shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  {t("trackOrderPage.signInToAccount")}
+                </Link>
+              </div>
             </div>
           </div>
 
-          <div className="mb-0 mt-10 xs:mt-14 w-full">
-            <h2 className="text-xl xs:text-2xl md:text-3xl font-extrabold text-foreground mb-6 xs:mb-8 text-center tracking-tight w-full">
-              {t("trackOrderPage.timeline")}
-            </h2>
-            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 xs:gap-6 md:gap-8 w-full">
-              <div className="bg-card border-2 border-transparent hover:border-emerald-400 dark:hover:border-emerald-600 rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer">
-                <div className="flex items-center gap-2 xs:gap-3 mb-2 xs:mb-3 sm:mb-4">
-                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-muted dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <CheckCircleIcon className="w-8 sm:w-10 h-8 sm:h-10 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <h3 className="font-extrabold text-foreground text-base sm:text-lg">
-                    {t("trackOrderPage.placed")}
-                  </h3>
-                </div>
-                <p className="text-sm sm:text-base text-foreground font-medium break-words">
-                  {t("trackOrderPage.placedDesc")}
+          <div className="bg-card rounded-xl shadow-lg border border-border p-4 sm:p-5 relative overflow-hidden">
+            <div className="relative flex items-start sm:items-center justify-between gap-3 mb-3">
+              <div className="min-w-0">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight leading-tight text-blue-600 dark:text-blue-600 drop-shadow-sm">
+                  {t("trackOrderPage.orderStatusTimeline")}
+                </h2>
+                <p className="text-xs sm:text-sm md:text-base text-muted-foreground mt-1.5 leading-relaxed max-w-3xl">
+                  {t("trackOrderPage.orderStatusTimelineDesc", {
+                    defaultValue:
+                      "A quick overview of the typical steps your order goes through.",
+                  })}
                 </p>
               </div>
-
-              <div className="bg-card border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-600 rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer">
-                <div className="flex items-center gap-2 xs:gap-3 mb-2 xs:mb-3 sm:mb-4">
-                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <TruckIcon className="w-8 sm:w-10 h-8 sm:h-10 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <h3 className="font-extrabold text-foreground text-base sm:text-lg">
-                    {t("trackOrderPage.shipped")}
-                  </h3>
-                </div>
-                <p className="text-sm sm:text-base text-foreground font-medium">
-                  {t("trackOrderPage.shippedDesc")}
-                </p>
-              </div>
-
-              <div className="bg-card border-2 border-transparent hover:border-green-400 dark:hover:border-green-600 rounded-3xl p-3 xs:p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 group cursor-pointer">
-                <div className="flex items-center gap-2 xs:gap-3 mb-2 xs:mb-3 sm:mb-4">
-                  <div className="w-14 sm:w-16 h-14 sm:h-16 bg-muted dark:bg-green-900/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <CheckCircleIcon className="w-8 sm:w-10 h-8 sm:h-10 text-green-600 dark:text-green-400" />
-                  </div>
-                  <h3 className="font-extrabold text-foreground text-base sm:text-lg">
-                    {t("trackOrderPage.delivered")}
-                  </h3>
-                </div>
-                <p className="text-sm sm:text-base text-foreground font-medium">
-                  {t("trackOrderPage.deliveredDesc")}
-                </p>
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-extrabold whitespace-nowrap bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <span className="text-sm leading-none">⏱</span>
+                <span>
+                  {t("trackOrderPage.timelineBadge", {
+                    defaultValue: "Live updates",
+                  })}
+                </span>
               </div>
             </div>
+
+            {(() => {
+              const steps = [
+                {
+                  key: "placed",
+                  Icon: CheckCircleIcon,
+                  title: t("trackOrderPage.orderPlaced"),
+                  description: t("trackOrderPage.orderConfirmedDesc"),
+                  frameClass:
+                    "from-blue-500/60 via-blue-600/35 to-indigo-600/60",
+                  iconClass: "from-blue-600 via-blue-600 to-indigo-600",
+                },
+                {
+                  key: "shipped",
+                  Icon: TruckIcon,
+                  title: t("trackOrderPage.shipped"),
+                  description: t("trackOrderPage.outForDeliveryDesc"),
+                  frameClass:
+                    "from-sky-500/60 via-blue-600/35 to-indigo-600/60",
+                  iconClass: "from-sky-600 via-blue-600 to-indigo-600",
+                },
+                {
+                  key: "delivered",
+                  Icon: CheckCircleIcon,
+                  title: t("trackOrderPage.delivered"),
+                  description: t("trackOrderPage.deliveredDesc"),
+                  frameClass: "from-cyan-500/55 via-sky-500/30 to-blue-600/55",
+                  iconClass: "from-cyan-600 via-sky-600 to-blue-600",
+                },
+              ];
+
+              return (
+                <ol className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+                  {steps.map((step, index) => {
+                    const isLast = index === steps.length - 1;
+                    const StepIcon = step.Icon;
+
+                    return (
+                      <li
+                        key={step.key}
+                        className={`relative h-full min-w-0 ${
+                          isLast ? "" : "pb-5 md:pb-0"
+                        }`}
+                      >
+                        {!isLast && (
+                          <>
+                            <div className="md:hidden absolute left-5 top-11 bottom-0 w-px bg-linear-to-b from-blue-400/70 via-blue-300/35 to-transparent" />
+                            <div className="hidden md:block absolute top-5 -right-5 w-5 h-px bg-linear-to-r from-blue-400/70 via-blue-300/35 to-transparent" />
+                          </>
+                        )}
+
+                        <div
+                          className={`group h-full rounded-2xl p-px bg-linear-to-r ${step.frameClass}`}
+                        >
+                          <div className="relative h-full rounded-2xl bg-card/90 backdrop-blur border border-border/60 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl overflow-hidden">
+                            <div
+                              className={`pointer-events-none absolute inset-x-0 top-0 h-1 bg-linear-to-r ${step.iconClass}`}
+                            />
+                            <div
+                              className={`pointer-events-none absolute -top-12 -left-12 h-36 w-36 rounded-full blur-3xl opacity-25 bg-linear-to-br ${step.frameClass}`}
+                            />
+                            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                            <div className="relative flex items-start gap-3">
+                              <div className="relative shrink-0">
+                                <div
+                                  className={`w-9 h-9 rounded-xl bg-linear-to-br ${step.iconClass} text-white flex items-center justify-center shadow-sm`}
+                                >
+                                  <StepIcon className="w-5 h-5" />
+                                </div>
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <h3 className="font-extrabold text-foreground text-sm sm:text-base leading-tight">
+                                  {step.title}
+                                </h3>
+                                <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed wrap-break-word">
+                                  {step.description}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ol>
+              );
+            })()}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

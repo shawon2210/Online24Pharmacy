@@ -135,7 +135,7 @@ export default function ProfilePage() {
         <div className="min-h-screen flex items-center justify-center bg-background dark:bg-card px-4">
           <div className="text-center">
             <UserCircleIcon className="w-20 h-20 mx-auto text-muted mb-4" />
-            <p className="text-muted-foreground dark:text-muted-foreground mb-6">
+            <p className="text-muted-foreground mb-6">
               {t("profilePage.loginPrompt")}
             </p>
             <a
@@ -157,10 +157,10 @@ export default function ProfilePage() {
         <div className="w-full h-full px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-4 sm:mb-6 lg:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-background">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               {t("profilePage.title")}
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground dark:text-muted-foreground mt-1">
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">
               {t("profilePage.description")}
             </p>
           </div>
@@ -213,17 +213,17 @@ export default function ProfilePage() {
                       />
                     </label>
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold text-foreground dark:text-background">
+                  <h2 className="text-lg sm:text-xl font-bold text-foreground">
                     {user.firstName} {user.lastName}
                   </h2>
-                  <p className="text-xs sm:text-sm text-background0 dark:text-muted-foreground mt-1 truncate">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1 truncate">
                     {user.email}
                   </p>
-                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border dark:border-foreground">
-                    <p className="text-xs text-background0 dark:text-muted-foreground">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border">
+                    <p className="text-xs text-muted-foreground">
                       {t("profilePage.memberSince")}
                     </p>
-                    <p className="text-xs sm:text-sm font-medium text-foreground dark:text-background">
+                    <p className="text-xs sm:text-sm font-medium text-foreground">
                       {new Date(
                         user.createdAt || Date.now()
                       ).toLocaleDateString()}
@@ -237,8 +237,8 @@ export default function ProfilePage() {
             <div className="lg:col-span-3">
               <div className="bg-background dark:bg-card rounded-xl shadow-sm">
                 {/* Header */}
-                <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border dark:border-foreground flex items-center justify-between">
-                  <h3 className="text-base sm:text-lg font-semibold text-foreground dark:text-background">
+                <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border flex items-center justify-between">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground">
                     {t("profilePage.personalInfo")}
                   </h3>
                   <button
@@ -248,7 +248,7 @@ export default function ProfilePage() {
                     }}
                     className={`px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-lg font-medium transition-colors ${
                       isEditing
-                        ? "bg-muted dark:bg-foreground text-foreground dark:text-muted hover:bg-border dark:hover:bg-muted-foreground"
+                        ? "bg-muted text-foreground hover:bg-border"
                         : "bg-emerald-600 text-background hover:bg-emerald-700"
                     }`}
                   >
@@ -266,7 +266,7 @@ export default function ProfilePage() {
                   {/* Basic Info */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
+                      <label className="block text-sm font-medium text-muted-foreground mb-2">
                         <UserCircleIcon className="w-4 h-4 inline mr-1" />
                         {t("profilePage.fullName")}
                       </label>
@@ -278,12 +278,12 @@ export default function ProfilePage() {
                         }
                         disabled={!isEditing}
                         required
-                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
+                      <label className="block text-sm font-medium text-muted-foreground mb-2">
                         <PhoneIcon className="w-4 h-4 inline mr-1" />
                         {t("profilePage.phoneNumber")}
                       </label>
@@ -298,12 +298,12 @@ export default function ProfilePage() {
                         }
                         disabled={!isEditing}
                         placeholder="+8801XXXXXXXXX"
-                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
+                      <label className="block text-sm font-medium text-muted-foreground mb-2">
                         <CalendarIcon className="w-4 h-4 inline mr-1" />
                         {t("profilePage.dateOfBirth")}
                       </label>
@@ -317,12 +317,12 @@ export default function ProfilePage() {
                           })
                         }
                         disabled={!isEditing}
-                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
+                      <label className="block text-sm font-medium text-muted-foreground mb-2">
                         {t("profilePage.gender")}
                       </label>
                       <select
@@ -331,7 +331,7 @@ export default function ProfilePage() {
                           setFormData({ ...formData, gender: e.target.value })
                         }
                         disabled={!isEditing}
-                        className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                       >
                         <option value="">
                           {t("profilePage.selectGender")}
@@ -346,14 +346,14 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Address Section */}
-                  <div className="pt-6 border-t border-border dark:border-foreground">
-                    <h4 className="text-base font-semibold text-foreground dark:text-background mb-4 flex items-center gap-2">
+                  <div className="pt-6 border-t border-border">
+                    <h4 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
                       <MapPinIcon className="w-5 h-5 text-emerald-600" />
                       {t("profilePage.shippingAddress")}
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="sm:col-span-2">
-                        <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">
                           {t("profilePage.streetAddress")}
                         </label>
                         <input
@@ -366,12 +366,12 @@ export default function ProfilePage() {
                           placeholder={t(
                             "profilePage.streetAddressPlaceholder"
                           )}
-                          className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                          className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">
                           {t("profilePage.area")}
                         </label>
                         <select
@@ -380,7 +380,7 @@ export default function ProfilePage() {
                             setFormData({ ...formData, area: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                          className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         >
                           <option value="">
                             {t("profilePage.selectArea")}
@@ -394,7 +394,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-foreground dark:text-muted mb-2">
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">
                           {t("profilePage.postalCode")}
                         </label>
                         <input
@@ -408,7 +408,7 @@ export default function ProfilePage() {
                           }
                           disabled={!isEditing}
                           placeholder="1200"
-                          className="w-full px-4 py-2.5 border border-border dark:border-muted-foreground rounded-lg bg-background dark:bg-foreground text-foreground dark:text-background disabled:bg-background dark:disabled:bg-card focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                          className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         />
                       </div>
                     </div>
@@ -416,7 +416,7 @@ export default function ProfilePage() {
 
                   {/* Save Button */}
                   {isEditing && (
-                    <div className="pt-4 sm:pt-6 border-t border-border dark:border-foreground">
+                    <div className="pt-4 sm:pt-6 border-t border-border">
                       <button
                         type="submit"
                         disabled={loading}

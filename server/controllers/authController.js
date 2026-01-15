@@ -115,7 +115,7 @@ export const login = async (req, res) => {
           firstName: fileUser.firstName,
           lastName: fileUser.lastName,
           passwordHash: fileUser.passwordHash,
-          role: fileUser.role || 'CUSTOMER',
+          role: fileUser.role || 'USER',
           isActive: fileUser.isActive !== false
         };
       }

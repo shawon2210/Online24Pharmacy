@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, lazy, memo, useRef } from "react";
+import { Suspense, lazy, memo } from "react";
 import { useTranslation } from "react-i18next";
 import SEOHead from "../components/common/SEOHead";
 import HeroWithDynamicSlider from "../components/common/HeroWithDynamicSlider";
@@ -29,14 +29,19 @@ const API_URL = (
 
 const ensureAbsoluteImageUrl = (url) => {
   if (!url) return null;
+  // Remove curly braces if present (fixes {https://...} bug)
+  if (typeof url === "string" && url.startsWith("{") && url.endsWith("}")) {
+    url = url.slice(1, -1);
+  }
   if (/^(https?:)?\/\//.test(url) || url.startsWith("data:")) return url;
   if (url.startsWith("/")) return `${API_URL}${url}`;
   return `${API_URL}/${url}`;
 };
 
-const CategoryCircleCard = memo(({ category }) => {
+const CategoryCircleCard = memo(({ category, pastelBg }) => {
   const { t } = useTranslation();
-  const imageSrc =
+
+  let imageSrc =
     ensureAbsoluteImageUrl(category.imageUrl) ||
     category.image ||
     FALLBACK_CATEGORY_CARD;
@@ -44,38 +49,30 @@ const CategoryCircleCard = memo(({ category }) => {
   return (
     <Link
       to={`/categories/${category.slug}`}
-      aria-label={`Shop ${category.name}`}
-      className="group flex w-27 sm:w-31 md:w-34 flex-col items-center snap-start transition-all duration-500 ease-out hover:-translate-y-2 active:scale-95"
+      key={category.slug || category.id}
+      className={`flex flex-col items-center justify-center rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-0 min-h-40 xs:min-h-44 sm:min-h-45 md:min-h-48 min-w-35 xs:min-w-[160px] sm:min-w-45 md:min-w-50 snap-start ${pastelBg} group`}
+      style={{ boxShadow: "0 4px 16px 0 rgba(0,0,0,0.07)" }}
     >
-      <div className="relative">
-        <div className="p-1.5 rounded-full bg-white/12 dark:bg-white/10 border border-white/18 shadow-xl backdrop-blur-lg">
-          <div className="h-24 w-24 sm:h-27 sm:w-27 md:h-30 md:w-30 rounded-full bg-linear-to-br from-white via-emerald-50/80 to-cyan-50/85 dark:from-emerald-900/55 dark:via-emerald-800/45 dark:to-cyan-900/45 overflow-hidden ring-3 ring-white/45 dark:ring-emerald-300/28 shadow-lg transition-all duration-500 group-hover:ring-white/70 group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.16)]">
-            <img
-              src={imageSrc}
-              alt={category.name}
-              loading="lazy"
-              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-              onError={(e) => {
-                e.currentTarget.src = FALLBACK_CATEGORY_CARD;
-              }}
-            />
-            <div
-              className={`absolute inset-0 bg-linear-to-t ${
-                category.color ||
-                "from-emerald-500/42 via-cyan-500/32 to-transparent"
-              } opacity-55 group-hover:opacity-45 transition-opacity`}
-            ></div>
-          </div>
-        </div>
-        <div className="absolute inset-x-0 -bottom-2 flex justify-center">
-          <span className="px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-linear-to-r from-white to-white/90 dark:from-emerald-700 dark:to-cyan-700 text-emerald-800 dark:text-white shadow-sm group-hover:shadow-md group-hover:-translate-y-0.5 transition-all">
-            {t("explore", { defaultValue: "Explore" })}
-          </span>
-        </div>
+      <div className="w-full h-28 xs:h-32 sm:h-36 md:h-40 rounded-t-2xl overflow-hidden bg-white/60 dark:bg-gray-800/60 group-hover:scale-105 transition-transform flex items-center justify-center">
+        <img
+          src={imageSrc}
+          alt={category.name}
+          className="object-cover w-full h-full"
+          loading="lazy"
+          onError={(e) => {
+            if (e.currentTarget.src !== FALLBACK_CATEGORY_CARD)
+              e.currentTarget.src = FALLBACK_CATEGORY_CARD;
+          }}
+        />
       </div>
-      <p className="mt-3.5 text-center text-sm sm:text-base md:text-lg font-semibold text-white drop-shadow-sm line-clamp-2 tracking-tight">
+      <span className="w-full px-2 py-2 text-center text-sm xs:text-base sm:text-lg font-semibold text-gray-800 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors line-clamp-2 drop-shadow-sm bg-transparent rounded-b-2xl">
         {category.name}
-      </p>
+      </span>
+      <div className="absolute inset-x-0 -bottom-1 flex justify-center">
+        <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-linear-to-r from-white to-cyan-100 dark:from-emerald-800 dark:to-cyan-800 text-emerald-900 dark:text-emerald-100 shadow-sm group-hover:shadow-md group-hover:-translate-y-0.5 transition-all">
+          {t("explore", { defaultValue: "Explore" })}
+        </span>
+      </div>
     </Link>
   );
 });
@@ -87,10 +84,7 @@ const FALLBACK_CATEGORY_CARD =
 const Skeleton = () => (
   <div className="flex gap-4 justify-center py-8">
     {[...Array(4)].map((_, i) => (
-      <div
-        key={i}
-        className="w-48 h-64 rounded-2xl bg-border dark:bg-foreground"
-      />
+      <div key={i} className="w-48 h-64 rounded-2xl bg-border" />
     ))}
   </div>
 );
@@ -178,15 +172,6 @@ export default function HomePage() {
 
   const displayCategories = categoriesData || [];
   const categoryProductSections = categoriesWithProducts || [];
-  const categoryCarouselRef = useRef(null);
-
-  const scrollCategories = (direction) => {
-    const node = categoryCarouselRef.current;
-    if (!node) return;
-    const base = typeof window !== "undefined" ? window.innerWidth : 1200;
-    const amount = base < 640 ? 220 : base < 1024 ? 280 : 340;
-    node.scrollBy({ left: direction * amount, behavior: "smooth" });
-  };
 
   console.log(
     "HomePage - Categories with products:",
@@ -214,13 +199,13 @@ export default function HomePage() {
         </LazySection>
 
         {/* Featured Products Section - compact, responsive height */}
-        <section className="w-full py-5 sm:py-7 md:py-8 lg:py-10 bg-background dark:bg-background border-b border-border dark:border-border">
-          <div className="w-full px-4 xs:px-5 sm:px-6 md:px-8 max-w-7xl mx-auto">
-            <div className="text-center mb-6 sm:mb-8 lg:mb-10">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-2 sm:mb-2.5 lg:mb-3">
+        <section className="w-full py-10 sm:py-14 md:py-16 border-b border-border bg-background dark:bg-background flex items-center justify-center">
+          <div className="w-screen px-1 xs:px-2 sm:px-4 md:px-8 lg:px-12 xl:px-16 max-w-screen-2xl mx-auto">
+            <div className="flex flex-col items-center mb-8">
+              <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-700 dark:text-blue-700 mb-2 text-center drop-shadow-sm">
                 {tf("homePage.featuredProducts", "Featured Products")}
               </h2>
-              <p className="text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg text-violet-800 dark:text-violet-500 text-center max-w-2xl">
                 {tf(
                   "homePage.popularMedicines",
                   "Popular medicines and healthcare products"
@@ -234,128 +219,113 @@ export default function HomePage() {
         </section>
 
         {/* Shop by Category – Premium slider */}
-        <section className="relative w-full overflow-hidden py-2 sm:py-3 md:py-4 lg:py-5 bg-linear-to-r from-emerald-600 via-emerald-500 to-cyan-600 dark:from-emerald-700 dark:via-emerald-700 dark:to-cyan-700 text-white shadow-xl">
-          {/* Enhanced Background Pattern */}
-          <div className="absolute inset-0 bg-white/10 dark:bg-foreground/10 animate-pulse"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.18),transparent_52%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.1),transparent_52%)]"></div>
-          <div className="absolute inset-0 bg-white/8 dark:bg-white/5"></div>
-
-          {/* Floating Elements */}
-          <div className="hidden xs:block absolute top-2 xs:top-3 left-3 xs:left-6 animate-bounce">
-            <span className="text-xl xs:text-2xl animate-pulse">🏥</span>
-          </div>
-          <div
-            className="hidden xs:block absolute bottom-2 xs:bottom-3 right-3 xs:right-6 animate-bounce"
-            style={{ animationDelay: "0.5s" }}
-          >
-            <span className="text-lg xs:text-xl animate-pulse">💊</span>
-          </div>
-          <div
-            className="hidden sm:block absolute top-4 right-1/4 animate-pulse"
-            style={{ animationDelay: "1s" }}
-          >
-            <span className="text-lg animate-pulse">⚕️</span>
-          </div>
-          <div className="w-full px-4 xs:px-5 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1.5 sm:gap-2 mb-2 sm:mb-3 md:mb-4">
-              <div className="space-y-1.5 max-w-3xl">
-                {/* Enhanced Content Layout */}
-                <div className="flex items-center gap-2 xs:gap-3 sm:gap-4 mb-2 xs:mb-3">
-                  <span className="text-xl xs:text-2xl sm:text-3xl animate-pulse">
-                    🏥
-                  </span>
-                  <div className="h-6 xs:h-7 sm:h-9 w-px bg-white/50"></div>
-                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 dark:bg-white/15 text-[9px] font-bold uppercase tracking-[0.15em] text-white shadow-lg backdrop-blur-sm border border-white/30 hover:bg-white/30 dark:hover:bg-white/25 transition-all duration-300">
-                    ✨ {tf("homePage.curated", "Curated")}
-                  </span>
-                  <div className="h-6 xs:h-7 sm:h-9 w-px bg-white/50 hidden sm:block"></div>
-                  <span className="text-lg xs:text-xl sm:text-2xl animate-pulse">
-                    💊
-                  </span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-tight drop-shadow-lg tracking-tighter bg-linear-to-r from-white via-white to-cyan-100 text-transparent bg-clip-text">
-                  {tf("homePage.shopByCategory", "Shop by Category")}
-                </h2>
-                <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-2xl font-medium opacity-95">
-                  {tf(
-                    "homePage.exploreProducts",
-                    "Discover premium healthcare products tailored for your wellness"
-                  )}
-                </p>
-                <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
-                  <Link
-                    to="/categories"
-                    className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-bold px-4 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-lg hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all text-sm duration-200 group/btn border border-white/30"
-                  >
-                    <span className="text-sm">
-                      {tf("homePage.viewAllCategories", "Explore Categories")}
-                    </span>
-                    <ArrowRightIcon className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                  </Link>
-                  <span className="text-xs text-white/80 italic">
-                    {tf("homePage.dragHint", "← Swipe or use arrows →")}
-                  </span>
-                </div>
-              </div>
-              <div className="hidden lg:flex items-center gap-2.5">
+        {/* Shop by Category – Pastel Grid Design */}
+        <section
+          className="w-full py-10 sm:py-14 md:py-16 border-b border-border"
+          aria-label="Shop by Category Section"
+        >
+          <div className="w-screen px-1 xs:px-2 sm:px-4 md:px-8 lg:px-12 xl:px-16">
+            <div className="flex flex-col items-center mb-8">
+              <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-extrabold text-violet-700 dark:text-violet-600 mb-2 text-center drop-shadow-sm">
+                {tf("homePage.shopByCategory", "Shop by Category")}
+              </h2>
+              <p className="text-base sm:text-lg text-violet-600 dark:text-violet-400 text-center max-w-2xl">
+                {tf(
+                  "homePage.exploreProducts",
+                  "Explore our comprehensive range of medical products."
+                )}
+              </p>
+            </div>
+            <div className="relative">
+              <div className="flex items-center">
+                {/* Left scroll button (desktop only) */}
                 <button
                   type="button"
                   aria-label="Scroll categories left"
-                  onClick={() => scrollCategories(-1)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 backdrop-blur-md hover:-translate-x-0.5"
+                  onClick={() => {
+                    const el = document.getElementById("category-slider");
+                    if (el) el.scrollBy({ left: -320, behavior: "smooth" });
+                  }}
+                  className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-blue-200 bg-white dark:bg-gray-900 text-blue-700 dark:text-blue-300 shadow hover:shadow-lg active:scale-95 transition-all duration-200 mr-2"
                 >
-                  <ArrowLeftIcon className="h-4 w-4 font-bold" />
+                  <ArrowLeftIcon className="h-6 w-6" />
                 </button>
+                {/* Category slider starts here */}
+                <div
+                  id="category-slider"
+                  className="flex gap-3 xs:gap-4 sm:gap-6 md:gap-8 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-1 py-2 w-full"
+                  style={{
+                    WebkitOverflowScrolling: "touch",
+                    touchAction: "pan-x",
+                    scrollbarWidth: "none",
+                  }}
+                  tabIndex={0}
+                  aria-label="Category slider"
+                >
+                  {displayCategories.map((category, idx) => {
+                    const pastelBg = [
+                      "bg-[#B6E6FB] dark:bg-[#1e293b] dark:border dark:border-blue-900",
+                      "bg-[#FFF6B3] dark:bg-[#334155] dark:border dark:border-yellow-900",
+                      "bg-[#FFD6C9] dark:bg-[#3b2f2f] dark:border dark:border-rose-900",
+                      "bg-[#F9C7F8] dark:bg-[#3b2941] dark:border dark:border-pink-900",
+                      "bg-[#C7E6F9] dark:bg-[#1e293b] dark:border dark:border-cyan-900",
+                      "bg-[#FBE6B6] dark:bg-[#3b3a29] dark:border dark:border-amber-900",
+                    ][idx % 6];
+                    let imageSrc =
+                      ensureAbsoluteImageUrl(category.imageUrl) ||
+                      category.image ||
+                      FALLBACK_CATEGORY_CARD;
+                    return (
+                      <Link
+                        to={`/categories/${category.slug}`}
+                        key={category.slug || category.id}
+                        className={`flex flex-col items-center justify-center rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-3 xs:p-4 sm:p-6 min-h-40 xs:min-h-44 sm:min-h-45 md:min-h-48 min-w-35 xs:min-w-[160px] sm:min-w-45 md:min-w-50 snap-start ${pastelBg} group`}
+                        style={{ boxShadow: "0 4px 16px 0 rgba(0,0,0,0.07)" }}
+                      >
+                        <div className="flex items-center justify-center w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-white/60 dark:bg-gray-800/60 mb-2 sm:mb-3 group-hover:scale-105 transition-transform">
+                          <img
+                            src={imageSrc}
+                            alt={category.name}
+                            className="object-contain w-full h-full"
+                            loading="lazy"
+                            onError={(e) => {
+                              if (
+                                e.currentTarget.src !== FALLBACK_CATEGORY_CARD
+                              )
+                                e.currentTarget.src = FALLBACK_CATEGORY_CARD;
+                            }}
+                          />
+                        </div>
+                        <span className="mt-1 text-center text-sm xs:text-base sm:text-lg font-semibold text-gray-800 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors line-clamp-2 drop-shadow-sm">
+                          {category.name}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+                {/* Right scroll button (desktop only) */}
                 <button
                   type="button"
                   aria-label="Scroll categories right"
-                  onClick={() => scrollCategories(1)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 backdrop-blur-md hover:translate-x-0.5"
+                  onClick={() => {
+                    const el = document.getElementById("category-slider");
+                    if (el) el.scrollBy({ left: 320, behavior: "smooth" });
+                  }}
+                  className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-blue-200 bg-white dark:bg-gray-900 text-blue-700 dark:text-blue-300 shadow hover:shadow-lg active:scale-95 transition-all duration-200 ml-2"
                 >
-                  <ArrowRightIcon className="h-4 w-4 font-bold" />
+                  <ArrowRightIcon className="h-6 w-6" />
                 </button>
               </div>
             </div>
-
-            <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-3xl ring-1 ring-white/30 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 hover:ring-white/40 hover:border-white/30 transition-all duration-500">
-              <div
-                ref={categoryCarouselRef}
-                className="flex gap-3 sm:gap-4 md:gap-4.5 overflow-x-auto pb-1.5 sm:pb-2 snap-x snap-mandatory px-1 sm:px-1.5 scrollbar-hide"
-                style={{ scrollbarWidth: "none" }}
-              >
-                {displayCategories.map((category) => (
-                  <CategoryCircleCard
-                    key={category.slug || category.id}
-                    category={category}
-                  />
-                ))}
-              </div>
-              <div className="mt-2 flex justify-center gap-2 lg:hidden">
-                <button
-                  type="button"
-                  aria-label="Scroll categories left"
-                  onClick={() => scrollCategories(-1)}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-sm hover:shadow transition-all backdrop-blur"
-                >
-                  <ArrowLeftIcon className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Scroll categories right"
-                  onClick={() => scrollCategories(1)}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/20 hover:bg-white/30 text-white shadow-sm hover:shadow transition-all backdrop-blur"
-                >
-                  <ArrowRightIcon className="h-4 w-4" />
-                </button>
-              </div>
+            <div className="flex justify-center mt-6">
+              {/* Add any additional content or controls here if needed */}
             </div>
           </div>
         </section>
 
         {/* Category-wise Product Sections */}
         {!categoriesLoading && categoryProductSections.length > 0 && (
-          <>
+          <div className="divide-y divide-border/50">
             {categoryProductSections.map((category, index) => (
               <div key={category.id || category.slug}>
                 <LazySection>
@@ -365,14 +335,14 @@ export default function HomePage() {
                 {/* Show Prescription Upload after 3rd category */}
                 {index === 2 && (
                   <LazySection>
-                    <div className="w-full bg-background dark:bg-background border-b border-border dark:border-border">
+                    <div className="w-full bg-background border-y border-border">
                       <PrescriptionUpload />
                     </div>
                   </LazySection>
                 )}
               </div>
             ))}
-          </>
+          </div>
         )}
 
         {/* Loading state for category sections */}
@@ -382,12 +352,12 @@ export default function HomePage() {
               <div className="animate-pulse space-y-8">
                 {[...Array(2)].map((_, i) => (
                   <div key={i} className="space-y-4">
-                    <div className="h-6 sm:h-8 bg-border dark:bg-foreground rounded w-40 sm:w-48"></div>
+                    <div className="h-6 sm:h-8 bg-border rounded w-40 sm:w-48"></div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xs:gap-3 sm:gap-4 md:gap-5 lg:gap-6">
                       {[...Array(6)].map((_, j) => (
                         <div
                           key={j}
-                          className="bg-border dark:bg-foreground rounded-lg aspect-square"
+                          className="bg-border rounded-lg aspect-square"
                         ></div>
                       ))}
                     </div>

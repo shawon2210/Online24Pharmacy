@@ -64,34 +64,34 @@ export default function AdminInventory() {
 
           {/* Inventory Table */}
           <div className="bg-background rounded-lg shadow-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-border">
               <thead className="bg-background">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Product
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Batch
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Stock
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Expiry
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="bg-background divide-y divide-border">
                 {inventory?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-foreground">
                         {item.product.name}
                       </div>
-                      <div className="text-sm text-background0">
+                      <div className="text-sm text-muted-foreground">
                         {item.product.sku}
                       </div>
                     </td>

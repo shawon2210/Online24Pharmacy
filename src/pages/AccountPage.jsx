@@ -122,12 +122,12 @@ export default function AccountPage() {
                 <span>{t("accountPage.myAccount")}</span>
               </div>
             </div>
-            <h1 className="font-black text-3xl sm:text-4xl lg:text-5xl text-foreground dark:text-background mb-2 sm:mb-3 tracking-tight">
+            <h1 className="font-black text-3xl sm:text-4xl lg:text-5xl text-foreground mb-2 sm:mb-3 tracking-tight">
               <span className="text-emerald-600 dark:text-emerald-400">
                 {t("accountPage.welcome", { name: user.firstName })}
               </span>
             </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground dark:text-muted-foreground">
+            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
               {t("accountPage.manageAccount")}
             </p>
           </div>
@@ -160,7 +160,7 @@ export default function AccountPage() {
               <Link
                 key={section.title}
                 to={section.link}
-                className="group bg-background dark:bg-card rounded-2xl shadow-lg border-2 border-border dark:border-foreground/10 p-6 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-700 transition-all duration-300 hover:-translate-y-1"
+                className="group bg-background dark:bg-card rounded-2xl shadow-lg border-2 border-border p-6 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-700 transition-all duration-300 hover:-translate-y-1"
               >
                 <div
                   className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 ${
@@ -179,10 +179,10 @@ export default function AccountPage() {
                 >
                   <section.icon className="w-6 h-6 text-background" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground dark:text-background mb-1">
+                <h3 className="text-lg font-bold text-foreground mb-1">
                   {section.title}
                 </h3>
-                <p className="text-sm text-muted-foreground dark:text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {section.description}
                 </p>
               </Link>

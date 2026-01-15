@@ -1,42 +1,38 @@
-import { useState, useLayoutEffect, useCallback } from "react";
+import {
+  useMemo,
+  useState,
+  useLayoutEffect,
+  useCallback,
+  useEffect,
+} from "react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import SEOHead from "../components/common/SEOHead";
 import { useAuth } from "../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  ClockIcon,
-  TruckIcon,
-  CheckCircleIcon,
-  XMarkIcon,
   ShoppingBagIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import { orderApi } from "../utils/apiClient";
 import { ROUTES, ORDER_STATUS } from "../utils/constants";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import { ORDER_STATUS_CONFIG } from "../hooks/useOrderStatus";
+import OrderItemDisplay from "../components/order/OrderItemDisplay";
 
 export default function OrdersPage() {
   const { t } = useTranslation();
-  const [headerOffset, setHeaderOffset] = useState(0);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const highlightOrderId = location.state?.highlightOrderId;
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState({});
-
-  useLayoutEffect(() => {
-    const el = document.querySelector("header");
-    if (!el) return;
-    const compute = () => {
-      const h = Math.ceil(el.getBoundingClientRect().height);
-      setHeaderOffset(h);
-    };
-    compute();
-    window.addEventListener("resize", compute, { passive: true });
-    return () => window.removeEventListener("resize", compute);
-  }, []);
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const fetchOrders = useCallback(async () => {
     setError(null);
@@ -50,6 +46,18 @@ export default function OrdersPage() {
         );
       }
     } catch (err) {
+      if (err?.status === 401 || err?.status === 403) {
+        toast.error(
+          t(
+            "auth.sessionExpired",
+            "Your session has expired. Please sign in again."
+          )
+        );
+        // Clears storage and updates auth state.
+        await logout();
+        return;
+      }
+
       console.error(t("ordersPage.fetchOrdersError"), err);
       const errorMessage = err.message || t("ordersPage.failedToLoadOrders");
       setError(errorMessage);
@@ -57,107 +65,138 @@ export default function OrdersPage() {
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, [t, logout]);
 
   useLayoutEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
 
+  useEffect(() => {
+    if (!highlightOrderId || orders.length === 0) return;
+
+    const exists = orders.some((o) => o.id === highlightOrderId);
+    if (!exists) return;
+
+    setStatusFilter("all");
+    setExpanded((prev) => ({ ...prev, [highlightOrderId]: true }));
+
+    // Scroll within the list container after it renders.
+    const timer = window.setTimeout(() => {
+      const el = document.getElementById(`order-${highlightOrderId}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+
+    // Clear navigation state so back/refresh doesn't keep re-highlighting.
+    navigate(location.pathname, { replace: true });
+
+    return () => window.clearTimeout(timer);
+  }, [highlightOrderId, orders, navigate, location.pathname]);
+
   const toggleExpand = (orderId) => {
     setExpanded((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
   };
 
-  const statusMeta = {
-    [ORDER_STATUS.PENDING]: {
-      icon: ClockIcon,
-      color: "text-amber-600 dark:text-amber-400",
-      bg: "bg-amber-50 dark:bg-amber-900/30",
-      label: t("ordersPage.status.pending"),
-    },
-    [ORDER_STATUS.CONFIRMED]: {
-      icon: CheckCircleIcon,
-      color: "text-emerald-600 dark:text-emerald-400",
-      bg: "bg-emerald-50 dark:bg-emerald-900/30",
-      label: t("ordersPage.status.confirmed"),
-    },
-    [ORDER_STATUS.PROCESSING]: {
-      icon: TruckIcon,
-      color: "text-emerald-600 dark:text-emerald-400",
-      bg: "bg-emerald-50 dark:bg-emerald-900/30",
-      label: t("ordersPage.status.processing"),
-    },
-    [ORDER_STATUS.SHIPPED]: {
-      icon: TruckIcon,
-      color: "text-purple-600 dark:text-purple-400",
-      bg: "bg-purple-50 dark:bg-purple-900/30",
-      label: t("ordersPage.status.shipped"),
-    },
-    [ORDER_STATUS.DELIVERED]: {
-      icon: CheckCircleIcon,
-      color: "text-emerald-600 dark:text-emerald-400",
-      bg: "bg-emerald-50 dark:bg-emerald-900/30",
-      label: t("ordersPage.status.delivered"),
-    },
-    [ORDER_STATUS.CANCELLED]: {
-      icon: XMarkIcon,
-      color: "text-red-600 dark:text-red-400",
-      bg: "bg-red-50 dark:bg-red-900/30",
-      label: t("ordersPage.status.cancelled"),
-    },
+  // Helper function to get translated status label
+  const getStatusLabel = (status) => {
+    const labelMap = {
+      [ORDER_STATUS.PENDING]: t("ordersPage.status.pending"),
+      [ORDER_STATUS.CONFIRMED]: t("ordersPage.status.confirmed"),
+      [ORDER_STATUS.PROCESSING]: t("ordersPage.status.processing"),
+      [ORDER_STATUS.SHIPPED]: t("ordersPage.status.shipped"),
+      [ORDER_STATUS.DELIVERED]: t("ordersPage.status.delivered"),
+      [ORDER_STATUS.CANCELLED]: t("ordersPage.status.cancelled"),
+    };
+    return labelMap[status] || t("ordersPage.status.pending");
+  };
+
+  // Helper function to get status metadata with translations
+  const getStatusMeta = (status) => {
+    const config =
+      ORDER_STATUS_CONFIG[status] || ORDER_STATUS_CONFIG[ORDER_STATUS.PENDING];
+    return {
+      ...config,
+      label: getStatusLabel(status),
+    };
+  };
+
+  const filteredOrders = useMemo(() => {
+    if (statusFilter === "all") return orders;
+    return orders.filter((o) => o.status === statusFilter);
+  }, [orders, statusFilter]);
+
+  // Render header component
+  const renderHeader = (variant = "default") => {
+    const isAuthRequired = variant === "authRequired";
+    const isLoading = variant === "loading";
+
+    const headerClasses =
+      "bg-card/95 backdrop-blur-md shadow-md border-b border-border";
+
+    return (
+      <div className={`sticky top-0 z-40 ${headerClasses}`}>
+        <div className="container mx-auto px-4 py-4">
+          <nav className="mb-3" aria-label={t("breadcrumb")}>
+            <ol className="flex items-center gap-1 text-sm text-foreground">
+              <li>
+                <a href="/" className="hover:text-primary font-medium">
+                  {t("home")}
+                </a>
+              </li>
+              <li className="px-1 text-muted-foreground">/</li>
+              <li className="text-foreground font-bold" aria-current="page">
+                {t("ordersPage.title")}
+              </li>
+            </ol>
+          </nav>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-black text-primary mb-1">
+                {t("ordersPage.title")}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {t("ordersPage.subtitle")}
+              </p>
+            </div>
+            {!isAuthRequired && !isLoading && (
+              <div className="hidden sm:flex items-center gap-2">
+                <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border-2 border-primary/30 text-primary rounded-full text-sm font-bold">
+                  <ShoppingBagIcon className="w-5 h-5" />
+                  <span>
+                    {orders.length} {t("orders")}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={fetchOrders}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary/10 border-2 border-primary/30 text-primary rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
+                  title={t("ordersPage.refresh", { defaultValue: "Refresh" })}
+                >
+                  <ArrowPathIcon className="w-5 h-5" />
+                  <span>
+                    {t("ordersPage.refresh", { defaultValue: "Refresh" })}
+                  </span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (!user) {
     return (
-      <>
+      <div className="min-h-screen bg-background">
         <SEOHead
           title={t("ordersPage.seoTitle")}
           description={t("ordersPage.seoDescription")}
           url="/orders"
         />
-        <div className="sticky top-0 z-40 bg-background/95 dark:bg-card/95 backdrop-blur-md shadow-md border-b border-border">
-          <div className="container mx-auto px-4 py-4">
-            <nav className="mb-3" aria-label={t("breadcrumb")}>
-              <ol className="flex items-center gap-1 text-sm text-foreground">
-                <li>
-                  <a
-                    href="/"
-                    className="hover:text-primary font-medium"
-                  >
-                    {t("home")}
-                  </a>
-                </li>
-                <li className="px-1 text-muted-foreground">/</li>
-                <li
-                  className="text-foreground font-bold"
-                  aria-current="page"
-                >
-                  {t("ordersPage.title")}
-                </li>
-              </ol>
-            </nav>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-black text-primary mb-1">
-                  {t("ordersPage.title")}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {t("ordersPage.description")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="w-full px-4 sm:px-6 lg:px-8 bg-background flex items-center justify-center"
-          style={{
-            marginTop: `-${headerOffset}px`,
-            paddingTop: `calc(${headerOffset}px + 1.5rem)`,
-            minHeight: "100vh",
-          }}
-        >
-          <div className="bg-card rounded-2xl shadow-lg dark:shadow-2xl border border-border p-8 sm:p-12 lg:p-16 text-center max-w-md">
-            <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-red-100 dark:bg-red-900/30 mx-auto mb-4 sm:mb-6">
-              <ShoppingBagIcon className="w-8 sm:w-10 h-8 sm:h-10 text-red-600 dark:text-red-400" />
+        {renderHeader("authRequired")}
+        <div className="container mx-auto px-4 py-8">
+          <div className="bg-card rounded-xl shadow-lg border border-border p-8 sm:p-10 lg:p-12 text-center max-w-md mx-auto">
+            <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-destructive/10 border border-destructive/20 mx-auto mb-4 sm:mb-6">
+              <ShoppingBagIcon className="w-8 sm:w-10 h-8 sm:h-10 text-destructive" />
             </div>
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 sm:mb-3">
               {t("ordersPage.authRequired")}
@@ -173,182 +212,151 @@ export default function OrdersPage() {
             </a>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
   if (loading) {
     return (
-      <>
+      <div className="min-h-screen bg-background">
         <SEOHead
           title={t("ordersPage.seoTitle")}
           description={t("ordersPage.seoDescription")}
           url="/orders"
         />
-        <div className="sticky top-0 z-40 bg-background/95 dark:bg-card/95 backdrop-blur-md shadow-md border-b border-border">
-          <div className="container mx-auto px-4 py-4">
-            <nav className="mb-3" aria-label={t("breadcrumb")}>
-              <ol className="flex items-center gap-1 text-sm text-foreground">
-                <li>
-                  <a
-                    href="/"
-                    className="hover:text-primary font-medium"
-                  >
-                    {t("home")}
-                  </a>
-                </li>
-                <li className="px-1 text-muted-foreground">/</li>
-                <li
-                  className="text-foreground font-bold"
-                  aria-current="page"
-                >
-                  {t("ordersPage.title")}
-                </li>
-              </ol>
-            </nav>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-black text-primary mb-1">
-                  {t("ordersPage.title")}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {t("ordersPage.description")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="w-full px-4 sm:px-6 lg:px-8 bg-background flex items-center justify-center"
-          style={{
-            marginTop: `-${headerOffset}px`,
-            paddingTop: `calc(${headerOffset}px + 1.5rem)`,
-            minHeight: "100vh",
-          }}
-        >
+        {renderHeader("loading")}
+        <div className="container mx-auto px-4 py-8 flex items-center justify-center">
           <LoadingSpinner size="lg" text={t("ordersPage.loading")} />
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <SEOHead
         title={t("ordersPage.seoTitle")}
         description={t("ordersPage.seoDescription")}
         url="/orders"
       />
-      <div className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/95 backdrop-blur-md shadow-md border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="mb-3" aria-label={t("breadcrumb")}>
-            <ol className="flex items-center gap-1 text-sm text-gray-900 dark:text-gray-100">
-              <li>
-                <a
-                  href="/"
-                  className="hover:text-emerald-600 dark:hover:text-blue-400 font-medium transition-colors"
-                >
-                  {t("home")}
-                </a>
-              </li>
-              <li className="px-1 text-gray-500 dark:text-slate-400">/</li>
-              <li
-                className="text-gray-900 dark:text-slate-200 font-bold"
-                aria-current="page"
-              >
-                {t("ordersPage.title")}
-              </li>
-            </ol>
-          </nav>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-black text-emerald-600 dark:text-blue-400 mb-1">
-                {t("ordersPage.title")}
-              </h1>
-              <p className="text-sm text-gray-600 dark:text-slate-400">
-                {t("ordersPage.description")}
-              </p>
-            </div>
-            <button
-              onClick={fetchOrders}
-              className="flex items-center gap-2 px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-white dark:bg-slate-800 border-2 border-gray-300 dark:border-slate-700 hover:border-emerald-600 dark:hover:border-blue-400 hover:text-emerald-600 dark:hover:text-blue-400 font-bold shadow-sm hover:shadow-md dark:shadow-lg dark:hover:shadow-xl transition-all active:scale-95 text-gray-900 dark:text-slate-200"
-              title={t("ordersPage.refresh")}
-            >
-              <ArrowPathIcon className="w-5 h-5" />
-              <span className="hidden xs:inline">
-                {t("ordersPage.refresh")}
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-start pb-8 sm:pb-12 lg:pb-16"
-        style={{
-          marginTop: `-${headerOffset}px`,
-          paddingTop: `calc(${headerOffset}px + 1.5rem)`,
-        }}
-      >
-        <div className="w-full max-w-5xl mx-auto px-4 sm:px-8 py-8 flex flex-col gap-8">
+      {renderHeader("default")}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-5xl mx-auto flex flex-col gap-6">
           {error && (
-            <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950 border-2 border-red-300 dark:border-red-700 flex items-start gap-3">
+            <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3">
               <span className="text-lg shrink-0">⚠️</span>
-              <p className="text-sm sm:text-base text-red-800 dark:text-red-200 font-semibold">
+              <p className="text-sm sm:text-base text-destructive font-semibold">
                 {error}
               </p>
             </div>
           )}
 
-          {orders.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-md dark:shadow-2xl border border-gray-200 dark:border-gray-700 p-8 sm:p-12 text-center">
-              <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-gray-100 dark:bg-gray-700 mx-auto mb-4">
-                <ShoppingBagIcon className="w-8 sm:w-10 h-8 sm:h-10 text-slate-400 dark:text-slate-400" />
-              </div>
-              <h3 className="text-xl xs:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                {t("ordersPage.noOrders")}
-              </h3>
-              <p className="text-base xs:text-lg text-gray-700 dark:text-gray-300 mb-6 max-w-md mx-auto">
-                {t("ordersPage.noOrdersDesc")}
-              </p>
-              <a
-                href={ROUTES.PRODUCTS}
-                className="inline-block bg-emerald-600 dark:bg-blue-600 hover:bg-emerald-700 dark:hover:bg-blue-700 text-white px-6 xs:px-8 py-2.5 xs:py-3 rounded-2xl font-extrabold transition-all shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl active:scale-98 text-base xs:text-lg"
+          {/* Quick Filters (matches Build-a-Kit card section) */}
+          <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <ShoppingBagIcon className="w-5 h-5 text-primary" />
+                {t("ordersPage.title")}
+              </h2>
+
+              <button
+                type="button"
+                onClick={fetchOrders}
+                className="px-4 py-2 bg-muted text-foreground rounded-lg font-medium hover:bg-primary/10 hover:text-primary transition-colors border border-border flex items-center gap-2"
+                title={t("ordersPage.refresh")}
               >
-                {t("ordersPage.browseProducts")}
-              </a>
+                <ArrowPathIcon className="w-5 h-5" />
+                <span className="hidden sm:inline">
+                  {t("ordersPage.refresh")}
+                </span>
+              </button>
             </div>
-          ) : (
-            <div className="space-y-5 xs:space-y-6">
-              {orders.map((order) => {
-                const meta =
-                  statusMeta[order.status] || statusMeta[ORDER_STATUS.PENDING];
-                const Icon = meta.icon;
-                const isExpanded = expanded[order.id];
-                return (
-                  <div
-                    key={order.id}
-                    className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-3xl shadow-xl dark:shadow-2xl hover:shadow-2xl dark:hover:shadow-2xl transition-all duration-500"
-                  >
-                    <div className="p-4 xs:p-5 sm:p-7 lg:p-10">
-                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 xs:gap-5">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 xs:gap-3 flex-wrap mb-2 xs:mb-3">
-                            <h3 className="font-black text-gray-900 dark:text-gray-100 text-lg xs:text-xl">
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => setStatusFilter("all")}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors border border-border ${
+                  statusFilter === "all"
+                    ? "bg-primary/10 text-primary"
+                    : "bg-muted text-foreground hover:bg-primary/10 hover:text-primary"
+                }`}
+              >
+                {t("all", { defaultValue: "All" })}
+              </button>
+
+              {Object.values(ORDER_STATUS).map((status) => (
+                <button
+                  key={status}
+                  type="button"
+                  onClick={() => setStatusFilter(status)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors border border-border ${
+                    statusFilter === status
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-foreground hover:bg-primary/10 hover:text-primary"
+                  }`}
+                >
+                  {getStatusLabel(status)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+            <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+              <ShoppingBagIcon className="w-5 h-5 text-primary" />
+              {t("ordersPage.orders", { defaultValue: "Orders" })}
+            </h2>
+
+            {filteredOrders.length === 0 ? (
+              <div className="text-center py-10">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mx-auto mb-4">
+                  <ShoppingBagIcon className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">
+                  {statusFilter === "all"
+                    ? t("ordersPage.noOrders")
+                    : t("ordersPage.noOrders", { defaultValue: "No orders" })}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                  {t("ordersPage.noOrdersDesc")}
+                </p>
+                <a
+                  href={ROUTES.PRODUCTS}
+                  className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg active:scale-95"
+                >
+                  {t("ordersPage.browseProducts")}
+                </a>
+              </div>
+            ) : (
+              <div className="bg-muted rounded-lg p-4 max-h-[70vh] sm:max-h-96 overflow-y-auto border border-border space-y-4">
+                {filteredOrders.map((order) => {
+                  const meta = getStatusMeta(order.status);
+                  const Icon = meta.icon;
+                  const isExpanded = expanded[order.id];
+                  const isHighlighted = order.id === highlightOrderId;
+
+                  return (
+                    <div
+                      key={order.id}
+                      id={`order-${order.id}`}
+                      className={`bg-card p-4 rounded-lg shadow-sm border transition-shadow ${
+                        isHighlighted
+                          ? "border-primary/50 ring-2 ring-primary/30 bg-primary/5"
+                          : "border-border hover:shadow-md"
+                      }`}
+                    >
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-foreground text-base">
                               {t("ordersPage.order") + " "}
-                              <span className="text-emerald-600 dark:text-blue-400">
+                              <span className="text-primary">
                                 #{order.orderNumber}
                               </span>
                             </h3>
-                            <span
-                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs xs:text-sm font-bold ${meta.bg} ${meta.color} border-2`}
-                              style={{ borderColor: "currentColor" }}
-                            >
-                              <Icon className="w-4 h-4" /> {meta.label}
-                            </span>
-                          </div>
-                          <div className="flex items-center flex-wrap gap-2 xs:gap-3 text-xs xs:text-sm text-gray-600 dark:text-slate-400">
-                            <span className="font-medium">
-                              📅 {t("ordersPage.placedOn")}{" "}
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {t("ordersPage.placedOn")}{" "}
                               {new Date(order.createdAt).toLocaleDateString(
                                 "en-US",
                                 {
@@ -357,129 +365,66 @@ export default function OrdersPage() {
                                   year: "numeric",
                                 }
                               )}
-                            </span>
-                            <span className="hidden sm:inline text-gray-600 dark:text-slate-400">
-                              •
-                            </span>
-                            <span className="font-medium">
-                              📦{" "}
-                              {t("ordersPage.items", {
-                                count: order.orderItems?.length || 0,
-                              })}
-                            </span>
-                            {order.shippingCost > 0 && (
-                              <>
-                                <span className="hidden md:inline text-gray-600 dark:text-slate-400">
-                                  •
-                                </span>
-                                <span className="hidden md:inline font-medium">
-                                  🚚 {t("ordersPage.shipping")}: ৳
-                                  {order.shippingCost}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                          <div className="mt-2 xs:mt-3 pt-2 xs:pt-3 border-t border-gray-300 dark:border-slate-700">
-                            <p className="text-lg xs:text-xl font-black text-gray-900 dark:text-slate-100">
-                              {t("ordersPage.total") + ": "}
-                              <span className="text-emerald-600 dark:text-blue-400">
-                                ৳{order.totalAmount}
-                              </span>
                             </p>
                           </div>
+
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${meta.bg} ${meta.color}`}
+                          >
+                            <Icon className="w-4 h-4" /> {meta.label}
+                          </span>
                         </div>
 
-                        <div className="flex items-center gap-2 xs:gap-3 flex-wrap">
-                          <button
-                            onClick={() => toggleExpand(order.id)}
-                            className="flex-1 xs:flex-none px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 font-bold flex items-center justify-center gap-2 transition-all border-2 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-slate-200"
-                          >
-                            {isExpanded ? (
-                              <>
-                                <ChevronUpIcon className="w-5 h-5" />
-                                <span>{t("ordersPage.hideItems")}</span>
-                              </>
-                            ) : (
-                              <>
-                                <ChevronDownIcon className="w-5 h-5" />
-                                <span>{t("ordersPage.viewItems")}</span>
-                              </>
-                            )}
-                          </button>
-                          <a
-                            href={`/track-order?orderId=${
-                              order.orderNumber
-                            }&phone=${order.shippingAddress?.phone || ""}`}
-                            className="flex-1 xs:flex-none px-4 xs:px-6 py-2 xs:py-2.5 text-sm xs:text-base rounded-xl bg-emerald-600 dark:bg-blue-600 hover:bg-emerald-700 dark:hover:bg-blue-700 text-white font-extrabold shadow-lg dark:shadow-lg hover:shadow-xl dark:hover:shadow-xl transition-all active:scale-98 text-center"
-                          >
-                            {t("ordersPage.trackOrder")}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    {isExpanded && (
-                      <div className="border-t-2 border-gray-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-                        <ul className="divide-y divide-gray-300 dark:divide-slate-700">
-                          {order.orderItems?.map((item) => (
-                            <li
-                              key={item.id}
-                              className="flex items-start gap-3 xs:gap-5 p-4 xs:p-5 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition-colors"
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-border">
+                          <p className="text-sm font-bold text-foreground">
+                            {t("ordersPage.total") + ": "}
+                            <span className="text-primary">
+                              ৳{order.totalAmount}
+                            </span>
+                          </p>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => toggleExpand(order.id)}
+                              className="px-3 py-2 rounded-lg bg-muted hover:bg-primary/10 hover:text-primary font-semibold transition-colors border border-border text-sm"
                             >
-                              <div className="w-16 xs:w-20 h-16 xs:h-20 rounded-xl bg-gray-50 dark:bg-slate-950 border-2 border-gray-300 dark:border-slate-700 overflow-hidden shrink-0 shadow-sm dark:shadow-md">
-                                <img
-                                  src={
-                                    Array.isArray(item.product.images)
-                                      ? item.product.images[0]
-                                      : item.product.images?.[0] ||
-                                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyOCAyOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI4IiBoZWlnaHQ9IjI4IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNCAxNEwxNCAyMEgyMFYyMEgyMEwxNCAxNFoiIGZpbGw9IiM5Q0E0QUYiLz4KPHBhdGggZD0iTTE0IDE0SDE5VjIwSDE5TDE0IDE0eiIgZmlsbD0iIzlDQTNBMiIvPgo8dGV4dCB4PSIxNCIgeT0iMTciIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmaWxsPSIjNjM2NkYxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD4KPC9zdmc+"
-                                  }
-                                  alt={item.product.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-base xs:text-lg font-bold text-gray-900 dark:text-slate-100 line-clamp-2 mb-1 xs:mb-2">
-                                  {item.product.name}
-                                </p>
-                                <div className="flex items-center gap-3 xs:gap-4 text-xs xs:text-sm text-gray-600 dark:text-slate-400">
-                                  <span className="font-medium">
-                                    {t("ordersPage.qty") + ": "}
-                                    <span className="font-bold text-gray-900 dark:text-slate-200">
-                                      {item.quantity}
-                                    </span>
-                                  </span>
-                                  <span className="text-gray-600 dark:text-slate-400">
-                                    •
-                                  </span>
-                                  <span className="font-medium">
-                                    {t("ordersPage.unit") + ": "}
-                                    <span className="font-bold text-gray-900 dark:text-slate-200">
-                                      ৳{item.unitPrice}
-                                    </span>
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <p className="text-lg xs:text-xl font-black text-emerald-600 dark:text-blue-400">
-                                  ৳{item.totalPrice}
-                                </p>
-                                <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
-                                  {t("ordersPage.total")}
-                                </p>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
+                              {isExpanded
+                                ? t("ordersPage.hideItems")
+                                : t("ordersPage.viewItems")}
+                            </button>
+                            <a
+                              href={`/track-order?orderId=${
+                                order.orderNumber
+                              }&phone=${order.shippingAddress?.phone || ""}`}
+                              className="px-3 py-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all shadow-sm hover:shadow-md active:scale-95 text-sm"
+                            >
+                              {t("ordersPage.trackOrder")}
+                            </a>
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+
+                      {isExpanded && (
+                        <div className="mt-4 rounded-lg border border-border bg-background">
+                          <ul className="divide-y divide-border">
+                            {order.orderItems?.map((item) => (
+                              <OrderItemDisplay
+                                key={item.id}
+                                item={item}
+                                t={t}
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

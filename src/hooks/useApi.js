@@ -1,17 +1,24 @@
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { getApiBaseUrl } from '../utils/apiBase';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = getApiBaseUrl();
 
 export const useCreateOrder = () => {
-  const navigate = useNavigate();
-  
   return useMutation({
     mutationFn: async (orderData) => {
-      const token = localStorage.getItem('auth_token');
+      const rawToken = localStorage.getItem('auth_token');
+      const token = typeof rawToken === 'string' ? rawToken.trim() : '';
+
+      // Prevent sending "Bearer null" / "Bearer undefined" which triggers confusing 403s.
+      if (!token || token === 'null' || token === 'undefined') {
+        const authError = new Error('Please sign in to place your order');
+        authError.code = 'AUTH_REQUIRED';
+        throw authError;
+      }
+
       const response = await axios.post(`${API_URL}/api/orders`, orderData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -22,10 +29,11 @@ export const useCreateOrder = () => {
     },
     onSuccess: (data) => {
       toast.success('Order created successfully!');
-      navigate(`/order-confirmation/${data.id || data.orderId}`);
+      return data;
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to create order');
+      const apiError = error?.response?.data?.error || error?.response?.data?.message;
+      toast.error(apiError || error?.message || 'Failed to create order');
     },
   });
 };

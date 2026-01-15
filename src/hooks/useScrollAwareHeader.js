@@ -1,51 +1,114 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 export const useScrollAwareHeader = () => {
   const [headerVisible, setHeaderVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const headerVisibleRef = useRef(headerVisible);
+  const isScrolledRef = useRef(isScrolled);
+
+  const lastScrollYRef = useRef(0);
+  const lastDirectionRef = useRef("none");
+  const upAccumRef = useRef(0);
+  const downAccumRef = useRef(0);
+  const tickingRef = useRef(false);
+
   useEffect(() => {
-    let lastScrollY = window.scrollY;
+    headerVisibleRef.current = headerVisible;
+  }, [headerVisible]);
+
+  useEffect(() => {
+    isScrolledRef.current = isScrolled;
+  }, [isScrolled]);
+
+  useEffect(() => {
+    const TOP_SHOW_Y = 100;
+    const SHADOW_Y = 50;
+    const HIDE_MIN_Y = 200;
+    const SHOW_UP_THRESHOLD = 28;
+    const HIDE_DOWN_THRESHOLD = 80;
+    const MIN_DELTA = 2;
+
+    lastScrollYRef.current = window.scrollY || 0;
+
+    const updateIsScrolled = (y) => {
+      const next = y > SHADOW_Y;
+      if (next !== isScrolledRef.current) {
+        isScrolledRef.current = next;
+        setIsScrolled(next);
+      }
+    };
+
+    const showHeader = () => {
+      if (!headerVisibleRef.current) {
+        headerVisibleRef.current = true;
+        setHeaderVisible(true);
+      }
+    };
+
+    const hideHeader = () => {
+      if (headerVisibleRef.current) {
+        headerVisibleRef.current = false;
+        setHeaderVisible(false);
+      }
+    };
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
+      if (tickingRef.current) return;
+      tickingRef.current = true;
 
-      setIsScrolled(currentScrollY > 50);
+      requestAnimationFrame(() => {
+        tickingRef.current = false;
 
-      console.log(`Scroll: current=${currentScrollY}, last=${lastScrollY}, delta=${scrollDelta}, headerVisible=${headerVisible}`);
+        const currentY = window.scrollY || 0;
+        const delta = currentY - lastScrollYRef.current;
 
-      // If scrolling up, always show the header
-      if (scrollDelta < 0) {
-        if (!headerVisible) {
-          console.log("Setting headerVisible to TRUE (scrolling up)");
-          setHeaderVisible(true);
+        updateIsScrolled(currentY);
+
+        if (Math.abs(delta) < MIN_DELTA) {
+          lastScrollYRef.current = currentY;
+          return;
         }
-      }
-      // If at the very top, always show the header
-      else if (currentScrollY < 100) {
-        if (!headerVisible) {
-          console.log("Setting headerVisible to TRUE (near top)");
-          setHeaderVisible(true);
-        }
-      }
-      // Otherwise, if scrolling down significantly, hide the header
-      else if (scrollDelta > 80 && currentScrollY > 200) {
-        if (headerVisible) {
-          console.log("Setting headerVisible to FALSE (scrolling down)");
-          setHeaderVisible(false);
-        }
-      }
 
-      lastScrollY = currentScrollY;
+        // Always visible near the top.
+        if (currentY < TOP_SHOW_Y) {
+          showHeader();
+          upAccumRef.current = 0;
+          downAccumRef.current = 0;
+          lastDirectionRef.current = "none";
+          lastScrollYRef.current = currentY;
+          return;
+        }
+
+        const direction = delta > 0 ? "down" : "up";
+        if (direction !== lastDirectionRef.current) {
+          upAccumRef.current = 0;
+          downAccumRef.current = 0;
+          lastDirectionRef.current = direction;
+        }
+
+        if (direction === "down") {
+          downAccumRef.current += delta;
+          if (currentY > HIDE_MIN_Y && downAccumRef.current > HIDE_DOWN_THRESHOLD) {
+            hideHeader();
+            downAccumRef.current = 0;
+          }
+        } else {
+          upAccumRef.current += -delta;
+          // Only show after a meaningful upward scroll, to avoid popping in instantly.
+          if (!headerVisibleRef.current && upAccumRef.current > SHOW_UP_THRESHOLD) {
+            showHeader();
+            upAccumRef.current = 0;
+          }
+        }
+
+        lastScrollYRef.current = currentY;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [headerVisible]); // Added headerVisible to dependency array to ensure logs reflect current state
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return { headerVisible, isScrolled };
 };

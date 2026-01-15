@@ -92,7 +92,7 @@ export default function CartDrawer({ isOpen, onClose }) {
                                           item.product.price}
                                       </p>
                                     </div>
-                                    <p className="mt-1 text-sm text-background0">
+                                    <p className="mt-1 text-sm text-muted-foreground">
                                       {item.product.brand}
                                     </p>
                                   </div>
@@ -146,7 +146,7 @@ export default function CartDrawer({ isOpen, onClose }) {
                         <p>Subtotal</p>
                         <p>৳{getTotalPrice()}</p>
                       </div>
-                      <p className="mt-0.5 text-sm text-background0">
+                      <p className="mt-0.5 text-sm text-muted-foreground">
                         Shipping calculated at checkout.
                       </p>
                       <div className="space-y-3">

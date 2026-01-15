@@ -7,7 +7,7 @@ export default function SpecialOfferBanner() {
   return (
     <section className="w-full relative overflow-hidden min-h-20 xs:min-h-24 sm:min-h-28 md:min-h-32 bg-linear-to-r from-emerald-600 via-emerald-500 to-cyan-600 dark:from-emerald-700 dark:via-emerald-700 dark:to-cyan-700 text-white shadow-xl">
       {/* Enhanced Background Pattern */}
-      <div className="absolute inset-0 bg-white/10 dark:bg-foreground/10 animate-pulse"></div>
+      <div className="absolute inset-0 bg-white/10 dark:bg-white/10 animate-pulse"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.18),transparent_52%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.1),transparent_52%)]"></div>
       <div className="absolute inset-0 bg-white/8 dark:bg-white/5"></div>
@@ -46,7 +46,7 @@ export default function SpecialOfferBanner() {
               </h3>
               <p className="text-white/95 text-xs xs:text-sm sm:text-base md:text-lg">
                 {t("specialOffer.useCode", "Use code")}{" "}
-                <span className="bg-white/80 dark:bg-white/25 backdrop-blur-sm px-2 xs:px-3 sm:px-4 py-1 xs:py-1.5 rounded-lg font-bold text-emerald-900 dark:text-background border border-white/50 shadow-md text-xs sm:text-sm md:text-base">
+                <span className="bg-white/80 dark:bg-white/25 backdrop-blur-sm px-2 xs:px-3 sm:px-4 py-1 xs:py-1.5 rounded-lg font-bold text-emerald-900 dark:text-emerald-50 border border-white/50 shadow-md text-xs sm:text-sm md:text-base">
                   {t("specialOffer.code", "SAVE20")}
                 </span>{" "}
                 {t("specialOffer.onFirstOrder", "on your first order")}

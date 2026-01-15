@@ -12,12 +12,14 @@ import {
   ChevronDoubleLeftIcon,
   Squares2X2Icon,
   MapPinIcon,
+  BuildingStorefrontIcon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: HomeIcon },
   { name: "Products", href: "/admin/products", icon: ShoppingBagIcon },
   { name: "Categories", href: "/admin/categories", icon: Squares2X2Icon },
+  { name: "Shop Upload", href: "/admin/shops", icon: BuildingStorefrontIcon },
   {
     name: "Pickup Locations",
     href: "/admin/pickup-locations",

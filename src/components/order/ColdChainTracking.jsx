@@ -30,7 +30,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
   return (
     <div className="bg-background rounded-lg shadow-md p-6 mt-6">
       <div className="flex items-center mb-4">
-        <ThermometerIcon className="w-6 h-6 text-blue-600 mr-2" />
+        <CubeIcon className="w-6 h-6 text-blue-600 mr-2" />
         <h3 className="text-lg font-semibold">Cold Chain Monitoring</h3>
       </div>
 
@@ -52,7 +52,9 @@ export default function ColdChainTracking({ hasColdChainItems }) {
           >
             {currentTemp ? `${currentTemp.toFixed(1)}°C` : "--"}
           </div>
-          <div className="text-sm text-background0 mt-1">Target: 2-8°C</div>
+          <div className="text-sm text-muted-foreground mt-1">
+            Target: 2-8°C
+          </div>
         </div>
 
         {/* Status */}
@@ -69,7 +71,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
           >
             {isTemperatureOk ? "✓ Maintained" : "⚠ Alert"}
           </div>
-          <div className="text-xs text-background0 mt-2">
+          <div className="text-xs text-muted-foreground mt-2">
             Last updated: {new Date().toLocaleTimeString()}
           </div>
         </div>
@@ -94,7 +96,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
             />
           ))}
         </div>
-        <div className="flex justify-between text-xs text-background0 mt-1">
+        <div className="flex justify-between text-xs text-muted-foreground mt-1">
           <span>10 readings ago</span>
           <span>Now</span>
         </div>
@@ -116,7 +118,7 @@ export default function ColdChainTracking({ hasColdChainItems }) {
         </div>
       )}
 
-      <div className="mt-4 text-xs text-background0">
+      <div className="mt-4 text-xs text-muted-foreground">
         <p>• Cold chain items require temperature control during transport</p>
         <p>• Temperature is monitored continuously during delivery</p>
         <p>• Items will be replaced if temperature requirements are not met</p>

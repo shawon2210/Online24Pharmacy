@@ -321,7 +321,7 @@ export default function AIChatbot({ language = "en" }) {
                         style={{ animationDelay: "0.2s" }}
                       ></div>
                     </div>
-                    <span className="text-[10px] sm:text-xs text-background0">
+                    <span className="text-[10px] sm:text-xs text-muted-foreground">
                       AI is typing...
                     </span>
                   </div>
@@ -397,7 +397,7 @@ export default function AIChatbot({ language = "en" }) {
                 <PaperAirplaneIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
-            <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-background0 text-center leading-relaxed">
+            <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-muted-foreground text-center leading-relaxed">
               AI assistance is not medical advice. Always consult a licensed
               clinician.
             </p>

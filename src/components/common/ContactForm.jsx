@@ -70,7 +70,7 @@ function ContactForm() {
           <h2 className="text-5xl md:text-6xl font-black text-foreground dark:text-foreground mb-4">
             {tf("contactForm.title", "Get in touch")}
           </h2>
-          <p className="text-xl text-muted-foreground dark:text-muted max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             {tf(
               "contactForm.subtitle",
               "We're here to help — send us a message"
@@ -82,7 +82,7 @@ function ContactForm() {
           {/* Left Side - Contact Info (2 cols) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Main Contact Card with Gradient */}
-            <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-emerald-600 via-emerald-500 to-cyan-600 p-8 shadow-2xl">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-500 to-cyan-600 p-8 shadow-2xl border-b-4 border-emerald-400/30">
               <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20" />
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-black/10 rounded-full -ml-16 -mb-16" />
 
@@ -183,7 +183,7 @@ function ContactForm() {
               ].map((stat, i) => (
                 <div
                   key={i}
-                  className="bg-background dark:bg-card rounded-2xl p-5 text-center shadow-lg border border-border dark:border-foreground hover:shadow-xl hover:-translate-y-1 transition-all"
+                  className="bg-background dark:bg-card rounded-2xl p-5 text-center shadow-lg border border-border hover:shadow-xl hover:-translate-y-1 transition-all"
                 >
                   <stat.icon
                     className={`w-8 h-8 mx-auto mb-3 text-${stat.color}-600 dark:text-${stat.color}-400`}
@@ -193,7 +193,7 @@ function ContactForm() {
                   >
                     {stat.value}
                   </div>
-                  <div className="text-xs text-muted-foreground dark:text-muted-foreground font-semibold">
+                  <div className="text-xs text-muted-foreground font-semibold">
                     {stat.label}
                   </div>
                 </div>
@@ -203,26 +203,26 @@ function ContactForm() {
 
           {/* Right Side - Form (3 cols) */}
           <div className="lg:col-span-3">
-            <div className="bg-background dark:bg-card rounded-3xl p-8 sm:p-10 shadow-2xl border border-border dark:border-foreground">
+            <div className="bg-white/60 dark:bg-emerald-950/60 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-white/30 dark:border-emerald-900/40">
               {success ? (
                 <div className="text-center py-16">
                   <div className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
                     <CheckCircleIcon className="w-14 h-14 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <h3 className="text-4xl font-black text-foreground dark:text-background mb-4">
+                  <h3 className="text-4xl font-black text-foreground mb-4">
                     {t("contactForm.successTitle")}
                   </h3>
-                  <p className="text-xl text-muted-foreground dark:text-muted">
+                  <p className="text-xl text-muted-foreground">
                     {t("contactForm.successDesc")}
                   </p>
                 </div>
               ) : (
                 <>
                   <div className="mb-8">
-                    <h3 className="text-3xl font-black text-foreground dark:text-background mb-3">
+                    <h3 className="text-3xl font-black text-foreground mb-3">
                       {tf("contactForm.formTitle", "Send us a message")}
                     </h3>
-                    <p className="text-muted-foreground dark:text-muted text-lg">
+                    <p className="text-muted-foreground text-lg">
                       {tf(
                         "contactForm.formDesc",
                         "Describe your question and we'll respond shortly"
@@ -232,7 +232,7 @@ function ContactForm() {
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <label className="block text-sm font-bold text-foreground dark:text-background mb-2.5">
+                      <label className="block text-sm font-bold text-foreground mb-2.5">
                         {t("contactForm.fullName")}{" "}
                         <span className="text-red-500">*</span>
                       </label>
@@ -244,8 +244,8 @@ function ContactForm() {
                         className={`w-full px-5 py-4 border-2 ${
                           errors.name
                             ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                            : "border-border dark:border-muted-foreground focus:border-emerald-500 focus:ring-emerald-500/20"
-                        } rounded-xl bg-background dark:bg-foreground text-foreground dark:text-background placeholder-gray-400 focus:outline-none focus:ring-4 transition-all text-base font-medium`}
+                            : "border-border focus:border-emerald-500 focus:ring-emerald-500/20"
+                        } rounded-xl bg-background dark:bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-4 transition-all text-base font-medium`}
                         placeholder={tf(
                           "contactForm.fullNamePlaceholder",
                           "Your full name"
@@ -260,7 +260,7 @@ function ContactForm() {
 
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-bold text-foreground dark:text-background mb-2.5">
+                        <label className="block text-sm font-bold text-foreground mb-2.5">
                           {t("contactForm.emailAddress")}{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -272,8 +272,8 @@ function ContactForm() {
                           className={`w-full px-5 py-4 border-2 ${
                             errors.email
                               ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                              : "border-border dark:border-muted-foreground focus:border-emerald-500 focus:ring-emerald-500/20"
-                          } rounded-xl bg-background dark:bg-foreground text-foreground dark:text-background placeholder-gray-400 focus:outline-none focus:ring-4 transition-all text-base font-medium`}
+                              : "border-border focus:border-emerald-500 focus:ring-emerald-500/20"
+                          } rounded-xl bg-background dark:bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-4 transition-all text-base font-medium`}
                           placeholder={tf(
                             "contactForm.emailPlaceholder",
                             "yourname@example.com"
@@ -287,7 +287,7 @@ function ContactForm() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-bold text-foreground dark:text-background mb-2.5">
+                        <label className="block text-sm font-bold text-foreground mb-2.5">
                           {t("contactForm.phoneNumber")}{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -299,8 +299,8 @@ function ContactForm() {
                           className={`w-full px-5 py-4 border-2 ${
                             errors.phone
                               ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                              : "border-border dark:border-muted-foreground focus:border-emerald-500 focus:ring-emerald-500/20"
-                          } rounded-xl bg-background dark:bg-foreground text-foreground dark:text-background placeholder-gray-400 focus:outline-none focus:ring-4 transition-all text-base font-medium`}
+                              : "border-border focus:border-emerald-500 focus:ring-emerald-500/20"
+                          } rounded-xl bg-background dark:bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-4 transition-all text-base font-medium`}
                           placeholder={tf(
                             "contactForm.phonePlaceholder",
                             "+8801XXXXXXXXX"
@@ -315,7 +315,7 @@ function ContactForm() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-bold text-foreground dark:text-background mb-2.5">
+                      <label className="block text-sm font-bold text-foreground mb-2.5">
                         {t("contactForm.messageLabel")}
                       </label>
                       <textarea
@@ -323,7 +323,7 @@ function ContactForm() {
                         rows="5"
                         value={form.message}
                         onChange={handleChange}
-                        className="w-full px-5 py-4 border-2 border-border dark:border-muted-foreground rounded-xl bg-background dark:bg-foreground text-foreground dark:text-background placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 transition-all resize-none text-base font-medium"
+                        className="w-full px-5 py-4 border-2 border-border rounded-xl bg-background dark:bg-card text-foreground placeholder:text-muted-foreground focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 transition-all resize-none text-base font-medium"
                         placeholder={tf(
                           "contactForm.messagePlaceholder",
                           "How can we help you?"

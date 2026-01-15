@@ -163,7 +163,7 @@ export default function AdminReviews() {
               <div className="font-semibold text-foreground">
                 {r.product?.name || "Product"} • {r.rating}★
               </div>
-              <span className="text-xs text-background0">
+              <span className="text-xs text-muted-foreground">
                 {new Date(r.createdAt).toLocaleDateString()}
               </span>
             </div>

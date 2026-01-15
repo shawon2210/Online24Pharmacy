@@ -71,6 +71,26 @@
   "twitter": "Twitter",
   "instagram": "Instagram",
   "copyright": "© {{year}} Online24 Pharmacy. All rights reserved.",
-  "licensed": "DGDA Licensed Pharmacy"
+  "licensed": "DGDA Licensed Pharmacy",
+  "myPrescriptionsPage": {
+    "title": "My Prescriptions",
+    "subtitle": "Manage your prescription history and reorder medications",
+    "uploadNew": "Upload New Prescription",
+    "all": "All",
+    "active": "Active",
+    "expiring": "Expiring Soon",
+    "expired": "Expired",
+    "pending": "Pending",
+    "noPrescriptions": "No prescriptions found",
+    "uploadFirst": "Upload your first prescription to get started",
+    "ref": "Ref",
+    "prescribedOn": "Prescribed on",
+    "expiresOn": "Expires on",
+    "reorder": "Reorder",
+    "remind": "Remind",
+    "medicinesAdded": "Medicines added to cart",
+    "reminderSet": "Reminder set successfully",
+    "status": "Status"
+  }
 }
 }

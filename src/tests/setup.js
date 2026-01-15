@@ -17,7 +17,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock global.fetch
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();
 
 // Silence React Router v7 future flag warnings in tests
 const originalWarn = console.warn;

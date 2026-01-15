@@ -83,7 +83,7 @@ export default function HeroAIGlassPremium() {
               className="w-full h-full object-cover object-[75%_center] sm:object-center"
               loading={i === 0 ? "eager" : "lazy"}
               decoding="async"
-              fetchpriority={i === 0 ? "high" : "auto"}
+              fetchPriority={i === 0 ? "high" : "auto"}
             />
           </div>
         ))}
@@ -104,12 +104,12 @@ export default function HeroAIGlassPremium() {
               </span>
             </div>
 
-            {/* Heading - Responsive Sizes */}
+            {/* Heading - Responsive Sizes (improved for mobile) */}
             <h1 className="mb-4 sm:mb-6">
-              <span className="block text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-2 sm:mb-3 drop-shadow-lg">
+              <span className="block text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-2 sm:mb-3 drop-shadow-lg warp-break-words">
                 {tf("hero.heading1", "Healthcare at your fingertips")}
               </span>
-              <span className="block text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight bg-linear-to-br from-emerald-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent drop-shadow-lg">
+              <span className="block text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight bg-linear-to-br from-emerald-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent drop-shadow-lg warp-break-words">
                 {tf("hero.heading2", "Fast delivery, certified pharmacists")}
               </span>
             </h1>

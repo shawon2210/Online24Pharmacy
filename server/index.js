@@ -20,6 +20,7 @@ import usersRoutes from './routes/users.js';
 import chatbotRoutes from './routes/chatbot.js';
 import savedKitsRoutes from './routes/savedKits.js';
 import pickupRoutes from './routes/pickup.js';
+import mapLocationsRoutes from './routes/mapLocations.js';
 import notificationRoutes from './routes/notifications.js';
 
 // Load cron jobs (side-effect imports)
@@ -30,7 +31,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+app.use(cors({ credentials: true, origin: ['http://localhost:5173', 'http://localhost:5174'] }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -60,6 +61,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/kits', savedKitsRoutes);
 app.use('/api', pickupRoutes);
+app.use('/api', mapLocationsRoutes);
 app.use('/api/notifications', notificationRoutes);
 
 // Health check
@@ -67,10 +69,19 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Ensure API 404s are always JSON (prevents frontend JSON parse errors)
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
 // Error handling
 app.use((err, req, res, _next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  const status = err?.statusCode || err?.status || 500;
+  const message = err?.message || 'Something went wrong!';
+  if (status >= 500) {
+    console.error(err.stack || err);
+  }
+  res.status(status).json({ error: message });
 });
  
 

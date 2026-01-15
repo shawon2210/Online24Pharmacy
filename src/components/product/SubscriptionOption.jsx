@@ -30,15 +30,13 @@ export default function SubscriptionOption({ product }) {
   };
 
   return (
-    <div className="bg-background dark:bg-card border border-border dark:border-foreground rounded-lg p-4 mt-4">
+    <div className="bg-background dark:bg-card border border-border rounded-lg p-4 mt-4">
       <div className="flex items-center mb-3">
         <CalendarIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mr-2" />
-        <h3 className="font-semibold text-foreground dark:text-background">
-          Subscribe & Save
-        </h3>
+        <h3 className="font-semibold text-foreground">Subscribe & Save</h3>
       </div>
 
-      <p className="text-sm text-blue-700 mb-4">
+      <p className="text-sm text-muted-foreground mb-4">
         Perfect for chronic conditions. Never run out of your essential
         medicines.
       </p>

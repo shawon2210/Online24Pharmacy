@@ -22,7 +22,7 @@ export default function AdminOrders() {
       const response = await axios.get(`${API_URL}/api/admin/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setOrders(response.data.orders || []);
+      setOrders(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
       if (error.response?.status === 401 || error.response?.status === 403) {
@@ -35,7 +35,8 @@ export default function AdminOrders() {
   };
 
   const updateOrderStatus = async (orderId, status) => {
-    if (!orderId || typeof orderId !== 'string') throw new Error('Invalid order ID');
+    if (!orderId || typeof orderId !== "string")
+      throw new Error("Invalid order ID");
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) {
@@ -85,32 +86,32 @@ export default function AdminOrders() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-border">
               <thead className="bg-background">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Order Number
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Amount
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-background divide-y divide-gray-200">
+              <tbody className="bg-background divide-y divide-border">
                 {!orders || orders.length === 0 ? (
                   <tr>
                     <td
                       colSpan="5"
-                      className="px-6 py-8 text-center text-background0"
+                      className="px-6 py-8 text-center text-muted-foreground"
                     >
                       No orders found. Orders from customers will appear here.
                     </td>
@@ -123,7 +124,7 @@ export default function AdminOrders() {
                           <div className="text-sm font-medium text-foreground">
                             #{order.orderNumber || order.id}
                           </div>
-                          <div className="text-sm text-background0">
+                          <div className="text-sm text-muted-foreground">
                             {new Date(order.createdAt).toLocaleDateString()}
                           </div>
                         </div>
@@ -133,7 +134,7 @@ export default function AdminOrders() {
                           {order.user?.firstName || "Unknown"}{" "}
                           {order.user?.lastName || "User"}
                         </div>
-                        <div className="text-sm text-background0">
+                        <div className="text-sm text-muted-foreground">
                           {order.user?.email || "N/A"}
                         </div>
                       </td>
@@ -143,11 +144,11 @@ export default function AdminOrders() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            order.status === "delivered"
+                            order.status === "DELIVERED"
                               ? "bg-green-100 text-green-800"
-                              : order.status === "confirmed"
+                              : order.status === "CONFIRMED"
                               ? "bg-blue-100 text-blue-800"
-                              : order.status === "pending"
+                              : order.status === "PENDING"
                               ? "bg-yellow-100 text-yellow-800"
                               : "bg-red-100 text-red-800"
                           }`}
@@ -163,12 +164,12 @@ export default function AdminOrders() {
                           }
                           className="border border-border rounded px-2 py-1"
                         >
-                          <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="processing">Processing</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
+                          <option value="PENDING">Pending</option>
+                          <option value="CONFIRMED">Confirmed</option>
+                          <option value="PROCESSING">Processing</option>
+                          <option value="SHIPPED">Shipped</option>
+                          <option value="DELIVERED">Delivered</option>
+                          <option value="CANCELLED">Cancelled</option>
                         </select>
                       </td>
                     </tr>

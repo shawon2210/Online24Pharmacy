@@ -4,6 +4,8 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Eye, ChevronDown, Search } from "lucide-react";
 import { useDebounce } from "../../hooks/useDebounce"; // Assuming this hook exists
+import ShipmentTable from "./ShipmentTable";
+import DeliveryTable from "./DeliveryTable";
 
 // Reusable components from previous steps...
 const Modal = ({ isOpen, onClose, title, children }) => {
@@ -11,11 +13,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
       <div className="bg-background rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
-        <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-semibold">{title}</h2>
+        <div className="p-4 border-b border-border flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-foreground">{title}</h2>
           <button
             onClick={onClose}
-            className="text-background0 hover:text-foreground text-2xl"
+            className="text-muted-foreground hover:text-foreground text-2xl"
           >
             &times;
           </button>
@@ -64,16 +66,25 @@ const fetchOrders = ({ queryKey }) => {
     .then((res) => res.data);
 };
 const fetchOrderDetails = (orderId) => {
-  if (!orderId || typeof orderId !== 'string') throw new Error('Invalid order ID');
-  return axios.get(`${API_URL}/api/admin/orders/${encodeURIComponent(orderId)}`).then((res) => res.data);
+  if (!orderId || typeof orderId !== "string")
+    throw new Error("Invalid order ID");
+  return axios
+    .get(`${API_URL}/api/admin/orders/${encodeURIComponent(orderId)}`)
+    .then((res) => res.data);
 };
 const updateOrderStatus = ({ id, status }) => {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  const csrfToken = document
+    .querySelector('meta[name="csrf-token"]')
+    ?.getAttribute("content");
   const headers = {};
   if (csrfToken) {
-    headers['X-CSRF-Token'] = csrfToken;
+    headers["X-CSRF-Token"] = csrfToken;
   }
-  return axios.put(`${API_URL}/api/admin/orders/${id}/status`, { status }, { headers });
+  return axios.put(
+    `${API_URL}/api/admin/orders/${id}/status`,
+    { status },
+    { headers }
+  );
 };
 
 const OrderStatusBadge = ({ status }) => {
@@ -270,7 +281,7 @@ const AdminOrdersPage = () => {
           <select
             onChange={handleFilterChange}
             value={filters.status}
-            className="border rounded-md py-2"
+            className="border border-border bg-background text-foreground rounded-md py-2"
           >
             <option value="">All Statuses</option>
             {ORDER_STATUSES.map((s) => (
@@ -284,30 +295,30 @@ const AdminOrdersPage = () => {
 
       <div className="bg-background shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-background">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Order #
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Customer
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Total
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-background0 uppercase">
+                <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-background divide-y divide-gray-200">
+            <tbody className="bg-background divide-y divide-border">
               {isLoading ? (
                 <tr>
                   <td colSpan="6" className="text-center py-4">
@@ -326,13 +337,13 @@ const AdminOrdersPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                       {order.orderNumber}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {order.user.email}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       ৳{parseFloat(order.totalAmount).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -377,6 +388,20 @@ const AdminOrdersPage = () => {
         <OrderDetailModal
           orderId={selectedOrderId}
           onClose={() => setSelectedOrderId(null)}
+        />
+      )}
+
+      {/* Render Shipment and Delivery tables based on order status */}
+      {filters.status === "SHIPPED" && (
+        <ShipmentTable
+          shipments={data?.data.filter((order) => order.status === "SHIPPED")}
+        />
+      )}
+      {filters.status === "DELIVERED" && (
+        <DeliveryTable
+          deliveries={data?.data.filter(
+            (order) => order.status === "DELIVERED"
+          )}
         />
       )}
     </div>

@@ -93,15 +93,15 @@ export default function AdminDashboard() {
           <h1 className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 mb-1">
             Welcome back, {user?.firstName}! 👋
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground dark:text-muted-foreground font-medium">
+          <p className="text-sm sm:text-base text-muted-foreground font-medium">
             Here's what's happening with your pharmacy today
           </p>
         </div>
         <div className="hidden md:flex flex-col items-end">
-          <span className="text-sm font-semibold text-muted-foreground dark:text-muted-foreground">
+          <span className="text-sm font-semibold text-muted-foreground">
             Today
           </span>
-          <span className="text-lg font-bold text-foreground dark:text-background">
+          <span className="text-lg font-bold text-foreground">
             {new Date().toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
         {statCards.map((stat, index) => (
           <div
             key={index}
-            className="group relative bg-background dark:bg-card rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-border dark:border-foreground/10 hover:border-emerald-200 dark:hover:border-emerald-700 hover:-translate-y-1 overflow-hidden"
+            className="group relative bg-background dark:bg-card rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-border hover:border-emerald-200 dark:hover:border-emerald-700 hover:-translate-y-1 overflow-hidden"
           >
             {/* Background Gradient */}
             <div
@@ -134,10 +134,10 @@ export default function AdminDashboard() {
                   {stat.change}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider mb-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                 {stat.label}
               </p>
-              <p className="text-3xl font-black text-foreground dark:text-background">
+              <p className="text-3xl font-black text-foreground">
                 {stat.value}
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="mb-8">
-        <h2 className="text-lg font-bold text-foreground dark:text-background mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
           <span className="text-xl">⚡</span>
           <span>Quick actions</span>
         </h2>
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
             to="/admin/products"
             className="group relative bg-emerald-600 dark:bg-emerald-700 rounded-xl p-6 shadow-md hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-background dark:bg-foreground opacity-0 group-hover:opacity-10 transition-opacity" />
+            <div className="absolute inset-0 bg-background opacity-0 group-hover:opacity-10 transition-opacity" />
             <div className="relative z-10 flex items-center space-x-4">
               <div className="w-14 h-14 bg-white/20 dark:bg-black/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
                 ➕
@@ -185,10 +185,42 @@ export default function AdminDashboard() {
             </div>
           </Link>
           <Link
+            to="/admin/shops"
+            className="group relative bg-cyan-600 dark:bg-cyan-700 rounded-xl p-6 shadow-md hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-background opacity-0 group-hover:opacity-10 transition-opacity" />
+            <div className="relative z-10 flex items-center space-x-4">
+              <div className="w-14 h-14 bg-white/20 dark:bg-black/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                🏪
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-background text-lg mb-1">
+                  Manage Pickup Shops
+                </p>
+                <p className="text-sm text-cyan-50 dark:text-cyan-200">
+                  Upload & edit pickup locations
+                </p>
+              </div>
+              <svg
+                className="w-5 h-5 text-background opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </div>
+          </Link>
+          <Link
             to="/admin/prescriptions"
             className="group relative bg-amber-600 dark:bg-amber-700 rounded-xl p-6 shadow-md hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-background dark:bg-foreground opacity-0 group-hover:opacity-10 transition-opacity" />
+            <div className="absolute inset-0 bg-background opacity-0 group-hover:opacity-10 transition-opacity" />
             <div className="relative z-10 flex items-center space-x-4">
               <div className="w-14 h-14 bg-white/20 dark:bg-black/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
                 📋
@@ -223,7 +255,7 @@ export default function AdminDashboard() {
             to="/admin/orders"
             className="group relative bg-blue-600 dark:bg-blue-700 rounded-xl p-6 shadow-md hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-background dark:bg-foreground opacity-0 group-hover:opacity-10 transition-opacity" />
+            <div className="absolute inset-0 bg-background opacity-0 group-hover:opacity-10 transition-opacity" />
             <div className="relative z-10 flex items-center space-x-4">
               <div className="w-14 h-14 bg-white/20 dark:bg-black/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
                 📦
@@ -255,7 +287,7 @@ export default function AdminDashboard() {
             to="/admin/reviews"
             className="group relative bg-purple-600 dark:bg-purple-700 rounded-xl p-6 shadow-md hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-background dark:bg-foreground opacity-0 group-hover:opacity-10 transition-opacity" />
+            <div className="absolute inset-0 bg-background opacity-0 group-hover:opacity-10 transition-opacity" />
             <div className="relative z-10 flex items-center space-x-4">
               <div className="w-14 h-14 bg-white/20 dark:bg-black/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
                 ⭐
@@ -287,18 +319,18 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Orders Table */}
-      <div className="bg-background dark:bg-card rounded-2xl shadow-lg border border-border dark:border-foreground/10 overflow-hidden">
-        <div className="px-6 py-5 border-b border-border dark:border-foreground/10 bg-gray-50 dark:bg-gray-800/50">
+      <div className="bg-background dark:bg-card rounded-2xl shadow-lg border border-border overflow-hidden">
+        <div className="px-6 py-5 border-b border-border bg-gray-50 dark:bg-gray-800/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-lg flex items-center justify-center text-background font-bold">
                 📊
               </div>
               <div>
-                <h3 className="text-xl font-bold text-foreground dark:text-background">
+                <h3 className="text-xl font-bold text-foreground">
                   Latest orders
                 </h3>
-                <p className="text-sm text-muted-foreground dark:text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Real-time activity from your customers
                 </p>
               </div>
@@ -328,22 +360,22 @@ export default function AdminDashboard() {
           <table className="min-w-full">
             <thead>
               <tr className="bg-gray-100 dark:bg-card/50">
-                <th className="px-6 py-4 text-left text-xs font-bold text-foreground dark:text-background uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-foreground uppercase tracking-wider">
                   Order #
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-foreground dark:text-background uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-foreground uppercase tracking-wider">
                   Customer
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-foreground dark:text-background uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-foreground uppercase tracking-wider">
                   Amount
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-foreground dark:text-background uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-foreground dark:text-background uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-foreground uppercase tracking-wider">
                   Date
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-foreground dark:text-background uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-foreground uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -352,18 +384,18 @@ export default function AdminDashboard() {
               {recentOrders.map((order, idx) => (
                 <tr
                   key={order.id}
-                  className={`border-b border-border dark:border-foreground/10 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-all duration-200 ${
+                  className={`border-b border-border hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-all duration-200 ${
                     idx % 2 === 0
                       ? "bg-background dark:bg-card"
                       : "bg-background/30 dark:bg-card/30"
                   }`}
                 >
                   <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-foreground dark:text-background">
+                    <span className="text-sm font-bold text-foreground">
                       #{order.orderNumber}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-foreground dark:text-background">
+                  <td className="px-6 py-4 text-sm font-medium text-foreground">
                     {order.customer}
                   </td>
                   <td className="px-6 py-4">
@@ -394,7 +426,7 @@ export default function AdminDashboard() {
                         order.status.slice(1)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground font-medium">
+                  <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
                     {order.date}
                   </td>
                   <td className="px-6 py-4">

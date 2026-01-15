@@ -19,16 +19,23 @@ export default function OrderStatusTimeline({ status }) {
               {index <= currentStatusIndex ? (
                 <div className="flex items-center">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600">
-                    <CheckIcon className="h-6 w-6 text-background" aria-hidden="true" />
+                    <CheckIcon
+                      className="h-6 w-6 text-background"
+                      aria-hidden="true"
+                    />
                   </span>
-                  <span className="ml-4 text-sm font-medium text-foreground">{s.name}</span>
+                  <span className="ml-4 text-sm font-medium text-foreground">
+                    {s.name}
+                  </span>
                 </div>
               ) : (
                 <div className="flex items-center">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-border">
-                    <span className="text-background0">{index + 1}</span>
+                    <span className="text-muted-foreground">{index + 1}</span>
                   </span>
-                  <span className="ml-4 text-sm font-medium text-background0">{s.name}</span>
+                  <span className="ml-4 text-sm font-medium text-muted-foreground">
+                    {s.name}
+                  </span>
                 </div>
               )}
 

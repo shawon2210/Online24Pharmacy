@@ -57,7 +57,9 @@ export default function ReviewSection({ productId }) {
     <div className="mt-8">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h3 className="text-xl font-semibold">Customer Reviews</h3>
+          <h3 className="text-xl font-semibold text-foreground">
+            Customer Reviews
+          </h3>
           {reviewData && (
             <div className="flex items-center mt-2">
               <div className="flex">
@@ -85,7 +87,7 @@ export default function ReviewSection({ productId }) {
       {showReviewForm && (
         <form
           onSubmit={handleSubmitReview}
-          className="bg-background dark:bg-card p-4 rounded-lg mb-6 border border-border dark:border-foreground"
+          className="bg-background dark:bg-card p-4 rounded-lg mb-6 border border-border"
         >
           <div className="mb-4">
             <label className="block text-sm font-medium text-foreground mb-2">
@@ -101,7 +103,7 @@ export default function ReviewSection({ productId }) {
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-md"
+              className="w-full px-3 py-2 border border-border rounded-md bg-background dark:bg-card text-foreground placeholder:text-muted-foreground"
               rows="3"
               placeholder="Share your experience with this product..."
             />
@@ -144,7 +146,7 @@ export default function ReviewSection({ productId }) {
                 </div>
                 <div className="flex mt-1">{renderStars(review.rating)}</div>
               </div>
-              <span className="text-sm text-background0">
+              <span className="text-sm text-muted-foreground">
                 {new Date(review.createdAt).toLocaleDateString()}
               </span>
             </div>
@@ -155,7 +157,7 @@ export default function ReviewSection({ productId }) {
         ))}
 
         {reviewData?.reviews?.length === 0 && (
-          <p className="text-background0 text-center py-8">
+          <p className="text-muted-foreground text-center py-8">
             No reviews yet. Be the first to review this product!
           </p>
         )}

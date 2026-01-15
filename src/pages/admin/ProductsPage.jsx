@@ -470,33 +470,33 @@ const AdminProductsPage = () => {
 
       <div className="bg-background shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-background">
               <tr>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Image
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Category
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Price
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Stock
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-background divide-y divide-gray-200">
+            <tbody className="bg-background divide-y divide-border">
               {data?.data.map((product) => {
                 const images =
                   typeof product.images === "string"
@@ -515,10 +515,10 @@ const AdminProductsPage = () => {
                         <img
                           src={`${API_URL}${firstImage}`}
                           alt={product.name}
-                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded border"
+                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded border border-border"
                         />
                       ) : (
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-muted border border-border rounded flex items-center justify-center text-xs text-muted-foreground">
                           No img
                         </div>
                       )}
@@ -526,14 +526,14 @@ const AdminProductsPage = () => {
                     <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm font-medium text-foreground">
                       {product.name}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm text-background0">
+                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm text-muted-foreground">
                       {product.subcategory?.category?.name} {" > "}{" "}
                       {product.subcategory?.name}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm text-background0">
+                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm text-muted-foreground">
                       ৳{product.price.toFixed(2)}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm text-background0">
+                    <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm text-muted-foreground">
                       {product.stockQuantity}
                     </td>
                     <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs">

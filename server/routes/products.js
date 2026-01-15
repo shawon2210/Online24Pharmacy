@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
     } = req.query;
 
     const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
-    const take = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+    const take = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 1000);
     const skip = (pageNumber - 1) * take;
 
     const where = { isActive: true };

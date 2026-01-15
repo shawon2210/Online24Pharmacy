@@ -18,7 +18,15 @@
     "outForDeliveryDesc": "Your order is on the way to your address. Track its journey here.",
     "delivered": "Delivered",
     "deliveredDesc": "Your order has been delivered. Thank you for choosing Online24 Pharmacy!",
-    "orderNotFound": "Order not found. Please check your Order ID and phone number."
+    "orderNotFound": "Order not found. Please check your Order ID and phone number.",
+    "status": "Status",
+    "totalAmount": "Total Amount",
+    "orderDate": "Order Date",
+    "orderItems": "Order Items",
+    "seoTitle": "Track Order - Online24 Pharmacy",
+    "seoDescription": "Track your order status by Order ID and phone number.",
+    "haveAccountForTracking": "Have an account? Sign in for full order history and faster tracking.",
+    "signInToAccount": "Sign In to Your Account"
   },
   "prescriptionsPage": {
     "prescriptions": "Your Prescriptions",
@@ -659,6 +667,21 @@
     "fetchOrdersError": "Failed to fetch orders:",
     "failedToLoadOrders": "Failed to load orders"
   },
+  "pickupMapPage": {
+    "seoTitle": "Pickup Locations - Online24 Pharmacy",
+    "seoDescription": "Find nearby pickup locations and view them on the map.",
+    "title": "Pickup Locations",
+    "subtitle": "Map & Nearby Shops",
+    "description": "Choose a nearby shop for pickup and see directions on the map.",
+    "loading": "Loading pickup locations...",
+    "error": "Something went wrong",
+    "failedToLoad": "Failed to load pickup locations",
+    "availableShops": "Available Shops",
+    "noShops": "No shops available",
+    "map": "Map",
+    "shops": "Shops",
+    "refresh": "Refresh"
+  },
   "customKitBuilder": {
     "myCustomKit": "My Custom Kit",
     "fetchProductsError": "Failed to fetch products",
@@ -677,9 +700,10 @@
     "subtitle": "Create personalized medical kits for your specific needs",
     "quickStartTemplates": "Quick Start Templates",
     "useCases": {
-      "Post-SurgeryCare": "Post-Surgery Care",
-      "DiabeticWoundKit": "Diabetic Wound Kit",
-      "FirstAidforHome": "First Aid for Home"
+      "SurgicalProducts": "Surgical Products",
+      "VitaminsSupplements": "Vitamins & Supplements",
+      "PainRelief": "Pain Relief",
+      "FirstAid": "First Aid"
     },
     "availableItems": "Available Items",
     "searchPlaceholder": "Search for items...",
@@ -699,6 +723,26 @@
     "shopByCategory": "Shop by Category",
     "exploreProducts": "Explore our comprehensive range of medical products.",
     "viewAllCategories": "View All Categories"
+  },
+  "myPrescriptionsPage": {
+    "title": "My Prescriptions",
+    "subtitle": "Manage your prescription history and reorder medications",
+    "uploadNew": "Upload New Prescription",
+    "all": "All",
+    "active": "Active",
+    "expiring": "Expiring Soon",
+    "expired": "Expired",
+    "pending": "Pending",
+    "noPrescriptions": "No prescriptions found",
+    "uploadFirst": "Upload your first prescription to get started",
+    "ref": "Ref",
+    "prescribedOn": "Prescribed on",
+    "expiresOn": "Expires on",
+    "reorder": "Reorder",
+    "remind": "Remind",
+    "medicinesAdded": "Medicines added to cart",
+    "reminderSet": "Reminder set successfully",
+    "status": "Status"
   },
   "loading": "Loading...",
   "previous": "Previous",

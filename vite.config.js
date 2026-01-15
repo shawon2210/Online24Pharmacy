@@ -31,12 +31,12 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) return 'vendor_react'
             if (id.includes('@tanstack') || id.includes('react-query')) return 'vendor_tanstack'
             if (id.includes('framer-motion')) return 'vendor_motion'
             if (id.includes('@heroicons')) return 'vendor_icons'
             if (id.includes('axios')) return 'vendor_axios'
             if (id.includes('react-router')) return 'vendor_router'
+            if (id.includes('chart.js') || id.includes('react-chartjs-2')) return 'vendor_charts'
             return 'vendor'
           }
         }

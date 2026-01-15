@@ -67,7 +67,7 @@ export default function OrderSummary({
           </span>
         </div>
         {safeSubtotal < DELIVERY.FREE_SHIPPING_THRESHOLD && (
-          <div className="text-xs text-background0">
+          <div className="text-xs text-muted-foreground">
             {t("cartPage.addMoreForFreeShipping", {
               amount: (DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(
                 2
@@ -91,7 +91,7 @@ export default function OrderSummary({
         className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 ${
           canCheckout
             ? "bg-linear-to-r from-emerald-600 to-green-600 text-background hover:from-emerald-700 hover:to-green-700 active:scale-95"
-            : "bg-border text-background0 cursor-not-allowed"
+            : "bg-border text-muted-foreground cursor-not-allowed"
         }`}
       >
         <span>{t("cartPage.proceedCheckout")}</span>

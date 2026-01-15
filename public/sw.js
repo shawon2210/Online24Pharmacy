@@ -1,9 +1,9 @@
 const CACHE_NAME = 'online24-pharmacy-v1';
 const urlsToCache = [
   '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json'
+  '/manifest.json',
+  '/vite.svg',
+  '/icon-192x192.png'
 ];
 
 // Install service worker
@@ -16,6 +16,12 @@ self.addEventListener('install', (event) => {
 
 // Fetch event
 self.addEventListener('fetch', (event) => {
+  const url = event.request.url;
+  // Always fetch from network for API requests
+  if (url.includes('/api/')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   event.respondWith(
     caches.match(event.request)
       .then((response) => {

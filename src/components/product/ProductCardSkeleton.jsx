@@ -4,7 +4,7 @@
  */
 export default function ProductCardSkeleton() {
   return (
-    <article className="bg-background dark:bg-card dark:border-foreground rounded-lg border border-border overflow-hidden animate-pulse">
+    <article className="bg-background dark:bg-card rounded-lg border border-border overflow-hidden animate-pulse">
       {/* Image Skeleton */}
       <div className="aspect-square bg-border" />
 

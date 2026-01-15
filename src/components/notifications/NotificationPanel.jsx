@@ -239,7 +239,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
       <div className="bg-background rounded-lg shadow-lg overflow-hidden w-full">
         <div className="p-6 text-center">
           <Bell className="w-12 h-12 mx-auto mb-4 text-muted" />
-          <p className="text-background0 text-sm">No notifications yet</p>
+          <p className="text-muted-foreground text-sm">No notifications yet</p>
           <p className="text-muted-foreground text-xs mt-2">
             We'll notify you when something important happens
           </p>

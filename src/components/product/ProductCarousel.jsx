@@ -83,18 +83,18 @@ const ProductCarousel = memo(({ products = [] }) => {
     >
       <div
         ref={trackRef}
-        className="flex gap-3 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-7 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-3 sm:pb-4 scroll-smooth px-1 -mx-1"
+        className="flex gap-3 sm:gap-4 md:gap-5 lg:gap-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth px-0 sm:px-0 -mx-1 sm:mx-0 pb-2 sm:pb-3"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
           WebkitOverflowScrolling: "touch",
+          touchAction: "pan-x",
         }}
       >
-        {products.map((p, index) => (
+        {products.map((p) => (
           <div
             key={p.id}
-            className="snap-start shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 2xl:w-1/6 animate-fade-in-up"
-            style={{ animationDelay: `${index * 100}ms` }}
+            className="snap-start shrink-0 min-w-0 w-[38vw] xs:w-[28vw] sm:w-[18vw] md:w-[14vw] lg:w-[13vw] xl:w-[10vw] 2xl:w-[12vw] max-w-full animate-fade-in-up px-0 sm:px-1 md:px-2"
           >
             <ProductCard product={p} size="carousel" />
           </div>

@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 export const RequireAuth = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
+  const token = localStorage.getItem("auth_token");
 
   if (loading) {
     return (
@@ -13,7 +14,7 @@ export const RequireAuth = ({ children }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !token) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

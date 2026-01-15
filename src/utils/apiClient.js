@@ -2,7 +2,9 @@
  * Centralized API client with error handling and token management
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+import { getApiBaseUrl } from './apiBase';
+
+const API_URL = getApiBaseUrl();
 
 /**
  * Get authorization headers with token
@@ -48,7 +50,10 @@ export const apiRequest = async (endpoint, options = {}) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Request failed');
+      const err = new Error(data.error || data.message || 'Request failed');
+      err.status = response.status;
+      err.data = data;
+      throw err;
     }
 
     return data;

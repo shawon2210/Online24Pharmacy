@@ -29,20 +29,10 @@ import { useTranslation } from "react-i18next";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const useCases = {
-  "Post-Surgery Care": [
-    "Gauze",
-    "Antiseptic",
-    "Medical Tape",
-    "Pain Relievers",
-  ],
-  "Diabetic Wound Kit": ["Gauze", "Antiseptic", "Saline Solution", "Bandages"],
-  "First Aid for Home": [
-    "Bandages",
-    "Antiseptic Wipes",
-    "Gauze",
-    "Adhesive Tape",
-    "Scissors",
-  ],
+  "Surgical Products": ["Surgical Products"],
+  "Vitamins & Supplements": ["Vitamins & Supplements"],
+  "Pain Relief": ["Pain Relief"],
+  "First Aid": ["First Aid"],
 };
 
 const ProductItem = ({ product, onAdd }) => {
@@ -67,7 +57,7 @@ const ProductItem = ({ product, onAdd }) => {
       >
         <p className="font-semibold text-foreground">{product.name}</p>
         <p className="text-sm text-muted-foreground">
-          ${product.price.toFixed(2)}
+          ${product.price ? product.price.toFixed(2) : "N/A"}
         </p>
       </div>
       <button
@@ -86,12 +76,12 @@ const KitItem = ({ item, onRemove }) => {
       <div>
         <p className="font-semibold text-foreground">{item.name}</p>
         <p className="text-sm text-muted-foreground">
-          ${item.price.toFixed(2)}
+          ${item.price ? item.price.toFixed(2) : "N/A"}
         </p>
       </div>
       <button
         onClick={() => onRemove(item.instanceId)}
-        className="text-red-600 hover:opacity-80 transition-opacity"
+        className="text-primary hover:opacity-80 transition-opacity"
       >
         <TrashIcon className="w-5 h-5" />
       </button>
@@ -111,7 +101,7 @@ export default function CustomSurgicalKitBuilder() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const response = await fetch(`${API_URL}/api/products`);
+      const response = await fetch(`${API_URL}/api/products?limit=1000`);
       if (!response.ok)
         throw new Error(t("customKitBuilder.fetchProductsError"));
       const data = await response.json();
@@ -158,7 +148,10 @@ export default function CustomSurgicalKitBuilder() {
   const clearKit = () => setKitItems([]);
 
   const selectUseCase = (useCase) => {
-    const newItems = products.filter((p) => useCases[useCase].includes(p.name));
+    const categoryNames = useCases[useCase];
+    const newItems = products.filter((p) =>
+      categoryNames.includes(p.category?.name)
+    );
     const uniqueNewItems = newItems.filter(
       (newItem) => !kitItems.some((kitItem) => kitItem.id === newItem.id)
     );
@@ -172,7 +165,7 @@ export default function CustomSurgicalKitBuilder() {
   };
 
   const totalPrice = useMemo(() => {
-    return kitItems.reduce((total, item) => total + item.price, 0);
+    return kitItems.reduce((total, item) => total + (item.price || 0), 0);
   }, [kitItems]);
 
   const saveKit = async () => {
@@ -310,15 +303,22 @@ export default function CustomSurgicalKitBuilder() {
             {t("customKitBuilder.quickStartTemplates")}
           </h2>
           <div className="flex flex-wrap gap-3">
-            {Object.keys(useCases).map((useCase) => (
-              <button
-                key={useCase}
-                onClick={() => selectUseCase(useCase)}
-                className="px-4 py-2 bg-muted text-foreground rounded-lg font-medium hover:bg-primary/10 hover:text-primary transition-colors border border-border"
-              >
-                {t(`customKitBuilder.useCases.${useCase.replace(/\s+/g, "")}`)}
-              </button>
-            ))}
+            {Object.keys(useCases).map((useCase) => {
+              const sanitized = useCase.replace(/[^a-z0-9]/gi, "");
+              const tKey = `customKitBuilder.useCases.${sanitized}`;
+              const label = t(tKey);
+              const displayLabel = label && label !== tKey ? label : useCase;
+              return (
+                <button
+                  key={useCase}
+                  onClick={() => selectUseCase(useCase)}
+                  className="px-4 py-2 rounded-lg font-bold bg-primary/10 border-2 border-primary/30 text-primary hover:bg-primary/15 transition-colors whitespace-normal text-center"
+                  aria-label={displayLabel}
+                >
+                  {displayLabel}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -388,7 +388,7 @@ export default function CustomSurgicalKitBuilder() {
                 {kitItems.length > 0 && (
                   <button
                     onClick={clearKit}
-                    className="text-sm font-medium text-red-600 hover:opacity-80 flex items-center gap-1 transition-opacity"
+                    className="text-sm font-semibold text-primary hover:opacity-80 flex items-center gap-1 transition-opacity"
                   >
                     <XMarkIcon className="w-4 h-4" /> {t("clearAll")}
                   </button>
@@ -439,7 +439,7 @@ export default function CustomSurgicalKitBuilder() {
                 placeholder={t("customKitBuilder.kitNamePlaceholder")}
               />
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center justify-between sm:justify-start gap-6 w-full lg:w-auto">
               <div className="text-center">
                 <p className="text-xs text-muted-foreground font-medium">
                   {t("items")}
@@ -457,25 +457,25 @@ export default function CustomSurgicalKitBuilder() {
                 </p>
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row flex-wrap gap-3">
               <button
                 onClick={addKitToCart}
-                className="bg-primary hover:opacity-90 text-white px-6 py-3 rounded-lg font-semibold transition-opacity flex items-center gap-2 shadow-lg hover:shadow-xl"
+                className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl font-extrabold transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-[0.99]"
               >
-                <ShoppingCartIcon className="w-5 h-5" /> {t("addToCart")}
+                <ShoppingCartIcon className="w-5 h-5" /> {t("Add To Cart")}
               </button>
               <button
                 onClick={saveKit}
-                className="bg-blue-600 hover:opacity-90 text-white px-6 py-3 rounded-lg font-semibold transition-opacity flex items-center gap-2 shadow-lg hover:shadow-xl"
+                className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl font-extrabold transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-[0.99]"
               >
                 <CheckCircleIcon className="w-5 h-5" />{" "}
                 {t("customKitBuilder.saveKit")}
               </button>
               <button
                 onClick={shareKit}
-                className="bg-muted-foreground hover:opacity-80 text-background px-6 py-3 rounded-lg font-semibold transition-opacity flex items-center gap-2 shadow-lg hover:shadow-xl"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl font-extrabold transition-colors flex items-center justify-center gap-2 border-2 border-primary/30 bg-primary/10 text-primary hover:bg-primary/15"
               >
-                <ShareIcon className="w-5 h-5" /> {t("share")}
+                <ShareIcon className="w-5 h-5" /> {t("Share")}
               </button>
             </div>
           </div>

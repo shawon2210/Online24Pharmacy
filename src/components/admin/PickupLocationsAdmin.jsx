@@ -47,13 +47,15 @@ const PickupLocationsAdmin = () => {
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) throw new Error("No admin token");
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
       const res = await fetch("/api/admin/pickup-locations/start-geocode-job", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          ...(csrfToken && { 'X-CSRF-Token': csrfToken })
+          ...(csrfToken && { "X-CSRF-Token": csrfToken }),
         },
         body: JSON.stringify({}),
       });
@@ -118,6 +120,11 @@ const PickupLocationsAdmin = () => {
     e.preventDefault();
     console.log("Form submitted with data:", formData);
 
+    if (!formData.lat || !formData.lng) {
+      alert("Latitude and Longitude are required.");
+      return;
+    }
+
     const token = localStorage.getItem("auth_token");
     if (!token) {
       alert("You must be logged in as an admin to perform this action.");
@@ -125,7 +132,9 @@ const PickupLocationsAdmin = () => {
     }
 
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
       const url = editingLocation
         ? `/api/admin/pickup-locations/${editingLocation.id}`
         : "/api/admin/pickup-locations";
@@ -138,7 +147,7 @@ const PickupLocationsAdmin = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          ...(csrfToken && { 'X-CSRF-Token': csrfToken })
+          ...(csrfToken && { "X-CSRF-Token": csrfToken }),
         },
         body: JSON.stringify(formData),
       });
@@ -194,13 +203,15 @@ const PickupLocationsAdmin = () => {
     }
 
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
       console.log("Deleting location:", id);
       const response = await fetch(`/api/admin/pickup-locations/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
-          ...(csrfToken && { 'X-CSRF-Token': csrfToken })
+          ...(csrfToken && { "X-CSRF-Token": csrfToken }),
         },
       });
       console.log("Delete response status:", response.status);
@@ -264,7 +275,7 @@ const PickupLocationsAdmin = () => {
                     <span className="text-foreground">Idle</span>
                   )}
                   {geocodeStatus.lastRun && (
-                    <span className="ml-2 text-background0">
+                    <span className="ml-2 text-muted-foreground">
                       Last: {geocodeStatus.lastRun.status} (
                       {geocodeStatus.lastRun.updatedAt
                         ? new Date(
@@ -275,12 +286,12 @@ const PickupLocationsAdmin = () => {
                     </span>
                   )}
                   {typeof geocodeStatus.pending === "number" && (
-                    <span className="ml-2 text-background0">
+                    <span className="ml-2 text-muted-foreground">
                       Pending: {geocodeStatus.pending}
                     </span>
                   )}
                   {typeof geocodeStatus.completed === "number" && (
-                    <span className="ml-2 text-background0">
+                    <span className="ml-2 text-muted-foreground">
                       Completed: {geocodeStatus.completed}
                     </span>
                   )}
@@ -421,7 +432,7 @@ const PickupLocationsAdmin = () => {
                       is_active: true,
                     });
                   }}
-                  className="bg-background0 hover:bg-muted-foreground text-background px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  className="bg-muted hover:bg-muted/80 text-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
@@ -437,22 +448,22 @@ const PickupLocationsAdmin = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-background">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Address
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Coordinates
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Hours
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-background0 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -463,13 +474,13 @@ const PickupLocationsAdmin = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                     {location.name}
                   </td>
-                  <td className="px-6 py-4 text-sm text-background0 max-w-xs truncate">
+                  <td className="px-6 py-4 text-sm text-muted-foreground max-w-xs truncate">
                     {location.address}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                     {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-background0">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                     {location.open_hours}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -513,7 +524,7 @@ const PickupLocationsAdmin = () => {
                     <h3 className="text-sm font-medium text-foreground">
                       {location.name}
                     </h3>
-                    <p className="text-sm text-background0 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       {location.address}
                     </p>
                   </div>
@@ -527,7 +538,7 @@ const PickupLocationsAdmin = () => {
                     {location.is_active ? "Active" : "Inactive"}
                   </span>
                 </div>
-                <div className="text-xs text-background0 space-y-1 mb-3">
+                <div className="text-xs text-muted-foreground space-y-1 mb-3">
                   <p>
                     <span className="font-medium">Coordinates:</span>{" "}
                     {location.lat.toFixed(4)}, {location.lng.toFixed(4)}

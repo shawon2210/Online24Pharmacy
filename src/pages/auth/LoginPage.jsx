@@ -176,7 +176,7 @@ export default function LoginPage() {
                     id="email"
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full px-4 py-3.5 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                    className="w-full px-4 py-3.5 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                     {...register("email")}
                   />
                   {errors.email && (
@@ -207,7 +207,7 @@ export default function LoginPage() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3.5 pr-12 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                      className="w-full px-4 py-3.5 pr-12 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                       {...register("password")}
                     />
                     <button
@@ -248,7 +248,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-linear-to-br from-emerald-600 via-blue-600 to-purple-600 hover:from-emerald-500 hover:via-blue-500 hover:to-purple-500 text-background font-bold py-4 rounded-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 active:translate-y-0 text-base"
+                  className="w-full bg-linear-to-br from-emerald-600 via-blue-600 to-purple-600 hover:from-emerald-500 hover:via-blue-500 hover:to-purple-500 text-white font-bold py-4 rounded-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 active:translate-y-0 text-base"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

@@ -180,7 +180,7 @@ export default function SignupPage() {
                       id="firstName"
                       type="text"
                       placeholder="John"
-                      className="w-full px-3 py-3 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                      className="w-full px-3 py-3 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                       {...register("firstName")}
                     />
                     {errors.firstName && (
@@ -200,7 +200,7 @@ export default function SignupPage() {
                       id="lastName"
                       type="text"
                       placeholder="Doe"
-                      className="w-full px-3 py-3 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                      className="w-full px-3 py-3 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                       {...register("lastName")}
                     />
                     {errors.lastName && (
@@ -222,7 +222,7 @@ export default function SignupPage() {
                     id="email"
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full px-4 py-3 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                    className="w-full px-4 py-3 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                     {...register("email")}
                   />
                   {errors.email && (
@@ -247,7 +247,7 @@ export default function SignupPage() {
                       id="phone"
                       type="tel"
                       placeholder="01712345678"
-                      className="w-full pl-14 pr-4 py-3 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                      className="w-full pl-14 pr-4 py-3 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                       {...register("phone")}
                     />
                   </div>
@@ -270,7 +270,7 @@ export default function SignupPage() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 pr-12 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                      className="w-full px-4 py-3 pr-12 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                       {...register("password")}
                     />
                     <button
@@ -304,7 +304,7 @@ export default function SignupPage() {
                       id="confirmPassword"
                       type={showConfirm ? "text" : "password"}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 pr-12 bg-card/50 border-2 border-foreground rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-background placeholder-gray-500 group-hover:border-muted-foreground"
+                      className="w-full px-4 py-3 pr-12 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground placeholder-gray-500 group-hover:border-muted-foreground"
                       {...register("confirmPassword")}
                     />
                     <button

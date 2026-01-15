@@ -7,18 +7,32 @@ const router = Router();
 
 // GET /api/admin/prescriptions - List all prescriptions with filtering and pagination
 router.get('/', async (req, res) => {
-  const { page = 1, limit = 10, status = 'PENDING' } = req.query;
+  const { page = 1, limit = 10, status, search = '' } = req.query;
   const pageNum = parseInt(page, 10);
   const limitNum = parseInt(limit, 10);
 
   try {
-    const where = status ? { status } : {};
+    const where = {};
+    
+    if (status && status !== 'ALL') {
+      where.status = status;
+    }
+    
+    if (search) {
+      where.OR = [
+        { referenceNumber: { contains: search, mode: 'insensitive' } },
+        { patientName: { contains: search, mode: 'insensitive' } },
+        { user: { email: { contains: search, mode: 'insensitive' } } },
+        { user: { firstName: { contains: search, mode: 'insensitive' } } },
+        { user: { lastName: { contains: search, mode: 'insensitive' } } },
+      ];
+    }
 
     const prescriptions = await prisma.prescription.findMany({
       where,
       skip: (pageNum - 1) * limitNum,
       take: limitNum,
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: 'desc' },
       include: {
         user: { select: { id: true, firstName: true, lastName: true, email: true } },
       },

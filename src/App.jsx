@@ -53,6 +53,7 @@ import AdminTest from "./pages/admin/AdminTest";
 import AdminReviews from "./pages/admin/AdminReviews";
 import AdminAuditLog from "./pages/admin/AdminAuditLog";
 import AdminPickupLocations from "./pages/admin/AdminPickupLocations";
+import AdminShopsPage from "./pages/admin/AdminShopsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,188 +68,180 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-          <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-            <Router>
-              <ScrollToTop />
-              <Toaster position="top-center" reverseOrder={false} />
-              <AIChatbot />
-              <Routes>
-                {/* Guest Routes */}
-                <Route
-                  path="/login"
-                  element={
-                    <RequireGuest>
-                      <LoginPage />
-                    </RequireGuest>
-                  }
-                />
-                <Route
-                  path="/signup"
-                  element={
-                    <RequireGuest>
-                      <SignupPage />
-                    </RequireGuest>
-                  }
-                />
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+          <Router>
+            <ScrollToTop />
+            <Toaster position="top-center" reverseOrder={false} />
+            <AIChatbot />
+            <Routes>
+              {/* Guest Routes */}
+              <Route
+                path="/login"
+                element={
+                  <RequireGuest>
+                    <LoginPage />
+                  </RequireGuest>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <RequireGuest>
+                    <SignupPage />
+                  </RequireGuest>
+                }
+              />
 
-                {/* Admin Routes */}
-                <Route
-                  path="/admin"
-                  element={
-                    <RequireAdmin>
-                      <AdminLayout />
-                    </RequireAdmin>
-                  }
-                >
-                  <Route index element={<AdminDashboard />} />
-                  <Route path="dashboard" element={<AdminDashboard />} />
-                  <Route path="products" element={<AdminProductsPage />} />
-                  <Route path="categories" element={<AdminCategories />} />
-                  <Route path="orders" element={<AdminOrders />} />
-                  <Route path="inventory" element={<AdminInventory />} />
-                  <Route path="analytics" element={<AdminAnalytics />} />
-                  <Route
-                    path="prescriptions"
-                    element={<AdminPrescriptions />}
-                  />
-                  <Route path="suppliers" element={<AdminSuppliers />} />
-                  <Route path="promotions" element={<AdminPromotions />} />
-                  <Route path="reviews" element={<AdminReviews />} />
-                  <Route path="customers" element={<AdminCustomers />} />
-                  <Route path="audit-log" element={<AdminAuditLog />} />
-                  <Route
-                    path="pickup-locations"
-                    element={<AdminPickupLocations />}
-                  />
-                  <Route path="test" element={<AdminTest />} />
-                </Route>
+              {/* Admin Routes */}
+              <Route
+                path="/admin"
+                element={
+                  <RequireAdmin>
+                    <AdminLayout />
+                  </RequireAdmin>
+                }
+              >
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="products" element={<AdminProductsPage />} />
+                <Route path="categories" element={<AdminCategories />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="inventory" element={<AdminInventory />} />
+                <Route path="analytics" element={<AdminAnalytics />} />
+                <Route path="prescriptions" element={<AdminPrescriptions />} />
+                <Route path="suppliers" element={<AdminSuppliers />} />
+                <Route path="promotions" element={<AdminPromotions />} />
+                <Route path="reviews" element={<AdminReviews />} />
+                <Route path="customers" element={<AdminCustomers />} />
+                <Route path="shops" element={<AdminShopsPage />} />
+                <Route path="audit-log" element={<AdminAuditLog />} />
+                {/* Pickup Locations route removed */}
+                <Route path="test" element={<AdminTest />} />
+              </Route>
 
-                {/* Public Routes */}
-                <Route
-                  path="/*"
-                  element={
-                    <Layout>
-                      <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route
-                          path="/products"
-                          element={<ProductDisplayPage />}
-                        />
-                        <Route
-                          path="/products/:slug"
-                          element={<ProductDisplayPage />}
-                        />
-                        <Route
-                          path="/categories"
-                          element={<CategoriesListPage />}
-                        />
-                        <Route
-                          path="/categories/:slug"
-                          element={<CategoryPage />}
-                        />
-                        <Route
-                          path="/product/:slug"
-                          element={<ProductDisplayPage />}
-                        />
-                        <Route path="/about" element={<AboutPage />} />
-                        <Route
-                          path="/build-kit"
-                          element={<CustomSurgicalKitBuilder />}
-                        />
-                        <Route path="/pickup-map" element={<PickupMapPage />} />
-                        <Route
-                          path="/track-order"
-                          element={<TrackOrderPage />}
-                        />
+              {/* Public Routes */}
+              <Route
+                path="/*"
+                element={
+                  <Layout>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route
+                        path="/products"
+                        element={<ProductDisplayPage />}
+                      />
+                      <Route
+                        path="/products/:slug"
+                        element={<ProductDisplayPage />}
+                      />
+                      <Route
+                        path="/categories"
+                        element={<CategoriesListPage />}
+                      />
+                      <Route
+                        path="/categories/:slug"
+                        element={<CategoryPage />}
+                      />
+                      <Route
+                        path="/product/:slug"
+                        element={<ProductDisplayPage />}
+                      />
+                      <Route path="/about" element={<AboutPage />} />
+                      <Route
+                        path="/build-kit"
+                        element={<CustomSurgicalKitBuilder />}
+                      />
+                      <Route path="/pickup-map" element={<PickupMapPage />} />
+                      <Route path="/track-order" element={<TrackOrderPage />} />
 
-                        {/* Authenticated Routes */}
-                        <Route
-                          path="/cart"
-                          element={
-                            <RequireAuth>
-                              <CartPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/prescription"
-                          element={
-                            <RequireAuth>
-                              <PrescriptionsPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/my-prescriptions"
-                          element={
-                            <RequireAuth>
-                              <MyPrescriptionsPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/account/orders"
-                          element={
-                            <RequireAuth>
-                              <OrdersPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/my-orders"
-                          element={
-                            <RequireAuth>
-                              <OrdersPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/account"
-                          element={
-                            <RequireAuth>
-                              <AccountPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/profile"
-                          element={
-                            <RequireAuth>
-                              <ProfilePage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/checkout"
-                          element={
-                            <RequireAuth>
-                              <CheckoutPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/orders/:orderId"
-                          element={
-                            <RequireAuth>
-                              <OrderTrackingPage />
-                            </RequireAuth>
-                          }
-                        />
-                        <Route
-                          path="/order/confirmation/:orderId"
-                          element={
-                            <RequireAuth>
-                              <OrderConfirmationPage />
-                            </RequireAuth>
-                          }
-                        />
-                      </Routes>
-                    </Layout>
-                  }
-                />
-              </Routes>
-            </Router>
-          </div>
+                      {/* Authenticated Routes */}
+                      <Route
+                        path="/cart"
+                        element={
+                          <RequireAuth>
+                            <CartPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/prescription"
+                        element={
+                          <RequireAuth>
+                            <PrescriptionsPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/my-prescriptions"
+                        element={
+                          <RequireAuth>
+                            <MyPrescriptionsPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/account/orders"
+                        element={
+                          <RequireAuth>
+                            <OrdersPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/my-orders"
+                        element={
+                          <RequireAuth>
+                            <OrdersPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/account"
+                        element={
+                          <RequireAuth>
+                            <AccountPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/profile"
+                        element={
+                          <RequireAuth>
+                            <ProfilePage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/checkout"
+                        element={
+                          <RequireAuth>
+                            <CheckoutPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/orders/:orderId"
+                        element={
+                          <RequireAuth>
+                            <OrderTrackingPage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/order/confirmation/:orderId"
+                        element={
+                          <RequireAuth>
+                            <OrderConfirmationPage />
+                          </RequireAuth>
+                        }
+                      />
+                    </Routes>
+                  </Layout>
+                }
+              />
+            </Routes>
+          </Router>
+        </div>
       </AuthProvider>
     </QueryClientProvider>
   );
