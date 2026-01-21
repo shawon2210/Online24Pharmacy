@@ -42,7 +42,7 @@ export default function OrdersPage() {
       setOrders(data.orders || []);
       if (data.orders?.length > 0) {
         toast.success(
-          t("ordersPage.ordersLoaded", { count: data.orders.length })
+          t("ordersPage.ordersLoaded", { count: data.orders.length }),
         );
       }
     } catch (err) {
@@ -50,8 +50,8 @@ export default function OrdersPage() {
         toast.error(
           t(
             "auth.sessionExpired",
-            "Your session has expired. Please sign in again."
-          )
+            "Your session has expired. Please sign in again.",
+          ),
         );
         // Clears storage and updates auth state.
         await logout();
@@ -363,7 +363,7 @@ export default function OrdersPage() {
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
-                                }
+                                },
                               )}
                             </p>
                           </div>

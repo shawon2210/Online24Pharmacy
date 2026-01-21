@@ -346,3 +346,42 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .printing, .printing * {
+    visibility: visible;
+  }
+
+  .printing {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    padding: 20px;
+    margin: 0;
+  }
+
+  .printing h3, .printing p, .printing span, .printing li {
+    color: #000 !important;
+  }
+  
+  .printing button, .printing a {
+    display: none !important;
+  }
+
+  .printing .bg-card, 
+  .printing .bg-muted, 
+  .printing .bg-background {
+    background-color: transparent !important;
+  }
+
+  .printing .divide-y > :not([hidden]) ~ :not([hidden]) {
+    border-color: #ccc !important;
+  }
+}

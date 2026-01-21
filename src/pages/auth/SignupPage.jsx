@@ -15,6 +15,8 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 
+import { USER_ROLES } from "../../utils/constants";
+
 const signupSchema = z
   .object({
     firstName: z.string().min(2, "Min 2 characters"),
@@ -23,6 +25,35 @@ const signupSchema = z
     phone: z.string().regex(/^01[3-9]\d{8}$/, "Format: 01XXXXXXXXX"),
     password: z.string().min(8, "Min 8 characters"),
     confirmPassword: z.string(),
+    role: z
+      .enum([
+        USER_ROLES.ADMIN,
+        USER_ROLES.PHARMACIST,
+        USER_ROLES.DELIVERY_PARTNER,
+        USER_ROLES.USER,
+        USER_ROLES.SUPPLIER || "SUPPLIER",
+      ])
+      .default(USER_ROLES.USER),
+    roleKey: z
+      .string()
+      .optional()
+      .refine(
+        (val, ctx) => {
+          const role = ctx.parent.role;
+          if (
+            [
+              USER_ROLES.DELIVERY_PARTNER,
+              USER_ROLES.PHARMACIST,
+              USER_ROLES.SUPPLIER,
+              "SUPPLIER",
+            ].includes(role)
+          ) {
+            return !!val && val.length > 2;
+          }
+          return true;
+        },
+        { message: "Role Key is required for this role" },
+      ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -40,8 +71,10 @@ export default function SignupPage() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm({
     resolver: zodResolver(signupSchema),
+    defaultValues: { role: USER_ROLES.USER },
   });
 
   const onSubmit = async (data) => {
@@ -53,9 +86,28 @@ export default function SignupPage() {
         email: data.email,
         phone: data.phone,
         password: data.password,
+        role: data.role,
+        roleKey: data.roleKey,
       });
       toast.success("Account created!");
-      navigate(ROUTES.HOME);
+      // Redirect based on role
+      switch (data.role) {
+        case USER_ROLES.ADMIN:
+          navigate(ROUTES.ADMIN_DASHBOARD);
+          break;
+        case USER_ROLES.PHARMACIST:
+          navigate("/admin/prescriptions");
+          break;
+        case USER_ROLES.DELIVERY_PARTNER:
+          navigate("/delivery-panel");
+          break;
+        case USER_ROLES.SUPPLIER:
+        case "SUPPLIER":
+          navigate("/supplier-panel");
+          break;
+        default:
+          navigate(ROUTES.HOME);
+      }
     } catch (err) {
       toast.error(err.message || "Failed to create account");
     } finally {
@@ -138,13 +190,13 @@ export default function SignupPage() {
             </div>
           </div>
           <p className="text-blue-100 text-sm relative z-10 flex items-center gap-2">
-            © 2024 Online24 Pharmacy. All rights reserved.
+            © 2026 Online24 Pharmacy. All rights reserved.
           </p>
         </div>
 
         {/* Form */}
-        <div className="flex-1 flex items-start sm:items-center justify-center p-4 sm:p-6 lg:p-8 pt-8 sm:pt-6 relative z-10">
-          <div className="w-full max-w-lg">
+        <div className="flex-1 flex items-start sm:items-center justify-center p-2 xs:p-4 sm:p-6 lg:p-8 pt-6 sm:pt-6 relative z-10 min-h-[80vh]">
+          <div className="w-full max-w-md sm:max-w-lg mx-auto">
             <Link
               to="/"
               className="lg:hidden flex items-center justify-center gap-3 mb-8 group"
@@ -157,7 +209,7 @@ export default function SignupPage() {
               </span>
             </Link>
 
-            <div className="bg-card/95 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 sm:p-8 border border-card/50 transform hover:scale-[1.01] transition-all duration-300">
+            <div className="bg-card/95 backdrop-blur-2xl rounded-3xl shadow-2xl p-4 xs:p-6 sm:p-8 border border-card/50 transform hover:scale-[1.01] transition-all duration-300">
               <div className="text-center mb-6">
                 <h2 className="text-3xl sm:text-4xl font-extrabold bg-linear-to-br from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent mb-3">
                   Create Account
@@ -168,7 +220,76 @@ export default function SignupPage() {
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="group">
+                  <label
+                    htmlFor="role"
+                    className="block text-sm font-bold text-muted mb-2"
+                  >
+                    Account Type{" "}
+                    <span className="text-xs text-gray-400">
+                      (Default: Customer)
+                    </span>
+                  </label>
+                  <select
+                    id="role"
+                    className="w-full px-4 py-3 sm:px-5 sm:py-3 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base sm:text-lg text-foreground group-hover:border-muted-foreground appearance-none cursor-pointer min-h-48px sm:min-h-56px"
+                    aria-label="Select account type"
+                    {...register("role")}
+                  >
+                    <option value={USER_ROLES.USER}>
+                      🛒 Customer (Default)
+                    </option>
+                    <option value={USER_ROLES.DELIVERY_PARTNER}>
+                      🚚 Deliveryman
+                    </option>
+                    <option value={USER_ROLES.SUPPLIER || "SUPPLIER"}>
+                      🏭 Supplier
+                    </option>
+                    <option value={USER_ROLES.PHARMACIST}>💊 Pharmacist</option>
+                  </select>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Choose your account type. Most users should select{" "}
+                    <b>Customer</b> for shopping.
+                  </p>
+                  {errors.role && (
+                    <p className="text-xs text-red-400 mt-1.5 font-medium">
+                      {errors.role.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Role Key Field - only for deliveryman, supplier, pharmacist */}
+                {[
+                  USER_ROLES.DELIVERY_PARTNER,
+                  USER_ROLES.PHARMACIST,
+                  USER_ROLES.SUPPLIER,
+                  "SUPPLIER",
+                ].includes(watch("role")) && (
+                  <div className="group">
+                    <label
+                      htmlFor="roleKey"
+                      className="block text-sm font-bold text-muted mb-2"
+                    >
+                      Role Key{" "}
+                      <span className="text-xs text-gray-400">
+                        (Required for this role)
+                      </span>
+                    </label>
+                    <input
+                      id="roleKey"
+                      type="text"
+                      placeholder="Enter your role key (provided by admin)"
+                      className="w-full px-4 py-3 bg-card/50 border-2 border-border rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-base text-foreground group-hover:border-muted-foreground"
+                      {...register("roleKey")}
+                    />
+                    {errors.roleKey && (
+                      <p className="text-xs text-red-400 mt-1.5 font-medium">
+                        {errors.roleKey.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="group">
                     <label
                       htmlFor="firstName"

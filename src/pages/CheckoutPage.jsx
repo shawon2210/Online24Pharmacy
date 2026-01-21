@@ -210,10 +210,7 @@ export default function CheckoutPage() {
       {
         onSuccess: (data) => {
           clearCart();
-          navigate(ROUTES.MY_ORDERS, {
-            replace: true,
-            state: { highlightOrderId: data?.id },
-          });
+          navigate(`/order/confirmation/${data.id}`, { replace: true });
         },
         onError: (error) => {
           const status = error?.response?.status;

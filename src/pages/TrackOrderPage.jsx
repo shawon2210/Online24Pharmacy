@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import "./track-order-print.css";
 import {
   MagnifyingGlassIcon,
   TruckIcon,
   CheckCircleIcon,
+  PrinterIcon,
 } from "@heroicons/react/24/outline";
 import SEOHead from "../components/common/SEOHead";
 import { getApiBaseUrl } from "../utils/apiBase";
@@ -16,6 +18,7 @@ export default function TrackOrderPage() {
   const [orderData, setOrderData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const printRef = useRef();
 
   const handleTrack = useCallback(
     async (id, ph) => {
@@ -54,8 +57,8 @@ export default function TrackOrderPage() {
             throw new Error(
               t(
                 "trackOrderPage.apiUnavailable",
-                "Unable to reach the order tracking service. If you're running locally, start the backend with `npm run server` and try again."
-              )
+                "Unable to reach the order tracking service. If you're running locally, start the backend with `npm run server` and try again.",
+              ),
             );
           }
           // Fallback: attempt JSON parse anyway.
@@ -73,7 +76,7 @@ export default function TrackOrderPage() {
         setLoading(false);
       }
     },
-    [t]
+    [t],
   );
 
   useEffect(() => {
@@ -87,9 +90,167 @@ export default function TrackOrderPage() {
     }
   }, [handleTrack]);
 
+  const [orderIdError, setOrderIdError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+
+  // Validation functions
+  const validateOrderId = (id) => {
+    if (!id.trim()) {
+      return t("trackOrderPage.orderIdRequired", "Order ID is required");
+    }
+
+    // Remove # prefix if present for validation
+    const cleanId = id.replace(/^#/, "");
+
+    // Check if it matches the expected format (LP followed by 8 digits)
+    const orderIdRegex = /^LP\d{8}$/;
+    if (!orderIdRegex.test(cleanId)) {
+      return t(
+        "trackOrderPage.invalidOrderId",
+        "Order ID must be in format LP12345678 or #LP12345678",
+      );
+    }
+
+    return "";
+  };
+
+  const validatePhone = (phone) => {
+    if (!phone.trim()) {
+      return t("trackOrderPage.phoneRequired", "Phone number is required");
+    }
+
+    // Bangladeshi phone number validation (supports various formats)
+    const phoneRegex = /^(\+880|880|0)?1[3-9]\d{8}$/;
+    if (!phoneRegex.test(phone.replace(/[-\s]/g, ""))) {
+      return t(
+        "trackOrderPage.invalidPhone",
+        "Please enter a valid Bangladeshi phone number",
+      );
+    }
+
+    return "";
+  };
+
+  const handleOrderIdChange = (e) => {
+    const value = e.target.value;
+    setOrderId(value);
+    setOrderIdError(validateOrderId(value));
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    setPhone(value);
+    setPhoneError(validatePhone(value));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleTrack(orderId, phone);
+
+    // Validate both fields
+    const orderIdValidation = validateOrderId(orderId);
+    const phoneValidation = validatePhone(phone);
+
+    setOrderIdError(orderIdValidation);
+    setPhoneError(phoneValidation);
+
+    // If validation fails, don't submit
+    if (orderIdValidation || phoneValidation) {
+      return;
+    }
+
+    // Clean the order ID (remove # prefix if present)
+    const cleanOrderId = orderId.replace(/^#/, "");
+
+    handleTrack(cleanOrderId, phone);
+  };
+
+  const handlePrint = () => {
+    console.log("Print button clicked");
+
+    if (!printRef.current) {
+      console.error("Print ref not found");
+      alert("Print reference not found. Please try again.");
+      return;
+    }
+
+    console.log("Print ref found:", printRef.current);
+    console.log(
+      "Print content HTML length:",
+      printRef.current.innerHTML.length,
+    );
+    console.log(
+      "Print content preview:",
+      printRef.current.innerHTML.substring(0, 200),
+    );
+
+    // Create a new window for printing
+    const printWindow = window.open("", "_blank", "width=800,height=600");
+
+    if (!printWindow) {
+      alert("Please allow popups for this site to print the order summary.");
+      return;
+    }
+
+    // Get the content to print
+    const printContent = printRef.current.innerHTML;
+
+    // Create the HTML for printing
+    const printHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Summary - ${orderData?.orderNumber || "Order"}</title>
+        <style>
+          @media print {
+            @page {
+              size: A4;
+              margin: 0.5in;
+            }
+          }
+
+          /* Screen styles */
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #fff;
+            color: #000;
+          }
+
+          .print-content {
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="print-content">
+          ${printContent}
+        </div>
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+              setTimeout(function() {
+                window.close();
+              }, 1000);
+            }, 500);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    // Write to the new window
+    printWindow.document.write(printHTML);
+    printWindow.document.close();
+
+    console.log("Print window opened and content written");
   };
 
   return (
@@ -149,15 +310,25 @@ export default function TrackOrderPage() {
                       id="order-id-input"
                       type="text"
                       value={orderId}
-                      onChange={(e) => setOrderId(e.target.value)}
-                      placeholder={t("trackOrderPage.orderIdPlaceholder")}
-                      className="w-full pr-12 px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-base bg-background text-foreground shadow-sm"
+                      onChange={handleOrderIdChange}
+                      placeholder={t(
+                        "trackOrderPage.orderIdPlaceholder",
+                        "e.g., LP12345678 or #LP12345678",
+                      )}
+                      className={`w-full pr-12 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-base bg-background text-foreground shadow-sm ${
+                        orderIdError ? "border-destructive" : "border-border"
+                      }`}
                       required
                       autoComplete="off"
                       inputMode="text"
                     />
                     <MagnifyingGlassIcon className="absolute right-3 top-3.5 w-5 h-5 text-primary pointer-events-none" />
                   </div>
+                  {orderIdError && (
+                    <p className="text-sm text-destructive font-medium mt-1">
+                      {orderIdError}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -171,20 +342,30 @@ export default function TrackOrderPage() {
                     id="phone-input"
                     type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder={t("trackOrderPage.phoneNumberPlaceholder")}
-                    className="w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-base bg-background text-foreground shadow-sm"
+                    onChange={handlePhoneChange}
+                    placeholder={t(
+                      "trackOrderPage.phoneNumberPlaceholder",
+                      "e.g., 01712345678",
+                    )}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-base bg-background text-foreground shadow-sm ${
+                      phoneError ? "border-destructive" : "border-border"
+                    }`}
                     required
                     autoComplete="off"
                     inputMode="tel"
                   />
+                  {phoneError && (
+                    <p className="text-sm text-destructive font-medium mt-1">
+                      {phoneError}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-extrabold text-base shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                disabled={loading || !!orderIdError || !!phoneError}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl font-extrabold text-base shadow-md transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 aria-label={t("trackOrderPage.trackButton")}
               >
                 <MagnifyingGlassIcon className="w-5 h-5 shrink-0" />
@@ -209,73 +390,227 @@ export default function TrackOrderPage() {
             )}
 
             {orderData && (
-              <div className="mt-6 bg-card rounded-xl shadow-lg border border-border p-6">
-                <div className="flex items-center gap-3 mb-6 flex-wrap">
-                  <CheckCircleIcon className="w-10 h-10 text-primary shrink-0" />
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-foreground">
-                    {t("ordersPage.order", { defaultValue: "Order" })} #
-                    {orderData.orderNumber}
-                  </h3>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
-                    <span className="text-muted-foreground font-medium">
-                      {t("trackOrderPage.status")}:
-                    </span>
-                    <span className="px-3 py-1 rounded-full text-sm font-bold bg-primary/10 border border-primary/20 text-primary">
-                      {orderData.status.replace(/_/g, " ").toUpperCase()}
-                    </span>
+              <>
+                {/* Printable Order Summary */}
+                <div
+                  ref={printRef}
+                  className="print-area mt-6 bg-card rounded-xl shadow-lg border border-border p-6"
+                >
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 items-center mb-8">
+                    <div className="sm:col-span-2">
+                      <h2 className="text-2xl font-bold text-foreground">
+                        {t("order.summary", "Order Summary")}
+                      </h2>
+                      <p className="text-muted-foreground">
+                        {t("order.number", "Order Number")}:{" "}
+                        <span className="font-mono text-primary">
+                          #{orderData.orderNumber}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-muted-foreground">
+                        {t("order.placedOn", "Placed On")}
+                      </p>
+                      <p className="font-semibold text-foreground">
+                        {new Date(orderData.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
-
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
-                    <span className="text-muted-foreground font-medium">
-                      {t("trackOrderPage.totalAmount")}:
-                    </span>
-                    <span className="font-bold text-lg text-foreground">
-                      ৳{orderData.totalAmount}
-                    </span>
+                  {/* Order Items Table */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left table-auto">
+                      <thead>
+                        <tr className="border-b border-border/50">
+                          <th className="px-4 py-3 font-semibold text-muted-foreground text-sm">
+                            {t("order.product", "Product")}
+                          </th>
+                          <th className="px-4 py-3 font-semibold text-muted-foreground text-sm text-center">
+                            {t("order.quantity", "Quantity")}
+                          </th>
+                          <th className="px-4 py-3 font-semibold text-muted-foreground text-sm text-right">
+                            {t("order.unitPrice", "Unit Price")}
+                          </th>
+                          <th className="px-4 py-3 font-semibold text-muted-foreground text-sm text-right">
+                            {t("order.total", "Total")}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orderData.orderItems?.map((item) => {
+                          const price =
+                            Number(item.unitPrice ?? item.price) || 0;
+                          return (
+                            <tr
+                              key={item.id}
+                              className="border-b border-border/50"
+                            >
+                              <td className="p-4">
+                                <p className="font-medium text-foreground">
+                                  {item.product?.name ||
+                                    item.productName ||
+                                    "Product 1"}
+                                </p>
+                              </td>
+                              <td className="p-4 text-center text-muted-foreground">
+                                {item.quantity}
+                              </td>
+                              <td className="p-4 text-right font-medium text-foreground">
+                                ৳{price.toFixed(2)}
+                              </td>
+                              <td className="p-4 text-right font-medium text-foreground">
+                                ৳{(price * item.quantity).toFixed(2)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   </div>
-
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
-                    <span className="text-muted-foreground font-medium">
-                      {t("trackOrderPage.orderDate")}:
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {new Date(orderData.createdAt).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        }
-                      )}
-                    </span>
+                  {/* Totals Section */}
+                  <div className="mt-8 max-w-sm ml-auto space-y-3">
+                    <div className="flex justify-between items-center text-muted-foreground">
+                      <span>{t("order.subtotal", "Subtotal")}</span>
+                      <span className="font-medium text-foreground">
+                        ৳
+                        {(() => {
+                          const subtotal =
+                            orderData.orderItems?.reduce((acc, item) => {
+                              const price =
+                                Number(item.unitPrice ?? item.price) || 0;
+                              return acc + price * item.quantity;
+                            }, 0) || 0;
+                          return subtotal.toFixed(2);
+                        })()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-muted-foreground">
+                      <span>{t("order.deliveryFee", "Delivery Fee")}</span>
+                      <span className="font-medium text-foreground">
+                        ৳
+                        {(() => {
+                          const subtotal =
+                            orderData.orderItems?.reduce((acc, item) => {
+                              const price =
+                                Number(item.unitPrice ?? item.price) || 0;
+                              return acc + price * item.quantity;
+                            }, 0) || 0;
+                          const deliveryFee =
+                            Number(orderData.totalAmount) - subtotal;
+                          return deliveryFee.toFixed(2);
+                        })()}
+                      </span>
+                    </div>
+                    <div className="border-t border-border/70 my-2" />
+                    <div className="flex justify-between items-center text-lg font-bold text-primary">
+                      <span>{t("order.total", "Total")}</span>
+                      <span>৳{Number(orderData.totalAmount).toFixed(2)}</span>
+                    </div>
                   </div>
-
-                  <div className="pt-4 border-t border-border">
-                    <h4 className="font-bold text-foreground mb-3 text-base flex items-center gap-2">
-                      <span className="text-lg">📋</span>
-                      {t("trackOrderPage.orderItems")}
-                    </h4>
-                    <div className="bg-muted rounded-lg p-4 border border-border space-y-3">
-                      {orderData.orderItems?.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-card p-3 rounded-lg border border-border"
-                        >
-                          <span className="text-foreground font-semibold">
-                            {item.product?.name}
-                          </span>
-                          <span className="mt-2 sm:mt-0 px-3 py-1 rounded-full text-sm font-bold bg-primary/10 border border-primary/20 text-primary">
-                            x{item.quantity}
-                          </span>
-                        </div>
-                      ))}
+                  {/* Shipping & Payment Info */}
+                  <div className="mt-8 pt-6 border-t border-border/70 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground mb-3">
+                        {t("order.shippingTo", "Shipping To")}
+                      </h3>
+                      <div className="text-muted-foreground space-y-1">
+                        <p>{orderData.shippingAddress?.fullName}</p>
+                        <p>{orderData.shippingAddress?.address}</p>
+                        <p>
+                          {orderData.shippingAddress?.area},{" "}
+                          {orderData.shippingAddress?.city}
+                        </p>
+                        <p>{orderData.shippingAddress?.phone}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground mb-3">
+                        {t("order.paymentMethod", "Payment Method")}
+                      </h3>
+                      <p className="text-muted-foreground capitalize">
+                        {orderData.paymentMethod
+                          ? orderData.paymentMethod.replace("_", " ")
+                          : ""}
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
+                {/* Non-printable tracking info */}
+                <div className="mt-6 bg-card rounded-xl shadow-lg border border-border p-6 no-print">
+                  <div className="flex items-center gap-3 mb-6 flex-wrap">
+                    <CheckCircleIcon className="w-10 h-10 text-primary shrink-0" />
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-foreground">
+                      {t("ordersPage.order", { defaultValue: "Order" })} #
+                      {orderData.orderNumber}
+                    </h3>
+                  </div>
+                  <div className="flex justify-end mb-4">
+                    <button
+                      onClick={handlePrint}
+                      className="inline-flex items-center justify-center gap-2 bg-card text-foreground px-4 py-2 rounded-lg font-semibold hover:bg-muted/50 border border-border transition-colors"
+                    >
+                      <PrinterIcon className="w-5 h-5" />
+                      <span>
+                        {t("order.printSummary", "Print Order Summary")}
+                      </span>
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
+                      <span className="text-muted-foreground font-medium">
+                        {t("trackOrderPage.status")}:
+                      </span>
+                      <span className="px-3 py-1 rounded-full text-sm font-bold bg-primary/10 border border-primary/20 text-primary">
+                        {orderData.status.replace(/_/g, " ").toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
+                      <span className="text-muted-foreground font-medium">
+                        {t("trackOrderPage.totalAmount")}:
+                      </span>
+                      <span className="font-bold text-lg text-foreground">
+                        ৳{orderData.totalAmount}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted rounded-lg border border-border gap-2">
+                      <span className="text-muted-foreground font-medium">
+                        {t("trackOrderPage.orderDate")}:
+                      </span>
+                      <span className="font-semibold text-foreground">
+                        {new Date(orderData.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          },
+                        )}
+                      </span>
+                    </div>
+                    <div className="pt-4 border-t border-border">
+                      <h4 className="font-bold text-foreground mb-3 text-base flex items-center gap-2">
+                        <span className="text-lg">📋</span>
+                        {t("trackOrderPage.orderItems")}
+                      </h4>
+                      <div className="bg-muted rounded-lg p-4 border border-border space-y-3">
+                        {orderData.orderItems?.map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-card p-3 rounded-lg border border-border"
+                          >
+                            <span className="text-foreground font-semibold">
+                              {item.product?.name}
+                            </span>
+                            <span className="mt-2 sm:mt-0 px-3 py-1 rounded-full text-sm font-bold bg-primary/10 border border-primary/20 text-primary">
+                              x{item.quantity}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
 
             <div className="mt-6 text-center pt-6 border-t border-border">

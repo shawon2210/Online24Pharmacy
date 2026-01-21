@@ -4,6 +4,13 @@
 
 import { body, param, query, validationResult } from 'express-validator';
 
+// Fixed role keys for privileged roles
+const FIXED_ROLE_KEYS = {
+  DELIVERY_PARTNER: 'DELIVERY2026',
+  PHARMACIST: 'PHARMA2026',
+  SUPPLIER: 'SUPPLY2026',
+};
+
 /**
  * Handle validation errors
  */
@@ -48,6 +55,27 @@ export const validateRegistration = [
   body('phone')
     .exists({ checkFalsy: true }).withMessage('Phone number is required')
     .matches(/^01[3-9]\d{8}$/).withMessage('Invalid phone number. Must be 11 digits and start with 01 (e.g., 01712345678)'),
+  body('role')
+    .optional()
+    .isIn(['ADMIN', 'PHARMACIST', 'DELIVERY_PARTNER', 'SUPPLIER', 'USER'])
+    .withMessage('Invalid role'),
+  body('roleKey')
+    .if(body('role').isIn(['DELIVERY_PARTNER', 'PHARMACIST', 'SUPPLIER']))
+    .exists({ checkFalsy: true }).withMessage('Role Key is required for this role')
+    .custom((value, { req }) => {
+      const role = req.body.role;
+      if (role === 'DELIVERY_PARTNER' && value !== FIXED_ROLE_KEYS.DELIVERY_PARTNER) {
+        throw new Error('Invalid Role Key for Deliveryman');
+      }
+      if (role === 'PHARMACIST' && value !== FIXED_ROLE_KEYS.PHARMACIST) {
+        throw new Error('Invalid Role Key for Pharmacist');
+      }
+      if (role === 'SUPPLIER' && value !== FIXED_ROLE_KEYS.SUPPLIER) {
+        throw new Error('Invalid Role Key for Supplier');
+      }
+      return true;
+    })
+    .optional({ nullable: true }),
   handleValidationErrors
 ];
 

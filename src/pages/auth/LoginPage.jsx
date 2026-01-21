@@ -47,9 +47,9 @@ export default function LoginPage() {
         () =>
           navigate(
             result.user.role === "ADMIN" ? ROUTES.ADMIN_DASHBOARD : ROUTES.HOME,
-            { replace: true }
+            { replace: true },
           ),
-        100
+        100,
       );
     } catch (err) {
       toast.error(err.message || "Login failed");
@@ -134,7 +134,7 @@ export default function LoginPage() {
           </div>
           <p className="text-emerald-100 text-sm relative z-10 flex items-center gap-2">
             <span className="text-lg">🇧🇩</span> Serving Dhaka with care since
-            2024
+            2025
           </p>
         </div>
 

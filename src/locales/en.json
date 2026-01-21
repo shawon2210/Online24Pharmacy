@@ -25,8 +25,11 @@
     "orderItems": "Order Items",
     "seoTitle": "Track Order - Online24 Pharmacy",
     "seoDescription": "Track your order status by Order ID and phone number.",
-    "haveAccountForTracking": "Have an account? Sign in for full order history and faster tracking.",
-    "signInToAccount": "Sign In to Your Account"
+    "orderIdRequired": "Order ID is required",
+    "invalidOrderId": "Order ID must be in format LP12345678 or #LP12345678",
+    "phoneRequired": "Phone number is required",
+    "invalidPhone": "Please enter a valid Bangladeshi phone number",
+    "apiUnavailable": "Unable to reach the order tracking service. If you're running locally, start the backend with `npm run server` and try again."
   },
   "prescriptionsPage": {
     "prescriptions": "Your Prescriptions",

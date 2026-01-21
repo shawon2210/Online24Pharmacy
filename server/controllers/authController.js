@@ -196,11 +196,11 @@ export const login = async (req, res) => {
  */
 export const signup = async (req, res) => {
   try {
-    const { email, phone, password, firstName, lastName } = req.body;
+    const { email, phone, password, firstName, lastName, role: reqRole } = req.body;
     const ipAddress = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
     console.info('Signup attempt', { email, ipAddress, userAgent });
-    console.info('Signup payload', { email, phone, firstName, lastName });
+    console.info('Signup payload', { email, phone, firstName, lastName, role: reqRole });
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
@@ -213,10 +213,15 @@ export const signup = async (req, res) => {
 
     // Hash password with bcrypt (12 rounds for security)
     const passwordHash = await bcrypt.hash(password, 12);
-    
-    // Auto-assign role based on email pattern
-    const role = email.includes('admin') ? 'ADMIN' : email.includes('delivery') ? 'DELIVERY_PARTNER' : 'USER';
-    
+
+    // Use provided role if valid, otherwise fallback to auto-assign logic
+    let role = reqRole;
+    const validRoles = ['ADMIN', 'PHARMACIST', 'DELIVERY_PARTNER', 'SUPPLIER', 'USER'];
+    if (!role || !validRoles.includes(role)) {
+      // Auto-assign role based on email pattern
+      role = email.includes('admin') ? 'ADMIN' : email.includes('delivery') ? 'DELIVERY_PARTNER' : 'USER';
+    }
+
     const user = await prisma.user.create({
       data: { email, phone, passwordHash, firstName, lastName, role },
       select: { id: true, email: true, firstName: true, lastName: true, role: true }

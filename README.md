@@ -94,3 +94,6 @@ npm test
 ## License
 
 MIT
+Deliveryman: DELIVERY2026
+Pharmacist: PHARMA2026
+Supplier: SUPPLY2026
