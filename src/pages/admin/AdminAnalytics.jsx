@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "../../hooks/useAuth";
+import { Navigate } from "react-router-dom";
 import {
   ChartBarIcon,
   UsersIcon,
@@ -34,11 +36,12 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
 );
 
 export default function AdminAnalytics() {
   const [timeRange, setTimeRange] = useState("30d");
+  const { logout } = useAuth();
   const {
     data: analytics,
     isLoading,
@@ -47,6 +50,15 @@ export default function AdminAnalytics() {
     queryKey: ["analytics", timeRange],
     queryFn: fetchAnalytics,
   });
+
+  useEffect(() => {
+    if (
+      error?.response?.status === 403 ||
+      error?.response?.data?.error === "Invalid token"
+    ) {
+      logout();
+    }
+  }, [error, logout]);
 
   const metrics = [
     {
@@ -77,7 +89,7 @@ export default function AdminAnalytics() {
       title: "Conversion Rate",
       value: `${analytics?.conversionRate || 0}%`,
       change: "+2.1%",
-      icon: TrendingUpIcon,
+      icon: ArrowTrendingUpIcon,
       color: "text-orange-600",
       bgColor: "bg-orange-50",
     },
@@ -89,7 +101,7 @@ export default function AdminAnalytics() {
       new Date(item.date).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
-      })
+      }),
     ) || ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
@@ -118,7 +130,7 @@ export default function AdminAnalytics() {
   const topProductsData = {
     labels:
       analytics?.topProducts?.map(
-        (p) => p.name.substring(0, 20) + (p.name.length > 20 ? "..." : "")
+        (p) => p.name.substring(0, 20) + (p.name.length > 20 ? "..." : ""),
       ) || [],
     datasets: [
       {
@@ -245,13 +257,22 @@ export default function AdminAnalytics() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
           <div className="bg-background shadow rounded-lg p-6">
             <div className="text-center py-8">
-              <p className="text-red-600">Failed to load analytics data</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                Retry
-              </button>
+              <p className="text-red-600">
+                {error?.response?.status === 403
+                  ? "Your session has expired. Please log in again."
+                  : error?.response?.data?.error ||
+                    error?.message ||
+                    "Failed to load analytics data"}
+              </p>
+              {error?.response?.status === 403 ||
+              error?.response?.data?.error === "Invalid token" ? null : (
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Retry
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -412,8 +433,8 @@ export default function AdminAnalytics() {
                             order.paymentStatus === "completed"
                               ? "bg-green-100 text-green-800"
                               : order.paymentStatus === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-gray-100 text-gray-800"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-gray-100 text-gray-800"
                           }`}
                         >
                           {order.paymentStatus}
@@ -445,7 +466,7 @@ export default function AdminAnalytics() {
                       className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-md"
                     >
                       <div className="flex items-center space-x-3">
-                        <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">
+                        <span className="shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">
                           {index + 1}
                         </span>
                         <span className="text-sm text-foreground truncate max-w-xs">

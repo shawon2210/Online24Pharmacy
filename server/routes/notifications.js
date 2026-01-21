@@ -14,6 +14,7 @@ import {
   getUnreadCountByType,
   searchNotifications,
   getAdminUnreadNotifications,
+  getAdminNotifications,
   getNotificationStats,
 } from '../utils/notificationManager.js';
 
@@ -25,6 +26,80 @@ const router = express.Router();
 
 // Require authentication for all notification routes
 router.use(authenticateToken);
+
+// ============================================
+// ADMIN ROUTES (Must be before /:id route)
+// ============================================
+
+/**
+ * GET /api/notifications/admin/unread
+ * Get unread admin notifications
+ */
+router.get('/admin/unread', async (req, res) => {
+  try {
+    if (req.user.role !== 'ADMIN' && req.user.role !== 'PHARMACIST') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    
+    const { limit = 10, types } = req.query;
+    const typeArray = types ? types.split(',') : [];
+    
+    const notifications = await getAdminUnreadNotifications({
+      limit: parseInt(limit),
+      types: typeArray,
+    });
+    
+    res.json({ notifications });
+  } catch (error) {
+    console.error('Error fetching admin notifications:', error);
+    res.status(500).json({ error: 'Failed to fetch admin notifications' });
+  }
+});
+
+/**
+ * GET /api/notifications/admin/stats
+ * Get notification statistics for admin dashboard
+ */
+router.get('/admin/stats', async (req, res) => {
+  try {
+    if (req.user.role !== 'ADMIN' && req.user.role !== 'PHARMACIST') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    
+    const stats = await getNotificationStats();
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching notification stats:', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
+/**
+ * GET /api/notifications/admin
+ * Get paginated admin notifications
+ */
+router.get('/admin', async (req, res) => {
+  try {
+    if (req.user.role !== 'ADMIN' && req.user.role !== 'PHARMACIST') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    
+    const { limit = 20, offset = 0, unreadOnly = false, types } = req.query;
+    const typeArray = types ? types.split(',') : [];
+    
+    const result = await getAdminNotifications(req.user.id, {
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      unreadOnly: unreadOnly === 'true',
+      types: typeArray,
+    });
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching admin notifications:', error);
+    res.status(500).json({ error: 'Failed to fetch admin notifications' });
+  }
+});
 
 // ============================================
 // GET NOTIFICATIONS
@@ -215,52 +290,5 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// ============================================
-// ADMIN ROUTES
-// ============================================
-
-/**
- * GET /api/notifications/admin/unread
- * Get unread admin notifications
- * (only accessible to admin users)
- */
-router.get('/admin/unread', authenticateToken, async (req, res) => {
-  try {
-    if (req.user.role !== 'ADMIN' && req.user.role !== 'PHARMACIST') {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-    
-    const { limit = 10, types } = req.query;
-    const typeArray = types ? types.split(',') : [];
-    
-    const notifications = await getAdminUnreadNotifications({
-      limit: parseInt(limit),
-      types: typeArray,
-    });
-    
-    res.json({ notifications });
-  } catch (error) {
-    console.error('Error fetching admin notifications:', error);
-    res.status(500).json({ error: 'Failed to fetch admin notifications' });
-  }
-});
-
-/**
- * GET /api/notifications/admin/stats
- * Get notification statistics for admin dashboard
- */
-router.get('/admin/stats', authenticateToken, async (req, res) => {
-  try {
-    if (req.user.role !== 'ADMIN' && req.user.role !== 'PHARMACIST') {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-    
-    const stats = await getNotificationStats();
-    res.json(stats);
-  } catch (error) {
-    console.error('Error fetching notification stats:', error);
-    res.status(500).json({ error: 'Failed to fetch stats' });
-  }
-});
 
 export default router;

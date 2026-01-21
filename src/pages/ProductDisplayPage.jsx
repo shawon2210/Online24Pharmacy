@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import SEOHead from "../components/common/SEOHead";
 import {
   normalizeProduct,
@@ -19,6 +19,9 @@ import { useCartStore } from "../stores/cartStore";
 import { useTranslation } from "react-i18next";
 import AnimatedButton from "../components/common/AnimatedButton";
 import i18next from "i18next";
+import { addToWishlist, removeFromWishlist, fetchWishlist } from "../utils/api";
+import toast from "react-hot-toast";
+import { useAuth } from "../hooks/useAuth";
 
 const API_URL = (
   import.meta.env.VITE_API_URL || "http://localhost:3000"
@@ -63,7 +66,7 @@ function ProductList() {
     queryKey: ["products", page],
     queryFn: async () => {
       const response = await fetch(
-        `${API_URL}/api/products?page=${page}&limit=${limit}`
+        `${API_URL}/api/products?page=${page}&limit=${limit}`,
       );
       const result = await response.json();
       return {
@@ -203,8 +206,9 @@ function ProductDetail({ slug }) {
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const _authUser = useAuthStore((s) => s.user);
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const { isAuthenticated } = useAuth();
   const addToCart = useCartStore((state) => state.addItem);
+  const navigate = useNavigate();
   const targetSlug = slug?.toString().toLowerCase();
 
   const fetchProduct = useCallback(async () => {
@@ -213,7 +217,7 @@ function ProductDetail({ slug }) {
 
       if (response.ok) {
         const foundProduct = ensureAbsoluteImages(
-          normalizeProduct(await response.json())
+          normalizeProduct(await response.json()),
         );
         setProduct(foundProduct);
 
@@ -227,7 +231,7 @@ function ProductDetail({ slug }) {
             (p) =>
               (p.slug || p.id) !== foundProduct.slug &&
               (p.category === foundProduct.category ||
-                p.categoryId === foundProduct.categoryId)
+                p.categoryId === foundProduct.categoryId),
           )
           .slice(0, 6);
         setRelatedProducts(related);
@@ -254,7 +258,7 @@ function ProductDetail({ slug }) {
               (p) =>
                 (p.slug || p.id) !== foundProduct.slug &&
                 (p.category === foundProduct.category ||
-                  p.categoryId === foundProduct.categoryId)
+                  p.categoryId === foundProduct.categoryId),
             )
             .slice(0, 6);
           setRelatedProducts(related);
@@ -270,6 +274,49 @@ function ProductDetail({ slug }) {
   useEffect(() => {
     fetchProduct();
   }, [fetchProduct, slug]);
+
+  // Check if product is in wishlist
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      if (isAuthenticated && product?.id) {
+        try {
+          const wishlist = await fetchWishlist();
+          const isInWishlist = wishlist.some(
+            (item) => item.productId === product.id,
+          );
+          setIsWishlisted(isInWishlist);
+        } catch (error) {
+          console.error("Error checking wishlist status:", error);
+        }
+      }
+    };
+    checkWishlistStatus();
+  }, [isAuthenticated, product?.id]);
+
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) {
+      toast.error(t("auth.loginRequired"));
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+      return;
+    }
+
+    try {
+      if (isWishlisted) {
+        await removeFromWishlist(product.id);
+        setIsWishlisted(false);
+        toast.success(t("wishlist.removed"));
+      } else {
+        await addToWishlist(product.id);
+        setIsWishlisted(true);
+        toast.success(t("wishlist.added"));
+      }
+    } catch (error) {
+      toast.error(t("wishlist.error"));
+    }
+  };
 
   const categoryName =
     typeof product?.category === "string"
@@ -329,7 +376,7 @@ function ProductDetail({ slug }) {
         return;
       }
       const res = await fetch(
-        `${API_URL}/api/reviews/product/${encodeURIComponent(pid)}`
+        `${API_URL}/api/reviews/product/${encodeURIComponent(pid)}`,
       );
       if (!res.ok) return;
       const data = await res.json();
@@ -622,7 +669,7 @@ function ProductDetail({ slug }) {
                     🏷️ {categoryName || "Uncategorized"}
                   </span>
                   <button
-                    onClick={() => setIsWishlisted(!isWishlisted)}
+                    onClick={handleWishlistToggle}
                     className="p-2 rounded-full hover:bg-muted transition-colors"
                   >
                     {isWishlisted ? (
@@ -672,7 +719,7 @@ function ProductDetail({ slug }) {
                           {Math.round(
                             ((product.originalPrice - product.price) /
                               product.originalPrice) *
-                              100
+                              100,
                           )}
                           % {t("productPage.off")}
                         </span>
@@ -736,7 +783,7 @@ function ProductDetail({ slug }) {
                         <button
                           onClick={() =>
                             setQuantity(
-                              Math.min(product.stockQuantity, quantity + 1)
+                              Math.min(product.stockQuantity, quantity + 1),
                             )
                           }
                           className="px-4 py-2 hover:bg-background font-medium text-lg transition-colors"
@@ -883,7 +930,7 @@ function ProductDetail({ slug }) {
                         aria-label={tf(
                           "productPage.setRating",
                           { rating: i + 1 },
-                          `Set rating to ${i + 1} star(s)`
+                          `Set rating to ${i + 1} star(s)`,
                         )}
                       >
                         ★
@@ -900,7 +947,7 @@ function ProductDetail({ slug }) {
                   placeholder={tf(
                     "productPage.shareExperience",
                     undefined,
-                    "Share your experience with this product (optional)"
+                    "Share your experience with this product (optional)",
                   )}
                   className="w-full border border-border rounded-lg p-3 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   rows={4}
@@ -914,19 +961,19 @@ function ProductDetail({ slug }) {
                     ? tf(
                         "productPage.submitting",
                         undefined,
-                        "Submitting your review..."
+                        "Submitting your review...",
                       )
                     : tf(
                         "productPage.submitReview",
                         undefined,
-                        "Submit Review"
+                        "Submit Review",
                       )}
                 </button>
                 <p className="text-xs text-muted-foreground mt-3">
                   {tf(
                     "productPage.reviewsModerated",
                     undefined,
-                    "All reviews are moderated. Only verified purchases are marked as 'Verified Purchase'."
+                    "All reviews are moderated. Only verified purchases are marked as 'Verified Purchase'.",
                   )}
                 </p>
               </div>
@@ -943,7 +990,7 @@ function ProductDetail({ slug }) {
                 {tf(
                   "productPage.toSubmitReview",
                   undefined,
-                  "log in to submit a review."
+                  "log in to submit a review.",
                 )}
               </div>
             )}

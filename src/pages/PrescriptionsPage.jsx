@@ -321,36 +321,36 @@ export default function PrescriptionsPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div
-          ref={uploadFormRef}
-          className="max-w-full sm:max-w-4xl lg:max-w-7xl mx-auto mt-6"
-        >
-          <div className="bg-background rounded-2xl shadow-xl border border-border dark:border-slate-700 overflow-hidden">
-            <div className="bg-muted/40 px-6 lg:px-8 py-6 border-b border-border dark:border-slate-700">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div ref={uploadFormRef} className="max-w-7xl mx-auto">
+          <div className="bg-background rounded-xl sm:rounded-2xl shadow-xl border border-border dark:border-slate-700 overflow-hidden">
+            <div className="bg-muted/40 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 border-b border-border dark:border-slate-700">
               <div className="text-center">
-                <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                   {t("formIntro")}
                 </p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 xl:p-12">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8 xl:gap-12">
                 <div className="space-y-8">
-                  <div className="bg-background rounded-xl p-6 border border-border dark:border-slate-700">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                        <span className="text-white text-lg">👤</span>
+                  <div className="bg-background rounded-xl p-4 sm:p-6 border border-border dark:border-slate-700">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center">
+                        <span className="text-white text-base sm:text-lg">
+                          👤
+                        </span>
                       </div>
                       <h3 className="text-base sm:text-lg md:text-xl font-bold text-foreground">
                         {t("patientInfo")}
                       </h3>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       <div className="space-y-2">
                         <label className="block text-xs sm:text-sm md:text-base font-semibold text-foreground">
-                          {t("patientName")}
+                          {t("patientName")}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -358,13 +358,14 @@ export default function PrescriptionsPage() {
                           required
                           value={formData.patientName}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500"
                           placeholder={t("patientNamePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="block text-xs sm:text-sm md:text-base font-semibold text-foreground">
-                          {t("patientAge")}
+                          {t("patientAge")}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="number"
@@ -374,13 +375,14 @@ export default function PrescriptionsPage() {
                           max="120"
                           value={formData.patientAge}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500"
                           placeholder={t("agePlaceholder")}
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="block text-xs sm:text-sm md:text-base font-semibold text-foreground">
-                          {t("patientPhone")}
+                          {t("patientPhone")}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="tel"
@@ -388,40 +390,44 @@ export default function PrescriptionsPage() {
                           required
                           value={formData.patientPhone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500"
                           placeholder={t("phonePlaceholder")}
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-2 sm:col-span-2">
                         <label className="block text-xs sm:text-sm md:text-base font-semibold text-foreground">
-                          {t("patientAddress")}
+                          {t("patientAddress")}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type="text"
+                        <textarea
                           name="patientAddress"
                           required
                           value={formData.patientAddress}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500"
+                          rows="3"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-background dark:bg-slate-700 text-foreground border border-border dark:border-slate-600 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400 dark:placeholder-gray-500 resize-none"
                           placeholder={t("addressPlaceholder")}
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-muted dark:bg-blue-900/20 rounded-xl p-6 border border-border dark:border-blue-800">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-8 h-8 bg-blue-600 dark:bg-muted0 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-lg">👨⚕️</span>
+                  <div className="bg-muted dark:bg-blue-900/20 rounded-xl p-4 sm:p-6 border border-border dark:border-blue-800">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 dark:bg-muted0 rounded-lg flex items-center justify-center">
+                        <span className="text-white text-base sm:text-lg">
+                          👨⚕️
+                        </span>
                       </div>
                       <h3 className="text-base sm:text-lg md:text-xl font-bold text-foreground">
                         {t("doctorInfo")}
                       </h3>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       <div className="space-y-2">
                         <label className="block text-xs sm:text-sm md:text-base font-semibold text-foreground">
-                          {t("doctorName")}
+                          {t("doctorName")}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -429,7 +435,7 @@ export default function PrescriptionsPage() {
                           required
                           value={formData.doctorName}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-background text-foreground border border-border dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-background text-foreground border border-border dark:border-slate-700 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 dark:placeholder-gray-500"
                           placeholder={t("doctorNamePlaceholder")}
                         />
                       </div>
@@ -442,13 +448,14 @@ export default function PrescriptionsPage() {
                           name="hospitalClinic"
                           value={formData.hospitalClinic}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-background text-foreground border border-border dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-background text-foreground border border-border dark:border-slate-700 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 dark:placeholder-gray-500"
                           placeholder={t("hospitalPlaceholder")}
                         />
                       </div>
                       <div className="sm:col-span-2 space-y-2">
                         <label className="block text-xs sm:text-sm md:text-base font-semibold text-foreground">
-                          {t("prescriptionDate")}
+                          {t("prescriptionDate")}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="date"
@@ -456,7 +463,7 @@ export default function PrescriptionsPage() {
                           required
                           value={formData.prescriptionDate}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-background text-foreground border border-border dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-background text-foreground border border-border dark:border-slate-700 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         />
                       </div>
                     </div>
@@ -464,17 +471,19 @@ export default function PrescriptionsPage() {
                 </div>
 
                 <div className="space-y-8">
-                  <div className="bg-muted dark:bg-purple-900/20 rounded-xl p-6 h-fit border border-purple-200 dark:border-purple-800">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-8 h-8 bg-purple-600 dark:bg-muted0 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-lg">📎</span>
+                  <div className="bg-muted dark:bg-purple-900/20 rounded-xl p-4 sm:p-6 h-fit border border-purple-200 dark:border-purple-800">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-600 dark:bg-muted0 rounded-lg flex items-center justify-center">
+                        <span className="text-white text-base sm:text-lg">
+                          📎
+                        </span>
                       </div>
                       <h3 className="text-base sm:text-lg md:text-xl font-bold text-foreground">
                         {t("prescriptionFiles")}
                       </h3>
                     </div>
                     <div
-                      className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center transition-all ${
+                      className={`border-2 border-dashed rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 text-center transition-all ${
                         dragActive
                           ? "border-primary bg-primary/5 dark:bg-primary/10"
                           : "border-border dark:border-slate-700 hover:border-primary bg-background"
@@ -485,11 +494,11 @@ export default function PrescriptionsPage() {
                       onDrop={handleDrop}
                     >
                       <div className="flex flex-col items-center">
-                        <CloudArrowUpIcon className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 text-muted-foreground mb-4" />
+                        <CloudArrowUpIcon className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-muted-foreground mb-3 sm:mb-4" />
                         <p className="text-sm sm:text-base lg:text-lg font-semibold text-foreground mb-2">
                           {t("dragAndDrop")}
                         </p>
-                        <p className="text-xs sm:text-sm text-muted-foreground mb-6">
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">
                           {t("orClickToBrowse")}
                         </p>
                         <input
@@ -502,7 +511,7 @@ export default function PrescriptionsPage() {
                         />
                         <label
                           htmlFor="file-upload"
-                          className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors cursor-pointer shadow-md hover:shadow-lg text-sm sm:text-base"
+                          className="inline-flex items-center gap-2 bg-primary text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:bg-primary/90 transition-colors cursor-pointer shadow-md hover:shadow-lg text-sm sm:text-base touch-manipulation"
                         >
                           <span>📁</span>
                           <span className="whitespace-normal">
@@ -527,8 +536,8 @@ export default function PrescriptionsPage() {
                     </div>
 
                     {files.length > 0 && (
-                      <div className="mt-6">
-                        <div className="flex items-center gap-2 mb-4">
+                      <div className="mt-4 sm:mt-6">
+                        <div className="flex items-center gap-2 mb-3 sm:mb-4">
                           <span className="text-green-600 font-semibold text-sm sm:text-base">
                             ✓
                           </span>
@@ -558,7 +567,7 @@ export default function PrescriptionsPage() {
                               <button
                                 type="button"
                                 onClick={() => removeFile(index)}
-                                className="self-start sm:self-center text-red-600 dark:text-red-400 hover:text-foreground dark:hover:text-red-300 font-medium text-xs sm:text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors whitespace-nowrap"
+                                className="self-start sm:self-center text-red-600 dark:text-red-400 hover:text-foreground dark:hover:text-red-300 font-medium text-xs sm:text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors whitespace-nowrap touch-manipulation"
                               >
                                 Remove
                               </button>
@@ -571,14 +580,14 @@ export default function PrescriptionsPage() {
                 </div>
               </div>
 
-              <div className="mt-6 sm:mt-8 bg-muted/40 rounded-xl p-4 sm:p-6">
+              <div className="mt-6 sm:mt-8 bg-muted/40 rounded-lg sm:rounded-xl p-4 sm:p-6">
                 <button
                   type="submit"
                   disabled={isSubmitting || files.length === 0}
-                  className={`w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold text-base sm:text-lg transition-all shadow-lg ${
+                  className={`w-full py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg transition-all shadow-lg touch-manipulation ${
                     isSubmitting || files.length === 0
                       ? "bg-border dark:bg-slate-700 text-foreground/50 cursor-not-allowed shadow-none"
-                      : "bg-primary hover:bg-primary/90 text-white hover:shadow-xl transform hover:scale-[1.02]"
+                      : "bg-primary hover:bg-primary/90 text-white hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
                   }`}
                 >
                   {isSubmitting ? (
@@ -603,14 +612,14 @@ export default function PrescriptionsPage() {
                     {t("bySubmitting")}
                     <a
                       href="/terms"
-                      className="text-primary hover:underline mx-1"
+                      className="text-primary hover:underline mx-1 touch-manipulation"
                     >
                       {t("termsOfService")}
                     </a>{" "}
                     {t("and")}{" "}
                     <a
                       href="/privacy"
-                      className="text-primary hover:underline ml-1"
+                      className="text-primary hover:underline ml-1 touch-manipulation"
                     >
                       {t("privacyPolicy")}
                     </a>

@@ -357,7 +357,22 @@
     "minQuantity": "Minimum quantity reached",
     "itemRemoved": "Item removed from cart",
     "removeItemTitle": "Remove item",
-    "addMoreForFreeShipping": "Add ৳{{amount}} more for free shipping"
+    "addMoreForFreeShipping": "Add ৳{{amount}} more for free shipping",
+    "added": "Added to cart",
+    "addError": "Failed to add to cart"
+  },
+  "wishlistText": "Wishlist",
+  "wishlist": {
+    "title": "My Wishlist",
+    "subtitle": "Your saved items for later",
+    "empty": "Your wishlist is empty",
+    "emptyDesc": "Save items you're interested in for later",
+    "browseProducts": "Browse Products",
+    "removed": "Removed from wishlist",
+    "removeError": "Failed to remove from wishlist",
+    "error": "Failed to load wishlist",
+    "added": "Added to wishlist",
+    "remove": "Remove from wishlist"
   },
   "myPrescriptionsPage": {
     "title": "My Prescriptions",
@@ -744,7 +759,11 @@
     "reminderSet": "Reminder set successfully",
     "status": "Status"
   },
+  "auth": {
+    "loginRequired": "Please sign in to add items to your wishlist"
+  },
   "loading": "Loading...",
   "previous": "Previous",
-  "next": "Next"
+  "next": "Next",
+  "pickup": "Pickup"
 }

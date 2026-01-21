@@ -15,6 +15,7 @@ import {
 import AIChatbot from "./components/chatbot/AIChatbot";
 import ScrollToTop from "./components/common/ScrollToTop";
 import Layout from "./components/layout/Layout";
+import AdminLayout from "./components/layout/AdminLayout";
 
 // Page Components (Public)
 import HomePage from "./pages/HomePage";
@@ -36,7 +37,7 @@ import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import PickupMapPage from "./pages/PickupMapPage";
 import AboutPage from "./pages/AboutPage";
 import CustomSurgicalKitBuilder from "./pages/CustomSurgicalKitBuilder";
-import AdminLayout from "./components/layout/AdminLayout";
+import WishlistPage from "./pages/WishlistPage";
 
 // Page Components (Admin)
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -54,6 +55,7 @@ import AdminReviews from "./pages/admin/AdminReviews";
 import AdminAuditLog from "./pages/admin/AdminAuditLog";
 import AdminPickupLocations from "./pages/admin/AdminPickupLocations";
 import AdminShopsPage from "./pages/admin/AdminShopsPage";
+import AdminNotifications from "./pages/admin/AdminNotifications";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -115,6 +117,7 @@ function App() {
                 <Route path="customers" element={<AdminCustomers />} />
                 <Route path="shops" element={<AdminShopsPage />} />
                 <Route path="audit-log" element={<AdminAuditLog />} />
+                <Route path="notifications" element={<AdminNotifications />} />
                 {/* Pickup Locations route removed */}
                 <Route path="test" element={<AdminTest />} />
               </Route>
@@ -208,6 +211,14 @@ function App() {
                         element={
                           <RequireAuth>
                             <ProfilePage />
+                          </RequireAuth>
+                        }
+                      />
+                      <Route
+                        path="/wishlist"
+                        element={
+                          <RequireAuth>
+                            <WishlistPage />
                           </RequireAuth>
                         }
                       />

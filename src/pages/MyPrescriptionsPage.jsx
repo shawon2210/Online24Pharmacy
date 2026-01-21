@@ -97,7 +97,7 @@ export default function MyPrescriptionsPage() {
   }, [prescriptions, tab]);
 
   const isExpired = (rx) => rx.derivedStatus === "EXPIRED";
-  const isPending = (rx) => rx.status?.toUpperCase() === "PENDING";
+  const _isPending = (rx) => rx.status?.toUpperCase() === "PENDING";
   const isApproved = (rx) => rx.status?.toUpperCase() === "APPROVED";
 
   const handleUpload = () => navigate("/prescription");
@@ -264,7 +264,7 @@ export default function MyPrescriptionsPage() {
                         <span>
                           {t(
                             STATUS_META[rx.derivedStatus]?.label ||
-                              "myPrescriptionsPage.status"
+                              "myPrescriptionsPage.status",
                           )}
                         </span>
                       </div>

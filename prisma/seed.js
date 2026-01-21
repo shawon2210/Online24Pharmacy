@@ -256,6 +256,53 @@ async function main() {
 
   console.log('Created products');
 
+  // 5.5. Create Sample Order
+  const sampleOrder = await prisma.order.upsert({
+    where: { orderNumber: 'ORD-2026-001' },
+    update: {},
+    create: {
+      userId: customer1.id,
+      orderNumber: 'ORD-2026-001',
+      status: 'DELIVERED',
+      totalAmount: 25.98,
+      discountAmount: 0,
+      shippingCost: 5.0,
+      paymentMethod: 'CARD',
+      paymentStatus: 'PAID',
+      paymentId: 'PAY-123456',
+      shippingAddress: '123 Main St, Dhaka',
+      billingAddress: '123 Main St, Dhaka',
+      notes: 'Sample order for testing',
+    },
+  });
+
+  // Create order items
+  await prisma.orderItem.upsert({
+    where: { id: 'order-item-1' },
+    update: {},
+    create: {
+      orderId: sampleOrder.id,
+      productId: (await prisma.product.findFirst({ where: { sku: 'VITC-1000MG-100' } })).id,
+      quantity: 1,
+      unitPrice: 22.5,
+      totalPrice: 22.5,
+    },
+  });
+
+  await prisma.orderItem.upsert({
+    where: { id: 'order-item-2' },
+    update: {},
+    create: {
+      orderId: sampleOrder.id,
+      productId: (await prisma.product.findFirst({ where: { sku: 'IBU-200MG-50' } })).id,
+      quantity: 1,
+      unitPrice: 9.99,
+      totalPrice: 9.99,
+    },
+  });
+
+  console.log('Created sample order');
+
   // 6. Create Pickup Locations
   await prisma.pickupLocation.upsert({
     where: { name: 'Online24 Pharma - Dhanmondi' },

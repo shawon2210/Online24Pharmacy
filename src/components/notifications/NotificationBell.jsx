@@ -74,7 +74,7 @@ export function NotificationBell() {
             .then((response) => response.json())
             .then((data) => setUnreadCount(data.count || 0))
             .catch((error) =>
-              console.error("Error fetching unread count:", error)
+              console.error("Error fetching unread count:", error),
             );
         });
 
@@ -128,37 +128,45 @@ export function NotificationBell() {
       {/* Bell Icon Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-foreground hover:text-emerald-600 transition-colors rounded-full hover:bg-muted"
+        className="group relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl hover:bg-gradient-to-br hover:from-amber-50 hover:to-amber-100 dark:hover:from-amber-900/20 dark:hover:to-amber-800/20 hover:shadow-lg hover:shadow-amber-500/10 hover:text-amber-600 dark:hover:text-amber-400 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:ring-offset-2"
         aria-label="Notifications"
         title="View notifications"
       >
-        <Bell className="w-6 h-6" />
+        <Bell
+          className={`w-5 h-5 sm:w-5.5 sm:h-5.5 group-hover:scale-110 transition-all duration-300 ${unreadCount > 0 ? "text-amber-500" : ""}`}
+        />
 
         {/* Badge with Unread Count */}
         {unreadCount > 0 && (
-          <span
-            className={`absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-background transform translate-x-1/2 -translate-y-1/2 rounded-full ${
-              unreadCount > 9 ? "w-6 h-6" : "px-1 py-0"
-            } ${isOpen ? "bg-emerald-600" : "bg-red-500 animate-pulse"}`}
-          >
+          <span className="absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-600 text-white text-xs font-bold rounded-full min-w-[22px] h-[22px] sm:min-w-[24px] sm:h-[24px] flex items-center justify-center px-1 shadow-lg shadow-red-500/25 animate-pulse ring-2 ring-white dark:ring-gray-900">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
+        )}
+
+        {/* Subtle glow effect for unread notifications */}
+        {unreadCount > 0 && (
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-amber-400/0 to-amber-500/0 group-hover:from-amber-400/10 group-hover:to-amber-500/10 transition-all duration-300" />
         )}
       </button>
 
       {/* Notification Panel Dropdown */}
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 max-w-full z-50">
-          <NotificationPanel
-            onClose={handleClose}
-            onNotificationRead={handleNotificationRead}
-          />
-        </div>
-      )}
+      <div className="relative">
+        {isOpen && (
+          <div className="fixed inset-x-4 top-16 z-50 sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-96">
+            <NotificationPanel
+              onClose={handleClose}
+              onNotificationRead={handleNotificationRead}
+            />
+          </div>
+        )}
+      </div>
 
-      {/* Close Panel when clicking outside */}
+      {/* Close Panel when clicking outside - only on desktop */}
       {isOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+        <div
+          className="hidden sm:block fixed inset-0 z-40"
+          onClick={() => setIsOpen(false)}
+        />
       )}
     </div>
   );

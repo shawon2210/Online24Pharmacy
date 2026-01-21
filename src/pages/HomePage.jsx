@@ -8,18 +8,18 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { normalizeProduct } from "../utils/normalizeProduct";
 import { useInView } from "react-intersection-observer";
 
-const ProductCarousel = lazy(() =>
-  import("../components/product/ProductCarousel")
+const ProductCarousel = lazy(
+  () => import("../components/product/ProductCarousel"),
 );
-const CategoryProductSection = lazy(() =>
-  import("../components/product/CategoryProductSection")
+const CategoryProductSection = lazy(
+  () => import("../components/product/CategoryProductSection"),
 );
 const WhyChooseUs = lazy(() => import("../components/marketing/WhyChooseUs"));
-const SpecialOfferBanner = lazy(() =>
-  import("../components/marketing/SpecialOfferBanner")
+const SpecialOfferBanner = lazy(
+  () => import("../components/marketing/SpecialOfferBanner"),
 );
-const PrescriptionUpload = lazy(() =>
-  import("../components/marketing/PrescriptionUpload")
+const PrescriptionUpload = lazy(
+  () => import("../components/marketing/PrescriptionUpload"),
 );
 const ContactForm = lazy(() => import("../components/common/ContactForm"));
 
@@ -116,7 +116,7 @@ export default function HomePage() {
       const res = await fetch(
         `${
           import.meta.env.VITE_API_URL || "http://localhost:3000"
-        }/api/products?limit=8`
+        }/api/products?limit=8`,
       );
       const data = await res.json();
       return data.products.map(normalizeProduct);
@@ -150,7 +150,7 @@ export default function HomePage() {
       queryFn: async () => {
         try {
           const response = await fetch(
-            `${API_URL}/api/products/categories/with-products?limit=8`
+            `${API_URL}/api/products/categories/with-products?limit=8`,
           );
           if (!response.ok) {
             console.error("API response not OK:", response.status);
@@ -176,7 +176,7 @@ export default function HomePage() {
   console.log(
     "HomePage - Categories with products:",
     categoryProductSections.length,
-    categoryProductSections
+    categoryProductSections,
   );
   console.log("HomePage - Loading state:", categoriesLoading);
 
@@ -208,7 +208,7 @@ export default function HomePage() {
               <p className="text-base sm:text-lg text-violet-800 dark:text-violet-500 text-center max-w-2xl">
                 {tf(
                   "homePage.popularMedicines",
-                  "Popular medicines and healthcare products"
+                  "Popular medicines and healthcare products",
                 )}
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function HomePage() {
               <p className="text-base sm:text-lg text-violet-600 dark:text-violet-400 text-center max-w-2xl">
                 {tf(
                   "homePage.exploreProducts",
-                  "Explore our comprehensive range of medical products."
+                  "Explore our comprehensive range of medical products.",
                 )}
               </p>
             </div>
@@ -374,6 +374,23 @@ export default function HomePage() {
             <WhyChooseUs />
           </div>
         </LazySection>
+
+        {/* Poster Section */}
+        <section className="w-full bg-background dark:bg-background py-8 sm:py-12 md:py-16">
+          <div className="container mx-auto px-4 sm:px-6 md:px-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl hover:shadow-3xl transition-shadow duration-500">
+                <img
+                  src="/aheroo.png"
+                  alt="Online24 Pharmacy Poster"
+                  className="w-full h-auto object-cover object-center"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Contact/Newsletter Section */}
         <LazySection>

@@ -1,6 +1,7 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/roleAuth.js';
 import { PrismaClient, Prisma } from '@prisma/client';
+import { createAdminNotification, NotificationType } from '../utils/notificationManager.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -248,6 +249,15 @@ router.post('/', authenticateToken, async (req, res) => {
       }
 
       return createdOrder;
+    });
+
+    // Create admin notification for new order
+    const shippingAddress = safeJsonParse(order.shippingAddress);
+    await createAdminNotification(NotificationType.NEW_ORDER_PLACED, {
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      customerPhone: shippingAddress?.phone || 'Unknown',
+      totalAmount: order.totalAmount,
     });
 
     res.status(201).json(order);

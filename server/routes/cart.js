@@ -49,10 +49,36 @@ router.delete('/:itemId', authenticateToken, async (req, res) => {
 // Add to cart
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
-    await prisma.cartItem.create({
-      data: { userId: req.user.id, productId, quantity }
+    const { productId, quantity = 1 } = req.body;
+    
+    // Check if item already exists in cart
+    const existingItem = await prisma.cartItem.findUnique({
+      where: {
+        userId_productId: {
+          userId: req.user.id,
+          productId: productId
+        }
+      }
     });
+
+    if (existingItem) {
+      // Update quantity if item already exists
+      await prisma.cartItem.update({
+        where: {
+          userId_productId: {
+            userId: req.user.id,
+            productId: productId
+          }
+        },
+        data: { quantity: existingItem.quantity + quantity }
+      });
+    } else {
+      // Create new cart item
+      await prisma.cartItem.create({
+        data: { userId: req.user.id, productId, quantity }
+      });
+    }
+    
     res.json({ success: true });
   } catch (error) {
     console.error('Error adding to cart:', error);

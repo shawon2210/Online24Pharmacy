@@ -138,6 +138,7 @@ export const login = async (req, res) => {
             isActive: true
           }
         });
+        console.log('DEBUG: Prisma user lookup result:', user ? 'found' : 'not found');
       } catch (prismaError) {
         console.error('Prisma lookup failed:', prismaError.message);
       }

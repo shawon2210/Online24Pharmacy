@@ -4,31 +4,38 @@ import {
   PhoneIcon,
   EnvelopeIcon,
   MapPinIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Footer() {
   const { t } = useTranslation();
   const footerLinks = {
     company: [
-      { label: t("footer.aboutUs", "About Us"), to: "/about" },
-      { label: t("footer.careers", "Careers"), to: "/careers" },
-      { label: t("footer.press", "Press"), to: "/press" },
-      { label: t("footer.blog", "Blog"), to: "/blog" },
+      { label: t("footer.aboutUs", "About Us"), to: "/about#company" },
+      { label: t("footer.careers", "Careers"), to: "/about#company" },
+      { label: t("footer.press", "Press"), to: "/about#company" },
+      { label: t("footer.blog", "Blog"), to: "/about#company" },
     ],
     support: [
-      { label: t("footer.contactUs", "Contact Us"), to: "/contact" },
-      { label: t("footer.faqs", "FAQs"), to: "/faq" },
+      { label: t("footer.contactUs", "Contact Us"), to: "/about#support" },
+      { label: t("footer.faqs", "FAQs"), to: "/about#support" },
       {
         label: t("footer.shippingReturns", "Shipping & Returns"),
-        to: "/shipping",
+        to: "/about#support",
       },
       { label: t("footer.trackOrder", "Track Order"), to: "/track-order" },
     ],
     legal: [
-      { label: t("footer.privacyPolicy", "Privacy Policy"), to: "/privacy" },
-      { label: t("footer.termsOfService", "Terms of Service"), to: "/terms" },
-      { label: t("footer.refundPolicy", "Refund Policy"), to: "/refund" },
-      { label: t("footer.cookiePolicy", "Cookie Policy"), to: "/cookies" },
+      {
+        label: t("footer.privacyPolicy", "Privacy Policy"),
+        to: "/about#legal",
+      },
+      {
+        label: t("footer.termsOfService", "Terms of Service"),
+        to: "/about#legal",
+      },
+      { label: t("footer.refundPolicy", "Refund Policy"), to: "/about#legal" },
+      { label: t("footer.cookiePolicy", "Cookie Policy"), to: "/about#legal" },
     ],
   };
 
@@ -74,14 +81,14 @@ export default function Footer() {
                 <h3 className="text-lg sm:text-xl font-extrabold text-emerald-900 dark:text-emerald-900 tracking-tight">
                   {t(
                     "footer.subscribeNewsletter",
-                    "Subscribe to Our Newsletter"
+                    "Subscribe to Our Newsletter",
                   )}
                 </h3>
               </div>
               <p className="text-sm text-muted-foreground text-black mb-2 md:mb-0 text-center md:text-left max-w-md">
                 {t(
                   "footer.newsletterDesc",
-                  "Get exclusive deals, health tips, and updates delivered to your inbox. Join our community and stay informed!"
+                  "Get exclusive deals, health tips, and updates delivered to your inbox. Join our community and stay informed!",
                 )}
               </p>
             </div>
@@ -93,7 +100,7 @@ export default function Footer() {
                 type="email"
                 placeholder={t(
                   "footer.emailPlaceholder",
-                  "Enter your email address"
+                  "Enter your email address",
                 )}
                 className="flex-1 min-w-45 sm:w-64 px-4 py-3 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-background dark:bg-card text-foreground placeholder:text-muted-foreground text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all"
                 required
@@ -134,7 +141,7 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground mb-6 max-w-md leading-relaxed">
               {t(
                 "footer.brandDesc",
-                "Your trusted online pharmacy providing quality medicines and healthcare products with fast delivery across Bangladesh."
+                "Your trusted online pharmacy providing quality medicines and healthcare products with fast delivery across Bangladesh.",
               )}
             </p>
             <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm mt-2">
@@ -148,18 +155,26 @@ export default function Footer() {
               {t("footer.dgdaCertified", "DGDA Certified")}
             </div>
 
-            <div className="mt-8 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <PhoneIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>{t("footer.phone", "+880-1234-567890")}</span>
+            <div className="mt-8 space-y-3">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground group hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-800/30 transition-colors">
+                  <PhoneIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <span className="font-medium">+880-1234-567890</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <EnvelopeIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>{t("footer.email", "support@online24pharmacy.com")}</span>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground group hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-800/30 transition-colors">
+                  <EnvelopeIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <span className="font-medium">
+                  support@online24pharmacy.com
+                </span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPinIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>{t("footer.address", "Dhaka, Bangladesh")}</span>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground group hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-800/30 transition-colors">
+                  <MapPinIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <span className="font-medium">Dhaka, Bangladesh</span>
               </div>
             </div>
           </div>
@@ -233,6 +248,18 @@ export default function Footer() {
               {t("footer.brandName", "Online24 Pharmacy")}. All rights reserved.
             </p>
 
+            {/* Scroll to Top Button */}
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
+              className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-linear-to-br from-fuchsia-950 to-blue-700 hover:from-ingigo-900 hover:to-sky-900 text-white text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 border border-white/20 backdrop-blur-sm order-3 sm:order-3"
+              aria-label={t("footer.scrollToTop", "Scroll to top")}
+            >
+              <ChevronUpIcon className="w-5 h-5" />
+              <span className="hidden sm:inline">
+                {t("footer.backToTop", "Back to Top")}
+              </span>
+            </button>
+
             {/* Payment Methods */}
             <div className="flex flex-col items-center sm:flex-row gap-2 sm:gap-3 order-1 sm:order-2">
               <span className="text-xs text-muted-foreground font-semibold tracking-wide">
@@ -251,7 +278,7 @@ export default function Footer() {
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center gap-2 order-3">
+            <div className="flex items-center align-center gap-2 justify-center sm:gap-3 order-2 sm:order-2">
               <a
                 href="#"
                 className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg bg-muted dark:bg-card text-muted-foreground hover:bg-emerald-600 hover:text-white transition-colors"

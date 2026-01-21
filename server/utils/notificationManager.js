@@ -178,6 +178,56 @@ export async function createNotification(userId, type, data = {}) {
   }
 }
 
+/**
+ * Create an admin notification (broadcast to all admin users)
+ * @param {string} type - Notification type from NotificationType enum
+ * @param {object} data - Context data for template rendering
+ * @returns {Promise<number>} Number of notifications created
+ */
+export async function createAdminNotification(type, data = {}) {
+  try {
+    const template = notificationTemplates[type];
+    
+    if (!template) {
+      console.warn(`Unknown admin notification type: ${type}`);
+      return 0;
+    }
+    
+    // Get all admin users
+    const adminUsers = await prisma.user.findMany({
+      where: { role: 'ADMIN' },
+      select: { id: true }
+    });
+    
+    if (adminUsers.length === 0) {
+      console.warn('No admin users found to send notification');
+      return 0;
+    }
+    
+    const notifications = adminUsers.map(admin => ({
+      userId: admin.id,
+      type,
+      title: template.title,
+      message: template.getMessage(data),
+      metadata: JSON.stringify({
+        ...data,
+        actionUrl: template.actionUrl(data),
+        createdAt: getDhakaTimestamp(),
+      }),
+      isRead: false,
+    }));
+    
+    const result = await prisma.notification.createMany({
+      data: notifications,
+    });
+    
+    return result.count;
+  } catch (error) {
+    console.error(`Error creating admin notification (type: ${type}):`, error);
+    return 0;
+  }
+}
+
 // ============================================
 // BULK CREATE NOTIFICATIONS
 // ============================================
@@ -516,6 +566,59 @@ export async function getAdminUnreadNotifications(options = {}) {
 }
 
 /**
+ * Get all admin notifications with pagination (for admin notifications page)
+ * @param {string} userId - Admin user ID
+ * @param {object} options - Filter options
+ * @returns {Promise<object>} Paginated admin notifications
+ */
+export async function getAdminNotifications(userId, options = {}) {
+  try {
+    const { limit = 20, offset = 0, unreadOnly = false, types = [] } = options;
+    
+    const where = {
+      userId,
+      type: {
+        in: types.length > 0 ? types : [
+          NotificationType.NEW_PRESCRIPTION_UPLOADED,
+          NotificationType.LOW_STOCK_ALERT,
+          NotificationType.NEW_ORDER_PLACED,
+          NotificationType.NEW_REVIEW_SUBMITTED,
+          NotificationType.PAYMENT_PENDING,
+          NotificationType.INVENTORY_ISSUE,
+        ],
+      },
+    };
+    
+    if (unreadOnly) {
+      where.isRead = false;
+    }
+    
+    const [notifications, total] = await Promise.all([
+      prisma.notification.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: offset,
+      }),
+      prisma.notification.count({ where }),
+    ]);
+    
+    return {
+      notifications: notifications.map(notif => ({
+        ...notif,
+        metadata: notif.metadata ? JSON.parse(notif.metadata) : {},
+      })),
+      total,
+      limit,
+      offset,
+    };
+  } catch (error) {
+    console.error('Error fetching admin notifications:', error);
+    return { notifications: [], total: 0, limit, offset };
+  }
+}
+
+/**
  * Get notification statistics for admin dashboard
  * @returns {Promise<object>} Statistics
  */
@@ -560,6 +663,7 @@ export async function getNotificationStats() {
 export default {
   NotificationType,
   createNotification,
+  createAdminNotification,
   createBulkNotifications,
   getUserNotifications,
   markNotificationAsRead,
@@ -570,5 +674,6 @@ export default {
   getUnreadCountByType,
   searchNotifications,
   getAdminUnreadNotifications,
+  getAdminNotifications,
   getNotificationStats,
 };

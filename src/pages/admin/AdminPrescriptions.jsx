@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 export default function AdminPrescriptions() {
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPrescription, setSelectedPrescription] = useState(null);
+  const [_selectedPrescription, _setSelectedPrescription] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("PENDING");
   const [pagination, setPagination] = useState(null);
@@ -15,12 +15,12 @@ export default function AdminPrescriptions() {
 
   useEffect(() => {
     fetchPrescriptions(search, statusFilter, currentPage);
-  }, []);
+  }, [search, statusFilter, currentPage]);
 
   const fetchPrescriptions = async (
     searchTerm = "",
     status = "PENDING",
-    page = 1
+    page = 1,
   ) => {
     try {
       const token = localStorage.getItem("auth_token");
@@ -33,7 +33,7 @@ export default function AdminPrescriptions() {
         `${API_URL}/api/admin/prescriptions?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       setPrescriptions(res.data.data || []);
       setPagination(res.data.pagination);
@@ -54,7 +54,7 @@ export default function AdminPrescriptions() {
       const token = localStorage.getItem("auth_token");
       const endpoint = status === "APPROVED" ? "approve" : "reject";
       const url = `${API_URL}/api/admin/prescriptions/${encodeURIComponent(
-        id
+        id,
       )}/${endpoint}`;
 
       const payload =
@@ -248,8 +248,8 @@ export default function AdminPrescriptions() {
                           rx.status === "APPROVED"
                             ? "bg-green-100 text-green-800"
                             : rx.status === "REJECTED"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
                         }`}
                       >
                         {rx.status}

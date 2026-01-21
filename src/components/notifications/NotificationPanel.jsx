@@ -37,7 +37,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
       const offset = Math.max(0, pageNum) * limit;
       const response = await fetch(
         `/api/notifications?limit=${limit}&offset=${offset}`,
-        { credentials: "include" }
+        { credentials: "include" },
       );
 
       if (!response.ok) throw new Error("Failed to fetch notifications");
@@ -75,7 +75,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to mark as read");
@@ -83,8 +83,8 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
       // Update local state
       setNotifications((prev) =>
         prev.map((notif) =>
-          notif.id === notificationId ? { ...notif, isRead: true } : notif
-        )
+          notif.id === notificationId ? { ...notif, isRead: true } : notif,
+        ),
       );
 
       // Notify parent to update unread count
@@ -108,7 +108,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
 
       // Update local state
       setNotifications((prev) =>
-        prev.map((notif) => ({ ...notif, isRead: true }))
+        prev.map((notif) => ({ ...notif, isRead: true })),
       );
 
       // Notify parent to update unread count
@@ -135,14 +135,14 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
         {
           method: "DELETE",
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to delete notification");
 
       // Update local state
       setNotifications((prev) =>
-        prev.filter((notif) => notif.id !== notificationId)
+        prev.filter((notif) => notif.id !== notificationId),
       );
 
       // Notify parent to update unread count
@@ -253,7 +253,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
   // ============================================
 
   return (
-    <div className="bg-background rounded-lg shadow-lg overflow-hidden w-full max-h-96 flex flex-col">
+    <div className="bg-background rounded-lg shadow-lg overflow-hidden w-full max-w-sm mx-auto sm:max-w-md flex flex-col">
       {/* Header */}
       <div className="bg-primary px-4 py-3 flex justify-between items-center text-white">
         <h3 className="font-semibold text-sm">Notifications</h3>
@@ -328,7 +328,7 @@ export function NotificationPanel({ onClose, onNotificationRead }) {
                       day: "numeric",
                       hour: "2-digit",
                       minute: "2-digit",
-                    }
+                    },
                   )}
                 </time>
               </div>

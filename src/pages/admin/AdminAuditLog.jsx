@@ -14,7 +14,7 @@ export default function AdminAuditLog() {
 
   useEffect(() => {
     fetchAuditLogs(search, actionFilter, currentPage);
-  }, []);
+  }, [search, actionFilter, currentPage]);
 
   const fetchAuditLogs = async (searchTerm = "", action = "", page = 1) => {
     try {

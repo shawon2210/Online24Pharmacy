@@ -1,45 +1,17 @@
-/* eslint-disable no-unused-vars, react-hooks/immutability */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import AdminNotificationBell from "../../components/notifications/AdminNotificationBell";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [stats, setStats] = useState({
-    totalOrders: 156,
-    pendingPrescriptions: 12,
-    lowStockItems: 8,
-    revenue: 245000,
-  });
-  const [recentOrders, setRecentOrders] = useState([
-    {
-      id: "1",
-      orderNumber: "ORD-001",
-      customer: "John Doe",
-      amount: 1500,
-      status: "delivered",
-      date: "2024-01-15",
-    },
-    {
-      id: "2",
-      orderNumber: "ORD-002",
-      customer: "Jane Smith",
-      amount: 2300,
-      status: "shipped",
-      date: "2024-01-14",
-    },
-    {
-      id: "3",
-      orderNumber: "ORD-003",
-      customer: "Bob Wilson",
-      amount: 890,
-      status: "pending",
-      date: "2024-01-14",
-    },
-  ]);
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -47,43 +19,79 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await axios.get("/api/admin/stats");
-      setStats(response.data);
+      setLoading(true);
+      const response = await axios.get("/api/analytics/dashboard");
+      setAnalytics(response.data);
+      setError(null);
     } catch (error) {
-      console.error("Failed to fetch stats:", error);
+      console.error("Failed to fetch analytics:", error);
+      setError("Failed to load dashboard data");
+    } finally {
+      setLoading(false);
     }
   };
 
   const statCards = [
     {
-      label: "Orders today",
-      value: stats.totalOrders || 0,
-      icon: "📦",
-      color: "bg-blue-600",
-      change: "+12%",
-    },
-    {
-      label: "Products live",
-      value: stats.pendingPrescriptions || 0,
-      icon: "📄",
-      color: "bg-amber-600",
-      change: "+3",
-    },
-    {
-      label: "Low-stock alerts",
-      value: stats.lowStockItems || 0,
-      icon: "⚠️",
-      color: "bg-red-600",
-      change: "-2",
-    },
-    {
-      label: "Revenue (BDT)",
-      value: (stats.revenue || 0).toLocaleString(),
+      label: "Total Revenue",
+      value: `৳${analytics?.totalRevenue?.toLocaleString() || 0}`,
       icon: "💰",
       color: "bg-emerald-600",
-      change: "+18%",
+      change: "+12.5%",
+    },
+    {
+      label: "Total Orders",
+      value: analytics?.totalOrders?.toLocaleString() || 0,
+      icon: "📦",
+      color: "bg-blue-600",
+      change: "+8.2%",
+    },
+    {
+      label: "Total Customers",
+      value: analytics?.totalCustomers?.toLocaleString() || 0,
+      icon: "👥",
+      color: "bg-purple-600",
+      change: "+15.3%",
+    },
+    {
+      label: "Conversion Rate",
+      value: `${analytics?.conversionRate || 0}%`,
+      icon: "📈",
+      color: "bg-orange-600",
+      change: "+2.1%",
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8 bg-background min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8 bg-background min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 text-6xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-foreground mb-2">
+            Error Loading Dashboard
+          </h2>
+          <p className="text-muted-foreground">{error}</p>
+          <button
+            onClick={fetchDashboardData}
+            className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-background min-h-screen">
@@ -97,17 +105,20 @@ export default function AdminDashboard() {
             Here's what's happening with your pharmacy today
           </p>
         </div>
-        <div className="hidden md:flex flex-col items-end">
-          <span className="text-sm font-semibold text-muted-foreground">
-            Today
-          </span>
-          <span className="text-lg font-bold text-foreground">
-            {new Date().toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </span>
+        <div className="flex items-center gap-4">
+          <AdminNotificationBell />
+          <div className="hidden md:flex flex-col items-end">
+            <span className="text-sm font-semibold text-muted-foreground">
+              Today
+            </span>
+            <span className="text-lg font-bold text-foreground">
+              {new Date().toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -231,7 +242,7 @@ export default function AdminDashboard() {
                 </p>
                 <p className="text-sm text-amber-50 dark:text-amber-200">
                   <span className="inline-flex items-center justify-center w-6 h-6 bg-white/30 dark:bg-black/30 rounded-full text-xs font-bold mr-1">
-                    {stats.pendingPrescriptions}
+                    {analytics?.pendingPrescriptions || 0}
                   </span>
                   prescriptions awaiting review
                 </p>
@@ -381,7 +392,7 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="bg-background dark:bg-card">
-              {recentOrders.map((order, idx) => (
+              {analytics?.recentOrders?.map((order, idx) => (
                 <tr
                   key={order.id}
                   className={`border-b border-border hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-all duration-200 ${
@@ -392,34 +403,34 @@ export default function AdminDashboard() {
                 >
                   <td className="px-6 py-4">
                     <span className="text-sm font-bold text-foreground">
-                      #{order.orderNumber}
+                      #{order.id}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-foreground">
-                    {order.customer}
+                    {order.customer.name}
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
-                      ৳{order.amount.toLocaleString()}
+                      ৳{order.totalAmount.toLocaleString()}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border-2 ${
-                        order.status === "delivered"
+                        order.status === "completed"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : order.status === "shipped"
-                          ? "bg-blue-50 text-blue-700 border-blue-200"
-                          : "bg-amber-50 text-amber-700 border-amber-200"
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-amber-50 text-amber-700 border-amber-200"
                       }`}
                     >
                       <span
                         className={`w-2 h-2 rounded-full ${
-                          order.status === "delivered"
+                          order.status === "completed"
                             ? "bg-emerald-500"
                             : order.status === "shipped"
-                            ? "bg-blue-500"
-                            : "bg-amber-500"
+                              ? "bg-blue-500"
+                              : "bg-amber-500"
                         }`}
                       />
                       {order.status.charAt(0).toUpperCase() +
@@ -427,7 +438,7 @@ export default function AdminDashboard() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
-                    {order.date}
+                    {new Date(order.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4">
                     <Link
@@ -457,7 +468,16 @@ export default function AdminDashboard() {
                     </Link>
                   </td>
                 </tr>
-              ))}
+              )) || (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="px-6 py-4 text-center text-muted-foreground"
+                  >
+                    No recent orders
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

@@ -18,7 +18,7 @@ router.get('/map-locations', async (req, res) => {
     }));
     res.setHeader('Content-Type', 'application/json');
     res.json(response);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });

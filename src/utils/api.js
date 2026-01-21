@@ -58,8 +58,18 @@ export const removeFromWishlist = async (productId) => {
   return response.data;
 };
 
+export const fetchWishlist = async () => {
+  const response = await api.get('/wishlist');
+  return response.data;
+};
+
 export const fetchCart = async () => {
   const response = await api.get('/cart');
+  return response.data;
+};
+
+export const addToCart = async (productId, quantity = 1) => {
+  const response = await api.post('/cart', { productId, quantity });
   return response.data;
 };
 

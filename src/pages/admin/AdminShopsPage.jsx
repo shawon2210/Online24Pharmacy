@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -85,7 +85,7 @@ const AdminShopsPage = () => {
       isNaN(parseFloat(form.lng))
     ) {
       setError(
-        "Latitude and Longitude are required and must be valid numbers. You can pick on the map."
+        "Latitude and Longitude are required and must be valid numbers. You can pick on the map.",
       );
       setLoading(false);
       return;

@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { authenticateToken } from '../middleware/roleAuth.js';
 import prisma from '../db/prisma.js';
+import { createAdminNotification, NotificationType } from '../utils/notificationManager.js';
 
 const router = express.Router();
 
@@ -178,6 +179,18 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     const result = computeDerivedStatus(created);
+    
+    // Create admin notification for new prescription
+    const customerName = created.user 
+      ? `${created.user.firstName} ${created.user.lastName}`.trim() 
+      : patientName || 'Unknown Customer';
+    
+    await createAdminNotification(NotificationType.NEW_PRESCRIPTION_UPLOADED, {
+      prescriptionId: created.id,
+      customerName,
+      orderNumber: referenceNumber,
+    });
+    
     res.status(201).json({ ...result, referenceNumber: created.referenceNumber || referenceNumber });
   } catch (error) {
     console.error(error);

@@ -11,7 +11,7 @@ router.get('/', authenticateToken, isAdmin, async (req, res) => {
   try {
     const shops = await prisma.shop.findMany({ orderBy: { id: 'desc' } });
     res.json(shops);
-  } catch (err) {
+  } catch (_err) {
     res.status(500).json({ error: 'Failed to fetch shops' });
   }
 });
@@ -31,7 +31,7 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
       },
     });
     res.status(201).json(shop);
-  } catch (err) {
+  } catch (_err) {
     res.status(500).json({ error: 'Failed to create shop' });
   }
 });

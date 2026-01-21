@@ -71,7 +71,7 @@ function ProductCard({ product, size = "xs" }) {
     price,
     discountPrice,
     finalPrice,
-    stock,
+    stock: _stock,
     isPrescriptionRequired,
     slug,
     inStock,
@@ -96,8 +96,8 @@ function ProductCard({ product, size = "xs" }) {
       !img || imgError
         ? FALLBACK_PRODUCT_IMAGE
         : img.startsWith("http")
-        ? img
-        : `${API_URL}${img}`;
+          ? img
+          : `${API_URL}${img}`;
 
     return {
       name,
@@ -123,7 +123,7 @@ function ProductCard({ product, size = "xs" }) {
       addItem(product, 1);
       setTimeout(() => setIsAdding(false), 800);
     },
-    [inStock, isAdding, addItem, product]
+    [inStock, isAdding, addItem, product],
   );
 
   return (

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import SEOHead from "../components/common/SEOHead";
 import {
   ShieldCheckIcon,
@@ -12,10 +13,35 @@ import {
   MapPinIcon,
   BuildingOfficeIcon,
   CheckCircleIcon,
+  BriefcaseIcon,
+  NewspaperIcon,
+  PencilSquareIcon,
+  QuestionMarkCircleIcon,
+  ChatBubbleLeftRightIcon,
+  TruckIcon as ShippingIcon,
+  ScaleIcon,
+  LockClosedIcon,
+  DocumentTextIcon,
+  ArrowPathIcon,
+  CookieIcon,
 } from "@heroicons/react/24/outline";
 
 export default function AboutPage() {
   const { t } = useTranslation();
+
+  // Handle smooth scrolling to anchor sections
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      }
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
@@ -199,6 +225,200 @@ export default function AboutPage() {
                     {t("aboutPage.qualityAssured")}
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Company Information Section */}
+          <div
+            id="company"
+            className="bg-card rounded-xl shadow-lg border border-border p-6"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-2 sm:mb-3">
+                Company
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Learn more about Online24 Pharmacy
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* About Us */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <UserGroupIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  About Us
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Our mission, vision, and commitment to healthcare excellence
+                </p>
+              </div>
+
+              {/* Careers */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <BriefcaseIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Careers
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Join our team of healthcare professionals
+                </p>
+              </div>
+
+              {/* Press */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <NewspaperIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Press
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Media resources and company news
+                </p>
+              </div>
+
+              {/* Blog */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <PencilSquareIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Blog
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Health tips, news, and educational content
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Support Information Section */}
+          <div
+            id="support"
+            className="bg-card rounded-xl shadow-lg border border-border p-6"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-2 sm:mb-3">
+                Support
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Get help and find answers to your questions
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Contact Us */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <ChatBubbleLeftRightIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Contact Us
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Reach out to our support team for assistance
+                </p>
+              </div>
+
+              {/* FAQs */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <QuestionMarkCircleIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  FAQs
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Find answers to commonly asked questions
+                </p>
+              </div>
+
+              {/* Shipping & Returns */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <ShippingIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Shipping & Returns
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Learn about delivery and return policies
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Legal Information Section */}
+          <div
+            id="legal"
+            className="bg-card rounded-xl shadow-lg border border-border p-6"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-2 sm:mb-3">
+                Legal
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Important legal information and policies
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Privacy Policy */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <LockClosedIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Privacy Policy
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  How we protect and handle your personal data
+                </p>
+              </div>
+
+              {/* Terms of Service */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <DocumentTextIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Terms of Service
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Rules and guidelines for using our services
+                </p>
+              </div>
+
+              {/* Refund Policy */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <ArrowPathIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Refund Policy
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Learn about our refund and return procedures
+                </p>
+              </div>
+
+              {/* Cookie Policy */}
+              <div className="bg-muted rounded-lg border border-border p-5 text-center hover:shadow-md transition-shadow">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary/30 mb-4 mx-auto">
+                  <CookieIcon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">
+                  Cookie Policy
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Information about cookies and tracking technologies
+                </p>
               </div>
             </div>
           </div>

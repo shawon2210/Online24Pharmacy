@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import AdminNotificationBell from "../notifications/AdminNotificationBell";
 import {
   LayoutDashboard,
   Menu,
@@ -12,6 +13,7 @@ import {
   MessageSquare,
   LogOut,
   Bell,
+  ExternalLink,
 } from "lucide-react";
 
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
@@ -49,6 +51,12 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
               <NavLink to="/admin" end className={navLinkClasses}>
                 <LayoutDashboard className="mr-3" size={20} />
                 Dashboard
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin/notifications" className={navLinkClasses}>
+                <Bell className="mr-3" size={20} />
+                Notifications
               </NavLink>
             </li>
             <li>
@@ -135,13 +143,15 @@ const AdminHeader = ({ toggleSidebar }) => {
           {/* Can add breadcrumbs here later */}
         </div>
         <div className="flex items-center space-x-4">
-          <button className="relative text-muted-foreground hover:text-emerald-600">
-            <Bell size={22} />
-            <span className="absolute top-0 right-0 flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-            </span>
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
+            title="View Public Site"
+          >
+            <ExternalLink size={18} />
+            <span className="hidden sm:inline">View Site</span>
           </button>
+          <AdminNotificationBell />
           <div className="flex items-center">
             <span className="text-sm font-medium text-foreground mr-2">
               Welcome, {user?.firstName || "Admin"}
