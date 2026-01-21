@@ -23,7 +23,7 @@ import {
   LockClosedIcon,
   DocumentTextIcon,
   ArrowPathIcon,
-  CookieIcon,
+  ShieldCheckIcon as CookieIcon,
 } from "@heroicons/react/24/outline";
 
 export default function AboutPage() {
