@@ -129,7 +129,7 @@ export default function PrescriptionsPage() {
                   </a>
                 </li>
                 <li className="px-1 text-muted-foreground">/</li>
-                <li className="text-foreground font-bold break-words max-w-[200px] sm:max-w-none">
+                <li className="text-foreground font-bold wrap-break-word max-w-200px sm:max-w-none">
                   {t("prescriptions")}
                 </li>
               </ol>
@@ -188,7 +188,7 @@ export default function PrescriptionsPage() {
                   </a>
                 </li>
                 <li className="px-1 text-muted-foreground">/</li>
-                <li className="text-foreground font-bold break-words max-w-[200px] sm:max-w-none">
+                <li className="text-foreground font-bold wrap-break-word max-w-200px sm:max-w-none">
                   {t("successTitle")}
                 </li>
               </ol>
@@ -296,7 +296,7 @@ export default function PrescriptionsPage() {
                 </a>
               </li>
               <li className="px-1 text-muted-foreground">/</li>
-              <li className="text-foreground font-bold break-words max-w-[200px] sm:max-w-none">
+              <li className="text-foreground font-bold wrap-break-word max-w-200px sm:max-w-none">
                 {t("uploadPrescription")}
               </li>
             </ol>
@@ -304,7 +304,7 @@ export default function PrescriptionsPage() {
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-primary mb-2 break-words">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-primary mb-2 wrap-break-word">
                 {t("uploadPrescription")}
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed">
@@ -313,7 +313,7 @@ export default function PrescriptionsPage() {
             </div>
             <a
               href="/my-prescriptions"
-              className="bg-muted-foreground text-background px-4 py-2 rounded-lg font-medium hover:bg-foreground transition-colors text-sm sm:text-base whitespace-nowrap flex-shrink-0"
+              className="bg-muted-foreground text-background px-4 py-2 rounded-lg font-medium hover:bg-foreground transition-colors text-sm sm:text-base whitespace-nowrap shrink-0"
             >
               📋 {t("myPrescriptions")}
             </a>

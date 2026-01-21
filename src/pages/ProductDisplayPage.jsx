@@ -285,8 +285,8 @@ function ProductDetail({ slug }) {
             (item) => item.productId === product.id,
           );
           setIsWishlisted(isInWishlist);
-        } catch (error) {
-          console.error("Error checking wishlist status:", error);
+        } catch (_error) {
+          console.error("Error checking wishlist status:", _error);
         }
       }
     };

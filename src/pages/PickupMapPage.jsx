@@ -205,7 +205,7 @@ const PickupMapPage = () => {
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 md:py-8">
         {loading ? (
-          <div className="flex items-center justify-center min-h-[300px]">
+          <div className="flex items-center justify-center min-h-300px">
             <div className="text-center bg-card rounded-2xl shadow-lg border border-border p-8 w-full max-w-md mx-auto">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
               <p className="mt-4 text-muted-foreground font-medium">
@@ -214,7 +214,7 @@ const PickupMapPage = () => {
             </div>
           </div>
         ) : error ? (
-          <div className="flex items-center justify-center min-h-[300px]">
+          <div className="flex items-center justify-center min-h-300px">
             <div className="bg-card rounded-2xl shadow-lg border border-destructive/20 p-8 w-full max-w-md mx-auto text-center">
               <div className="text-4xl mb-4">⚠️</div>
               <h2 className="text-xl font-bold text-destructive mb-2">
@@ -250,7 +250,7 @@ const PickupMapPage = () => {
                   {t("pickupMapPage.map")}
                 </h2>
 
-                <div className="bg-muted rounded-lg border border-border overflow-hidden flex-1 min-h-[320px] h-80 md:h-96">
+                <div className="bg-muted rounded-lg border border-border overflow-hidden flex-1 min-h-320px h-80 md:h-96">
                   <MapContainer
                     center={
                       selectedShop
@@ -331,7 +331,7 @@ const PickupMapPage = () => {
                     : t("pickupMapPage.noShops")}
                 </h2>
 
-                <div className="bg-muted rounded-lg p-3 md:p-4 flex-1 min-h-[320px] h-80 md:h-96 overflow-y-auto border border-border space-y-3 md:space-y-4">
+                <div className="bg-muted rounded-lg p-3 md:p-4 flex-1 min-h-320px h-80 md:h-96 overflow-y-auto border border-border space-y-3 md:space-y-4">
                   {shops.map((shop) => (
                     <div
                       key={shop.id}
