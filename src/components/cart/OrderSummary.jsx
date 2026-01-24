@@ -70,7 +70,7 @@ export default function OrderSummary({
           <div className="text-xs text-muted-foreground">
             {t("cartPage.addMoreForFreeShipping", {
               amount: (DELIVERY.FREE_SHIPPING_THRESHOLD - safeSubtotal).toFixed(
-                2
+                2,
               ),
             })}
           </div>

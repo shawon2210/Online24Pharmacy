@@ -41,8 +41,11 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
           {t("cartPage.unitPrice")}:{" "}
           <span className="font-bold text-emerald-600 dark:text-emerald-400">
             ৳
-            {(typeof item.product?.price === "number" &&
-            !isNaN(item.product.price)
+            {(typeof item.product?.discountPrice === "number" &&
+            !isNaN(item.product.discountPrice)
+              ? item.product.discountPrice
+              : typeof item.product?.price === "number" &&
+                !isNaN(item.product.price)
               ? item.product.price
               : 0
             ).toFixed(2)}
@@ -81,8 +84,11 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
         <p className="font-black text-emerald-600 dark:text-emerald-400 text-sm sm:text-base lg:text-lg">
           ৳
           {(
-            (typeof item.product?.price === "number" &&
-            !isNaN(item.product.price)
+            (typeof item.product?.discountPrice === "number" &&
+            !isNaN(item.product.discountPrice)
+              ? item.product.discountPrice
+              : typeof item.product?.price === "number" &&
+                !isNaN(item.product.price)
               ? item.product.price
               : 0) * item.quantity
           ).toFixed(2)}

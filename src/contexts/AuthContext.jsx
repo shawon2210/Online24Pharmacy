@@ -43,14 +43,14 @@ const initialState = {
 
 const loadPersistedState = () => {
   try {
-    const persistedUser = localStorage.getItem("auth_user");
+    const persistedUser = sessionStorage.getItem("auth_user");
     const persistedToken = localStorage.getItem("auth_token");
-    if (persistedUser && persistedToken) {
-      const user = JSON.parse(persistedUser);
+    if (persistedToken) {
+      const user = persistedUser ? JSON.parse(persistedUser) : null;
       return {
         user,
         accessToken: persistedToken,
-        isAuthenticated: true,
+        isAuthenticated: !!user,
         loading: false,
       };
     }
@@ -82,7 +82,7 @@ function AuthProvider({ children }) {
           // Fallback: Try to get from cookies if not found in meta
           if (!csrfToken) {
             const match = document.cookie.match(
-              new RegExp("(^| )csrf_token=([^;]+)")
+              new RegExp("(^| )csrf_token=([^;]+)"),
             );
             if (match) csrfToken = match[2];
           }
@@ -92,7 +92,7 @@ function AuthProvider({ children }) {
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     return () => {
@@ -111,17 +111,29 @@ function AuthProvider({ children }) {
       const response = await axios.post(
         `${API_URL}/api/auth/login`,
         { email, password },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
-      // Persist to localStorage
-      localStorage.setItem("auth_user", JSON.stringify(response.data.user));
+      // Sanitize user data to avoid storing large objects
+      const sanitizedUser = {
+        id: response.data.user.id,
+        email: response.data.user.email,
+        role: response.data.user.role,
+      };
+
+      // Persist to storage
+      try {
+        sessionStorage.setItem("auth_user", JSON.stringify(sanitizedUser));
+      } catch (e) {
+        console.warn("Failed to store user data:", e);
+        // Continue without storing user data
+      }
       localStorage.setItem("auth_token", response.data.accessToken);
 
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: {
-          user: response.data.user,
+          user: response.data.user, // Keep full user in state
           accessToken: response.data.accessToken,
         },
       });
@@ -138,42 +150,35 @@ function AuthProvider({ children }) {
       const response = await axios.post(
         `${API_URL}/api/auth/signup`,
         userData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
-      localStorage.setItem("auth_user", JSON.stringify(response.data.user));
+      // Sanitize user data to avoid storing large objects
+      const sanitizedUser = {
+        id: response.data.user.id,
+        email: response.data.user.email,
+        role: response.data.user.role,
+      };
+
+      try {
+        sessionStorage.setItem("auth_user", JSON.stringify(sanitizedUser));
+      } catch (e) {
+        console.warn("Failed to store user data:", e);
+        // Continue without storing user data
+      }
       localStorage.setItem("auth_token", response.data.accessToken);
 
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: {
-          user: response.data.user,
+          user: response.data.user, // Keep full user in state
           accessToken: response.data.accessToken,
         },
       });
 
       return response.data;
     } catch (error) {
-      const errorData = error.response?.data;
-      let errorMessage = "Signup failed";
-
-      if (errorData?.details) {
-        if (Array.isArray(errorData.details)) {
-          errorMessage = errorData.details
-            .map((d) => d.msg || d.message || "Invalid input")
-            .join(", ");
-        } else if (typeof errorData.details === "string") {
-          errorMessage = errorData.details;
-        } else {
-          errorMessage = JSON.stringify(errorData.details);
-        }
-      } else if (errorData?.error) {
-        errorMessage = errorData.error;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-
-      throw new Error(errorMessage);
+      throw new Error(error.response?.data?.error || "Signup failed");
     }
   };
 
@@ -183,12 +188,12 @@ function AuthProvider({ children }) {
       await axios.post(
         `${API_URL}/api/auth/logout`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      localStorage.removeItem("auth_user");
+      sessionStorage.removeItem("auth_user");
       localStorage.removeItem("auth_token");
       dispatch({ type: "LOGOUT" });
       window.location.href = "/login";
@@ -197,11 +202,11 @@ function AuthProvider({ children }) {
 
   const updateUser = (userData) => {
     dispatch({ type: "UPDATE_USER", payload: userData });
-    // Also update localStorage
-    const currentUser = JSON.parse(localStorage.getItem("auth_user") || "{}");
-    localStorage.setItem(
+    // Also update sessionStorage
+    const currentUser = JSON.parse(sessionStorage.getItem("auth_user") || "{}");
+    sessionStorage.setItem(
       "auth_user",
-      JSON.stringify({ ...currentUser, ...userData })
+      JSON.stringify({ ...currentUser, ...userData }),
     );
   };
 

@@ -1,78 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import DeliveryPanel from "./pages/DeliveryPanel";
-import SupplierPanel from "./pages/SupplierPanel";
-import PharmacistPanel from "./pages/PharmacistPanel";
-// Role-based route guards
-function RequireRole({ children, allowedRoles }) {
-  const { isAuthenticated, user, loading } =
-    require("./hooks/useAuth").useAuth();
-  const location = require("react-router-dom").useLocation();
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-  if (!allowedRoles.includes(user?.role)) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-muted">
-        <div className="text-center max-w-md p-8 bg-background rounded-lg shadow-lg">
-          <div className="text-6xl mb-4">🚫</div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">
-            Access Denied
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            You do not have permission to access this page.
-          </p>
-          <a
-            href="/"
-            className="inline-block px-6 py-3 bg-emerald-600 text-background rounded-lg font-medium hover:bg-emerald-700 transition-colors"
-          >
-            Go to Home
-          </a>
-        </div>
-      </div>
-    );
-  }
-  return children;
-}
-{
-  /* Deliveryman Panel */
-}
-<Route
-  path="/delivery-panel"
-  element={
-    <RequireRole allowedRoles={["DELIVERY_PARTNER"]}>
-      <DeliveryPanel />
-    </RequireRole>
-  }
-/>;
-{
-  /* Supplier Panel */
-}
-<Route
-  path="/supplier-panel"
-  element={
-    <RequireRole allowedRoles={["SUPPLIER"]}>
-      <SupplierPanel />
-    </RequireRole>
-  }
-/>;
-{
-  /* Pharmacist Panel (redirects to admin prescriptions) */
-}
-<Route
-  path="/pharmacist-panel"
-  element={
-    <RequireRole allowedRoles={["PHARMACIST"]}>
-      <PharmacistPanel />
-    </RequireRole>
-  }
-/>;
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Toaster } from "react-hot-toast";
@@ -127,7 +58,6 @@ import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminTest from "./pages/admin/AdminTest";
 import AdminReviews from "./pages/admin/AdminReviews";
 import AdminAuditLog from "./pages/admin/AdminAuditLog";
-import AdminPickupLocations from "./pages/admin/AdminPickupLocations";
 import AdminShopsPage from "./pages/admin/AdminShopsPage";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 

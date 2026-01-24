@@ -48,7 +48,7 @@ export default function AdminOrders() {
         { status },
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       await axios
         .post(
@@ -59,7 +59,7 @@ export default function AdminOrders() {
             targetId: orderId,
             metadata: JSON.stringify({ status }),
           },
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } },
         )
         .catch(() => {});
       fetchOrders();
@@ -147,10 +147,10 @@ export default function AdminOrders() {
                             order.status === "DELIVERED"
                               ? "bg-green-100 text-green-800"
                               : order.status === "CONFIRMED"
-                              ? "bg-blue-100 text-blue-800"
-                              : order.status === "PENDING"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
+                                ? "bg-blue-100 text-blue-800"
+                                : order.status === "PENDING"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-red-100 text-red-800"
                           }`}
                         >
                           {order.status}

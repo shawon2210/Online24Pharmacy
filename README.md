@@ -51,7 +51,30 @@ npx prisma migrate dev --name init
 npx prisma db seed
 ```
 
-### 4. Start the Development Server
+### 4. Environment Variables
+
+Copy `.env.example` to `.env` and configure the following:
+
+```bash
+cp .env.example .env
+```
+
+**Required Environment Variables:**
+
+- `DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET` & `JWT_REFRESH_SECRET` - For authentication
+- `OPENAI_API_KEY` - OpenAI API key (get from [OpenAI Platform](https://platform.openai.com/api-keys))
+- `GEMINI_API_KEY` - Google Gemini AI API key (optional, get from [Google AI Studio](https://makersuite.google.com/app/apikey))
+
+**Optional Variables:**
+
+- `CLOUDINARY_*` - For image uploads
+- `EMAIL_*` - For email notifications
+- `TWILIO_*` - For SMS notifications
+- `BKASH_*` & `SSLCOMMERZ_*` - For payment gateways
+- `VITE_GOOGLE_MAPS_API_KEY` - For map display
+
+### 5. Start the Development Server
 
 ```bash
 npm run dev

@@ -224,17 +224,17 @@ export default function CheckoutPage() {
             apiError === "Invalid token"
           ) {
             localStorage.removeItem("auth_token");
-            localStorage.removeItem("auth_user");
+            sessionStorage.removeItem("auth_user");
             toast.error(
               t(
                 "auth.sessionExpired",
-                "Your session has expired. Please sign in again."
-              )
+                "Your session has expired. Please sign in again.",
+              ),
             );
             navigate("/login", { replace: true });
           }
         },
-      }
+      },
     );
   };
 
@@ -307,7 +307,7 @@ export default function CheckoutPage() {
                 <p className="font-semibold text-sm sm:text-base">
                   {t(
                     "checkoutPage.orderCreateFailed",
-                    "Failed to create order"
+                    "Failed to create order",
                   )}
                 </p>
                 <p className="text-xs sm:text-sm text-red-800/90 dark:text-red-200/90 mt-1 wrap-break-word">
@@ -474,7 +474,7 @@ export default function CheckoutPage() {
                       <textarea
                         name="instructions"
                         placeholder={t(
-                          "checkoutPage.deliveryInstructionsPlaceholder"
+                          "checkoutPage.deliveryInstructionsPlaceholder",
                         )}
                         value={formData.instructions}
                         onChange={handleChange}

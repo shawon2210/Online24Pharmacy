@@ -1,111 +1,166 @@
 import express from 'express';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { chatbotSafety } from '../middleware/chatbotSafety.js';
-import { queryDocuments, upsertDocuments } from '../utils/vectorClient.js';
-import { buildChatbotCorpus } from '../utils/chatbotCorpus.js';
 
 const router = express.Router();
-let corpusReady = false;
 
-async function ensureCorpusLoaded() {
-  if (corpusReady) return;
-  const docs = await buildChatbotCorpus();
-  await upsertDocuments(docs);
-  corpusReady = true;
+// Initialize Gemini AI
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// Try different model names - Gemini Pro should work
+let model;
+try {
+  model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  console.log('✅ Gemini Pro model initialized successfully');
+} catch (error) {
+  console.warn('❌ Gemini Pro not available:', error.message);
+  console.warn('🤖 Chatbot will use fallback responses');
+  model = null;
 }
 
-function buildAnswer({ passages, caution }) {
-  const bullets = passages
-    .map((p) => `• ${p.text}`)
-    .join('\n');
+// System prompt for pharmacy AI assistant
+const SYSTEM_PROMPT = `You are an AI pharmacy assistant for Online24 Pharmacy, Bangladesh's trusted online pharmacy. You provide intelligent, helpful, and accurate information about medicines, health, and pharmacy services while maintaining strict safety guidelines.
 
-  const cautionLine = caution
-    ? '⚠️ I cannot provide dosing or clinical advice. Please consult a licensed clinician or pharmacist.'
-    : '';
+CORE PRINCIPLES:
+- NEVER provide medical advice, diagnoses, prescriptions, or treatment recommendations
+- Always direct users to consult licensed healthcare professionals for medical decisions
+- Be extremely cautious about anything that could be interpreted as medical advice
+- Focus on general information, pharmacy services, and health education
 
-  return [
-    'Here is information I found:',
-    bullets,
-    cautionLine,
-    'This is general information only and not medical advice. For any treatment decisions, speak to a licensed clinician.',
-  ]
-    .filter(Boolean)
-    .join('\n\n');
-}
+SERVICES & CAPABILITIES:
+- 5000+ medicines and healthcare products available
+- Prescription upload, management, and reorder system
+- Free delivery in Dhaka within 2-24 hours
+- Multiple payment options: Cash on Delivery, bKash, Nagad, Credit/Debit cards
+- 7-day return policy for sealed OTC medicines
+- Real-time order tracking and status updates
+- Prescription reminder system
+- Account management and order history
 
-function generateSmartFallbackAnswer(userMessage, _language = 'en') {
-  // Analyze the message to provide contextually relevant fallback
-  const msg = userMessage.toLowerCase();
-  const isAccountRelated = /account|profile|login|register|password|email|phone/i.test(msg);
-  const isOrderRelated = /order|cart|checkout|payment|bill|invoice/i.test(msg);
-  const isPrescriptionRelated = /prescription|rx|script|reorder|medicine|drug/i.test(msg);
-  const isDeliveryRelated = /delivery|shipping|track|address|when|how long|arrive/i.test(msg);
-  const isProductRelated = /product|medicine|drug|tablet|capsule|price|cost|available/i.test(msg);
-  const isReturnRelated = /return|refund|exchange|money back|damaged/i.test(msg);
-  const isPaymentRelated = /payment|cod|bkash|nagad|card|price/i.test(msg);
+RESPONSE GUIDELINES:
+- Be friendly, professional, and conversational
+- Provide detailed, helpful information about pharmacy services
+- For medicine questions: Give general information from reliable sources only
+- Include specific details about our services when relevant
+- Ask clarifying questions when needed
+- Keep responses informative but not overwhelming
+- Always end with appropriate disclaimers
 
-  const smartResponses = [
-    isAccountRelated && `I understand you're asking about your account. You can manage your profile, change password, update contact info, and view your transaction history in your account settings. Need more specific help?`,
-    isOrderRelated && `You're asking about orders and checkout. I can help with placing orders, applying coupons, selecting payment methods (COD, bKash, Nagad), and viewing order status.`,
-    isPrescriptionRelated && `I see you're asking about prescriptions. You can upload prescriptions, reorder from previous prescriptions, set reminders, and manage your prescription history.`,
-    isDeliveryRelated && `You're asking about delivery. We offer free delivery in Dhaka within 2-24 hours. You can track your order in real-time and see estimated delivery time.`,
-    isProductRelated && `You're asking about our medicines and products. We have 5000+ medicines and healthcare products. You can search, filter by price, check if prescription is needed, and read reviews.`,
-    isReturnRelated && `You're asking about returns and refunds. We accept returns within 7 days for sealed OTC medicines. Some items like surgical products and opened medicines are non-returnable.`,
-    isPaymentRelated && `You're asking about payment. We accept Cash on Delivery, bKash, Nagad, and Credit/Debit cards. All payments are secure and PCI-DSS compliant.`,
-    `I understand your question about "${userMessage}". While I don't have specific information in my current knowledge base, I can help with: medicine questions, prescription management, ordering, delivery, payments, account management, and returns. Try rephrasing or asking about one of these topics!`
-  ];
+MEDICINE INFORMATION APPROACH:
+- Provide general knowledge about common medicines
+- Mention common uses (not specific treatments)
+- Discuss general side effects from reliable sources
+- Never suggest dosages, frequencies, or specific treatments
+- Always recommend consulting pharmacists or doctors
 
-  const relevantResponse = smartResponses.find(r => r) || smartResponses[smartResponses.length - 1];
-  return relevantResponse;
-}
+CONVERSATION STYLE:
+- Natural and engaging
+- Use pharmacy-specific terminology appropriately
+- Show enthusiasm for helping with pharmacy needs
+- Be patient and thorough in explanations
+
+Always respond in English unless specifically requested otherwise.`;
 
 
 router.post('/', chatbotSafety, async (req, res) => {
   try {
     const { message, language = 'en' } = req.body;
 
-    // Ensure corpus is loaded with timeout
+    if (!message || message.trim().length === 0) {
+      return res.status(400).json({
+        answer: 'Please provide a message to chat about.',
+        citations: [],
+        language,
+        caution: false,
+      });
+    }
+
+    // Check if model is available
+    if (!model) {
+      return res.status(500).json({
+        answer: 'AI service is currently unavailable. Please try again later or contact our support team.',
+        citations: [],
+        language,
+        caution: false,
+      });
+    }
+
+    // Create enhanced prompt with system context
+    const fullPrompt = `${SYSTEM_PROMPT}\n\nUser question: ${message}\n\nCurrent date: ${new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}\n\nPlease respond as a knowledgeable pharmacy assistant.`;
+
+    // Send message using Gemini
     try {
-      await Promise.race([
-        ensureCorpusLoaded(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Corpus load timeout')), 10000))
-      ]);
-    } catch (corpusErr) {
-      console.warn('Corpus load warning:', corpusErr.message);
-      // Continue with empty results, fallback will handle it
+      const result = await model.generateContent(fullPrompt);
+      const response = await result.response;
+      let answer = response.text();
+
+      // Clean up the response and ensure it's helpful
+      answer = answer.trim();
+
+      // If response is too short or generic, provide more context
+      if (answer.length < 50) {
+        answer += "\n\nIs there anything specific about our pharmacy services or medicine information I can help you with?";
+      }
+
+      // Add safety disclaimer if needed
+      if (req.chatbotSafety?.caution) {
+        answer += '\n\n⚠️ I cannot provide dosing or clinical advice. Please consult a licensed clinician or pharmacist.';
+      }
+
+      // Always add general disclaimer
+      answer += '\n\nThis is general information only and not medical advice. For any treatment decisions, speak to a licensed clinician.';
+
+      res.json({
+        answer,
+        citations: [], // Gemini doesn't provide citations in the same way
+        language,
+        caution: !!req.chatbotSafety?.caution,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (aiError) {
+      console.error('Gemini API error:', aiError.message);
+
+      // Provide helpful fallback responses based on common pharmacy questions
+      let fallbackAnswer = '';
+
+      const lowerMessage = message.toLowerCase();
+
+      if (lowerMessage.includes('delivery') || lowerMessage.includes('shipping')) {
+        fallbackAnswer = 'We offer free delivery in Dhaka within 2-24 hours for orders over ৳500. Delivery charges apply for orders under ৳500. You can track your order status in real-time through our website.';
+      } else if (lowerMessage.includes('payment') || lowerMessage.includes('pay')) {
+        fallbackAnswer = 'We accept multiple payment methods: Cash on Delivery, bKash, Nagad, and all major credit/debit cards. Cash on Delivery is available for all locations.';
+      } else if (lowerMessage.includes('return') || lowerMessage.includes('refund')) {
+        fallbackAnswer = 'We have a 7-day return policy for sealed OTC medicines. Prescription medicines cannot be returned once dispensed. Please contact our support team for return requests.';
+      } else if (lowerMessage.includes('prescription') || lowerMessage.includes('upload')) {
+        fallbackAnswer = 'You can upload your prescriptions through our website. Our pharmacists will review them and contact you if needed. We ensure safe and accurate dispensing of all prescription medicines.';
+      } else {
+        fallbackAnswer = 'I\'m here to help with information about our pharmacy services. I can tell you about our delivery options, payment methods, return policy, prescription services, and general medicine information. What would you like to know?';
+      }
+
+      res.json({
+        answer: fallbackAnswer,
+        citations: [],
+        language,
+        caution: false,
+        timestamp: new Date().toISOString(),
+        fallback: true, // Indicate this is a fallback response
+      });
     }
 
-    // Query documents with fallback
-    let passages = [];
-    try {
-      passages = await queryDocuments(message, 4) || [];
-    } catch (queryErr) {
-      console.warn('Query documents error:', queryErr.message);
-    }
-
-    // Always provide a meaningful response
-    let answer;
-    let citations = [];
-
-    if (passages && passages.length > 0) {
-      answer = buildAnswer({ passages, caution: req.chatbotSafety?.caution });
-      citations = passages.map((p) => ({ title: p.title, source: p.source, url: p.url }));
-    } else {
-      // Smart fallback based on message content
-      answer = generateSmartFallbackAnswer(message, language);
-    }
-
-    res.json({
-      answer,
-      citations,
-      language,
-      caution: !!req.chatbotSafety?.caution,
-      timestamp: new Date().toISOString(),
-    });
   } catch (error) {
-    console.error('Chatbot endpoint error:', error);
-    // Always respond with something helpful
+    console.error('Gemini API error:', error);
+
+    // Fallback response
+    const fallbackAnswer = `I apologize for the temporary issue. I can help with questions about medicines, prescriptions, ordering, delivery, payments, account management, and using Online24 Pharmacy. Please try rephrasing your question or contact our support team.
+
+This is general information only and not medical advice. For any treatment decisions, speak to a licensed clinician.`;
+
     res.status(200).json({
-      answer: 'I apologize for the temporary issue. I can help with questions about medicines, prescriptions, ordering, and using Online24 Pharmacy. Please try rephrasing your question.',
+      answer: fallbackAnswer,
       citations: [],
       language: req.body?.language || 'en',
       caution: false,

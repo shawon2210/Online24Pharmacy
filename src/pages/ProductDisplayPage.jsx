@@ -313,7 +313,7 @@ function ProductDetail({ slug }) {
         setIsWishlisted(true);
         toast.success(t("wishlist.added"));
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error(t("wishlist.error"));
     }
   };

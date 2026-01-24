@@ -43,7 +43,6 @@ export default function Header() {
     [tf("prescriptions"), "/prescription"],
     [tf("orders"), "/my-orders"],
     [tf("pickupMapPage.title"), "/pickup-map"],
-    [tf("trackOrder"), "/track-order"],
     [tf("buildKit"), "/build-kit"],
     [tf("about"), "/about"],
   ];
@@ -234,26 +233,26 @@ export default function Header() {
             {/* Wishlist */}
             <Link
               to="/wishlist"
-              className="group relative flex items-center justify-center w-11 h-11 lg:w-10 lg:h-10 rounded-xl hover:bg-gradient-to-br hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 hover:shadow-lg hover:shadow-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2"
+              className="group relative flex items-center justify-center w-11 h-11 lg:w-10 lg:h-10 rounded-xl hover:bg-linear-to-br hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 hover:shadow-lg hover:shadow-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2"
               aria-label="Wishlist"
             >
               <Heart className="w-5 h-5 lg:w-4.5 lg:h-4.5 group-hover:scale-110 group-hover:fill-current group-hover:text-emerald-500 transition-all duration-300" />
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-400/0 to-emerald-500/0 group-hover:from-emerald-400/10 group-hover:to-emerald-500/10 transition-all duration-300" />
+              <div className="absolute inset-0 rounded-xl bg-linear-to-br from-emerald-400/0 to-emerald-500/0 group-hover:from-emerald-400/10 group-hover:to-emerald-500/10 transition-all duration-300" />
             </Link>
 
             {/* Cart */}
             <Link
               to="/cart"
-              className="group relative flex items-center justify-center w-11 h-11 lg:w-10 lg:h-10 rounded-xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-900/20 dark:hover:to-blue-800/20 hover:shadow-lg hover:shadow-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2"
+              className="group relative flex items-center justify-center w-11 h-11 lg:w-10 lg:h-10 rounded-xl hover:bg-linear-to-br hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-900/20 dark:hover:to-blue-800/20 hover:shadow-lg hover:shadow-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2"
               aria-label="Shopping Cart"
             >
               <ShoppingCart className="w-5 h-5 lg:w-4.5 lg:h-4.5 group-hover:scale-110 transition-transform duration-300" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-600 text-white text-xs font-bold rounded-full min-w-[22px] h-[22px] lg:min-w-[20px] lg:h-[20px] flex items-center justify-center px-1 shadow-lg shadow-red-500/25 animate-pulse ring-2 ring-white dark:ring-gray-900">
+                <span className="absolute -top-1 -right-1 bg-linear-to-br from-red-500 to-red-600 text-white text-xs font-bold rounded-full min-w-22px h-22px lg:min-w-20px lg:h-20px flex items-center justify-center px-1 shadow-lg shadow-red-500/25 animate-pulse ring-2 ring-white dark:ring-gray-900">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400/0 to-blue-500/0 group-hover:from-blue-400/10 group-hover:to-blue-500/10 transition-all duration-300" />
+              <div className="absolute inset-0 rounded-xl bg-linear-to-br from-blue-400/0 to-blue-500/0 group-hover:from-blue-400/10 group-hover:to-blue-500/10 transition-all duration-300" />
             </Link>
 
             {/* Notifications */}
@@ -262,7 +261,7 @@ export default function Header() {
             </div>
 
             {/* Divider */}
-            <div className="hidden lg:block w-px h-6 bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-1"></div>
+            <div className="hidden lg:block w-px h-6 bg-linear-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-1"></div>
 
             {/* Theme & Language */}
             <div className="hidden lg:flex items-center gap-1">
@@ -271,7 +270,7 @@ export default function Header() {
             </div>
 
             {/* Divider */}
-            <div className="hidden lg:block w-px h-6 bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-1"></div>
+            <div className="hidden lg:block w-px h-6 bg-linear-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-1"></div>
 
             {/* User Dropdown */}
             {user ? (
@@ -291,7 +290,7 @@ export default function Header() {
                     alt="User"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 to-emerald-600/0 group-hover:from-emerald-500/10 group-hover:to-emerald-600/10 transition-all duration-300" />
+                  <div className="absolute inset-0 bg-linear-to-br from-emerald-500/0 to-emerald-600/0 group-hover:from-emerald-500/10 group-hover:to-emerald-600/10 transition-all duration-300" />
                 </button>
 
                 <AnimatePresence>
@@ -313,7 +312,7 @@ export default function Header() {
                           <>
                             <Link
                               to="/admin"
-                              className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 transition-all duration-200 rounded-lg mx-1"
+                              className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-linear-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 transition-all duration-200 rounded-lg mx-1"
                               onClick={() => setIsDropdownOpen(false)}
                               role="menuitem"
                             >
@@ -325,7 +324,7 @@ export default function Header() {
                         )}
                         <Link
                           to="/account"
-                          className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 transition-all duration-200 rounded-lg mx-1"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-linear-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 transition-all duration-200 rounded-lg mx-1"
                           onClick={() => setIsDropdownOpen(false)}
                           role="menuitem"
                         >
@@ -338,7 +337,7 @@ export default function Header() {
                             logout();
                             setIsDropdownOpen(false);
                           }}
-                          className="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 transition-all duration-200 rounded-lg mx-1"
+                          className="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-linear-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 transition-all duration-200 rounded-lg mx-1"
                           role="menuitem"
                         >
                           <LogOut className="w-5 h-5 mr-3 text-gray-500 group-hover:scale-110 transition-transform" />
@@ -359,7 +358,7 @@ export default function Header() {
             ) : (
               <Link
                 to="/login"
-                className="group hidden sm:flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
+                className="group hidden sm:flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
               >
                 <UserCircle className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                 <span className="hidden lg:inline">{tf("login")}</span>
@@ -369,7 +368,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="group lg:hidden relative w-11 h-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-700 dark:hover:to-gray-600 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2"
+              className="group lg:hidden relative w-11 h-11 flex items-center justify-center rounded-xl bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-700 dark:hover:to-gray-600 shadow-md hover:shadow-lg active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
               <div className="relative w-5 h-5">
@@ -383,7 +382,7 @@ export default function Header() {
                   className={`absolute left-0 top-1/2 w-5 h-0.5 bg-current transform -translate-y-1/2 transition-all duration-300 ${isMenuOpen ? "-rotate-45" : ""}`}
                 ></span>
               </div>
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-400/0 to-emerald-500/0 group-hover:from-emerald-400/10 group-hover:to-emerald-500/10 transition-all duration-300" />
+              <div className="absolute inset-0 rounded-xl bg-linear-to-br from-emerald-400/0 to-emerald-500/0 group-hover:from-emerald-400/10 group-hover:to-emerald-500/10 transition-all duration-300" />
             </button>
           </div>
         </div>
@@ -403,7 +402,7 @@ export default function Header() {
               <div className="flex items-center gap-2 pb-3 mb-3 border-b border-gray-200 dark:border-gray-700">
                 <Link
                   to="/wishlist"
-                  className="group flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 active:scale-98 transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="group flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 active:scale-98 transition-all duration-300 shadow-sm hover:shadow-md"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <Heart className="w-4 h-4 group-hover:scale-110 group-hover:fill-current group-hover:text-emerald-500 transition-all duration-300" />
@@ -444,7 +443,7 @@ export default function Header() {
                 <Link
                   key={link}
                   to={link}
-                  className="group flex items-center px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-98 transition-all duration-300"
+                  className="group flex items-center px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-linear-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-98 transition-all duration-300"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <span className="group-hover:translate-x-1 transition-transform duration-300">
@@ -459,7 +458,7 @@ export default function Header() {
                   {user?.role === "ADMIN" && (
                     <Link
                       to="/admin"
-                      className="group flex items-center px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 active:scale-98 transition-all duration-300"
+                      className="group flex items-center px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-linear-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 active:scale-98 transition-all duration-300"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <Shield className="w-5 h-5 mr-3 text-red-500 group-hover:scale-110 transition-transform duration-300" />
@@ -470,7 +469,7 @@ export default function Header() {
                   )}
                   <Link
                     to="/account"
-                    className="group flex items-center px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 active:scale-98 transition-all duration-300"
+                    className="group flex items-center px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-linear-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 active:scale-98 transition-all duration-300"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <UserCircle className="w-5 h-5 mr-3 text-gray-500 group-hover:scale-110 transition-transform duration-300" />
@@ -483,7 +482,7 @@ export default function Header() {
                       logout();
                       setIsMenuOpen(false);
                     }}
-                    className="group flex items-center w-full px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 active:scale-98 transition-all duration-300"
+                    className="group flex items-center w-full px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-linear-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-900/20 dark:hover:to-red-800/20 active:scale-98 transition-all duration-300"
                   >
                     <LogOut className="w-5 h-5 mr-3 text-gray-500 group-hover:scale-110 transition-transform duration-300" />
                     <span className="group-hover:translate-x-1 transition-transform duration-300">
@@ -494,7 +493,7 @@ export default function Header() {
               ) : (
                 <Link
                   to="/login"
-                  className="group flex items-center justify-center gap-2 px-4 py-2.5 mt-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95 transition-all duration-300 sm:hidden"
+                  className="group flex items-center justify-center gap-2 px-4 py-2.5 mt-3 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95 transition-all duration-300 sm:hidden"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <UserCircle className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
@@ -509,15 +508,15 @@ export default function Header() {
       </AnimatePresence>
 
       {/* DESKTOP NAV */}
-      <nav className="hidden lg:block bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+      <nav className="hidden lg:block bg-white dark:bg-gray-900 border-bt border-gray-200 dark:border-gray-700">
         <div className="px-6 h-12 flex items-center gap-0.5">
           {navLinks.map(([label, link]) => (
             <Link
               key={link}
               to={link}
-              className="group px-3 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-98 transition-all duration-300"
+              className="group px-5 py-3/2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-linear-to-r hover:from-emerald-50 hover:to-emerald-100 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-98 transition-all duration-300"
             >
-              <span className="group-hover:translate-y-[-1px] transition-transform duration-300">
+              <span className="group-hover:translate-y-1px transition-transform duration-300">
                 {label}
               </span>
             </Link>

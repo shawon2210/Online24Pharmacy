@@ -55,7 +55,7 @@ export default function ProfilePage() {
     if (user) {
       setFormData({
         fullName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-        phoneNumber: user.phone || "",
+        phoneNumber: user.phone || "+880",
         dateOfBirth: user.dateOfBirth || "",
         gender: user.gender || "",
         street: "",
@@ -225,7 +225,7 @@ export default function ProfilePage() {
                     </p>
                     <p className="text-xs sm:text-sm font-medium text-foreground">
                       {new Date(
-                        user.createdAt || Date.now()
+                        user.createdAt || Date.now(),
                       ).toLocaleDateString()}
                     </p>
                   </div>
@@ -364,7 +364,7 @@ export default function ProfilePage() {
                           }
                           disabled={!isEditing}
                           placeholder={t(
-                            "profilePage.streetAddressPlaceholder"
+                            "profilePage.streetAddressPlaceholder",
                           )}
                           className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-card text-foreground disabled:opacity-70 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
                         />

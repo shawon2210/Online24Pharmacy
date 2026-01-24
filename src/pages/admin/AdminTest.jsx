@@ -38,7 +38,7 @@ export default function AdminTest() {
             <p className="font-semibold text-yellow-900">LocalStorage:</p>
             <p className="text-sm text-yellow-700">
               auth_user:{" "}
-              {localStorage.getItem("auth_user") ? "✅ Exists" : "❌ Missing"}
+              {sessionStorage.getItem("auth_user") ? "✅ Exists" : "❌ Missing"}
             </p>
             <p className="text-sm text-yellow-700">
               auth_token:{" "}

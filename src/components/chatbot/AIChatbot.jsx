@@ -9,10 +9,10 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 const SUGGESTIONS = [
-  "What is this medicine used for?",
-  "Common side effects of paracetamol",
-  "Can I take cetirizine at night?",
-  "Which medicines for gastric issues?",
+  "What is this medicine for?",
+  "Paracetamol side effects",
+  "Cetirizine at night?",
+  "Medicines for stomach issues",
 ];
 
 export default function AIChatbot({ language = "en" }) {
@@ -21,6 +21,7 @@ export default function AIChatbot({ language = "en" }) {
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [suggestions] = useState(SUGGESTIONS);
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const messagesEndRef = useRef(null);
   const chatBoxRef = useRef(null);
 
@@ -127,6 +128,7 @@ export default function AIChatbot({ language = "en" }) {
         timestamp: new Date(),
       },
     ]);
+    setShowSuggestions(true);
   };
 
   return (
@@ -146,15 +148,15 @@ export default function AIChatbot({ language = "en" }) {
               ]);
             }
           }}
-          className="fixed bottom-6 right-4 sm:bottom-8 sm:right-6 z-9999 group"
+          className="fixed bottom-6 right-4 sm:bottom-8 sm:right-6 lg:bottom-10 lg:right-8 z-9999 group"
         >
           <div className="relative">
             {/* Outer Glow */}
             <div className="absolute -inset-1 bg-linear-to-br from-emerald-500 to-teal-500 rounded-2xl opacity-60 blur-md group-hover:opacity-80 transition-opacity"></div>
 
             {/* Main Button */}
-            <div className="relative bg-linear-to-br from-emerald-600 to-teal-600 p-3 sm:p-3.5 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-200">
-              <ChatBubbleLeftRightIcon className="w-6 h-6 sm:w-7 sm:h-7 text-background" />
+            <div className="relative bg-linear-to-br from-emerald-600 to-teal-600 p-3 sm:p-3.5 lg:p-4 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-200">
+              <ChatBubbleLeftRightIcon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-background" />
 
               {/* AI Badge */}
               <div className="absolute -top-1 -right-1 bg-linear-to-r from-purple-600 to-pink-600 text-background text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg flex items-center gap-0.5">
@@ -175,10 +177,10 @@ export default function AIChatbot({ language = "en" }) {
       {isOpen && (
         <div
           ref={chatBoxRef}
-          className="fixed bottom-20 right-2 sm:bottom-28 sm:right-6 z-9999 bg-background rounded-2xl shadow-2xl w-[calc(100vw-3rem)] sm:w-95 h-130 flex flex-col overflow-hidden border border-border"
+          className="fixed bottom-20 right-2 sm:bottom-28 sm:right-6 lg:bottom-32 lg:right-8 z-9999 bg-background rounded-2xl shadow-2xl w-[calc(100vw-3rem)] sm:w-95 lg:w-120 xl:w-lg h-130 lg:h-160 xl:h-176 flex flex-col overflow-hidden border border-border"
         >
           {/* Header */}
-          <div className="relative bg-linear-to-br from-emerald-600 via-teal-600 to-cyan-700 text-background p-3 sm:p-4 flex justify-between items-center overflow-hidden">
+          <div className="relative bg-linear-to-br from-emerald-600 via-teal-600 to-cyan-700 text-background p-3 sm:p-4 lg:p-5 flex justify-between items-center overflow-hidden">
             {/* Animated Background Pattern */}
             <div className="absolute inset-0 opacity-20">
               <div className="absolute top-0 left-0 w-32 h-32 bg-background rounded-full blur-3xl animate-pulse"></div>
@@ -194,34 +196,34 @@ export default function AIChatbot({ language = "en" }) {
 
             <div className="flex items-center gap-2 sm:gap-2.5 relative z-10">
               <div className="relative">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                  <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                  <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-yellow-300" />
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-background shadow-md">
                   <div className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-75"></div>
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-sm sm:text-base flex items-center gap-1.5">
+                <h3 className="font-bold text-sm sm:text-base lg:text-lg flex items-center gap-1.5">
                   AI Pharmacy
-                  <span className="text-[8px] sm:text-[9px] bg-white/20 px-1.5 py-0.5 rounded-md font-semibold">
+                  <span className="text-[8px] sm:text-[9px] lg:text-[10px] bg-white/20 px-1.5 py-0.5 rounded-md font-semibold">
                     SMART
                   </span>
                 </h3>
-                <p className="text-[10px] sm:text-[11px] text-emerald-100 font-medium">
+                <p className="text-[10px] sm:text-[11px] lg:text-xs text-emerald-100 font-medium">
                   Deep Learning AI
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-1 sm:gap-1.5 relative z-10">
+            <div className="flex gap-1 sm:gap-1.5 lg:gap-2 relative z-10">
               <button
                 onClick={handleReset}
-                className="hover:bg-white/20 p-1.5 rounded-lg transition-all"
+                className="hover:bg-white/20 p-1.5 lg:p-2 rounded-lg transition-all"
                 title="Reset"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="w-4 h-4 lg:w-5 lg:h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -236,15 +238,15 @@ export default function AIChatbot({ language = "en" }) {
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="hover:bg-white/20 p-1.5 rounded-lg transition-all"
+                className="hover:bg-white/20 p-1.5 lg:p-2 rounded-lg transition-all"
               >
-                <XMarkIcon className="w-4 h-4" />
+                <XMarkIcon className="w-4 h-4 lg:w-5 lg:h-5" />
               </button>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-2 sm:space-y-3 bg-background">
+          <div className="flex-1 overflow-y-auto p-2 sm:p-3 lg:p-4 space-y-2 sm:space-y-3 bg-background">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -253,7 +255,7 @@ export default function AIChatbot({ language = "en" }) {
                 }`}
               >
                 <div
-                  className={`max-w-[85%] p-2.5 sm:p-3 rounded-2xl ${
+                  className={`max-w-[85%] p-2.5 sm:p-3 lg:p-4 rounded-2xl ${
                     msg.sender === "user"
                       ? "bg-linear-to-br from-emerald-500 to-teal-500 text-background rounded-br-sm shadow-md"
                       : "bg-background text-foreground rounded-bl-sm shadow-sm border border-border"
@@ -261,20 +263,20 @@ export default function AIChatbot({ language = "en" }) {
                 >
                   {msg.sender === "bot" && (
                     <div className="flex items-center gap-1.5 mb-2 pb-2 border-b border-border">
-                      <SparklesIcon className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-emerald-500" />
-                      <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-600">
+                      <SparklesIcon className="w-3 sm:w-3.5 lg:w-4 h-3 sm:h-3.5 lg:h-4 text-emerald-500" />
+                      <span className="text-[9px] sm:text-[10px] lg:text-xs font-semibold text-emerald-600">
                         AI Assistant
                       </span>
-                      <span className="text-[8px] sm:text-[9px] text-amber-700 font-medium bg-amber-50 px-1.5 py-0.5 rounded-md">
+                      <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-amber-700 font-medium bg-amber-50 px-1.5 py-0.5 rounded-md">
                         Not medical advice
                       </span>
                     </div>
                   )}
-                  <p className="text-xs sm:text-sm leading-relaxed">
+                  <p className="text-xs sm:text-sm lg:text-base leading-relaxed">
                     {msg.text}
                   </p>
                   {msg.citations?.length ? (
-                    <div className="mt-2 pt-2 border-t border-border space-y-1 text-[11px] sm:text-xs text-emerald-700">
+                    <div className="mt-2 pt-2 border-t border-border space-y-1 text-[11px] sm:text-xs lg:text-sm text-emerald-700">
                       <p className="font-semibold">Sources:</p>
                       {msg.citations.map((c, i) => (
                         <a
@@ -290,7 +292,7 @@ export default function AIChatbot({ language = "en" }) {
                     </div>
                   ) : null}
                   <p
-                    className={`text-[9px] sm:text-[10px] mt-1.5 ${
+                    className={`text-[9px] sm:text-[10px] lg:text-xs mt-1.5 ${
                       msg.sender === "user"
                         ? "text-emerald-100"
                         : "text-muted-foreground"
@@ -308,20 +310,20 @@ export default function AIChatbot({ language = "en" }) {
             {/* Typing Indicator */}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-background p-2.5 sm:p-3 rounded-2xl rounded-bl-sm shadow-sm border border-border">
+                <div className="bg-background p-2.5 sm:p-3 lg:p-4 rounded-2xl rounded-bl-sm shadow-sm border border-border">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-400 rounded-full animate-bounce"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-2.5 lg:h-2.5 bg-emerald-400 rounded-full animate-bounce"></div>
                       <div
-                        className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-teal-400 rounded-full animate-bounce"
+                        className="w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-2.5 lg:h-2.5 bg-teal-400 rounded-full animate-bounce"
                         style={{ animationDelay: "0.1s" }}
                       ></div>
                       <div
-                        className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-400 rounded-full animate-bounce"
+                        className="w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-2.5 lg:h-2.5 bg-emerald-400 rounded-full animate-bounce"
                         style={{ animationDelay: "0.2s" }}
                       ></div>
                     </div>
-                    <span className="text-[10px] sm:text-xs text-muted-foreground">
+                    <span className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
                       AI is typing...
                     </span>
                   </div>
@@ -333,20 +335,29 @@ export default function AIChatbot({ language = "en" }) {
           </div>
 
           {/* Quick Suggestions */}
-          {suggestions.length > 0 && !isTyping && (
-            <div className="px-2 sm:px-3 py-1.5 sm:py-2 bg-background border-t border-border">
-              <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
-                <LightBulbIcon className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-amber-500" />
-                <span className="text-[10px] sm:text-xs font-semibold text-foreground">
-                  Quick Questions
-                </span>
+          {suggestions.length > 0 && !isTyping && showSuggestions && (
+            <div className="px-0.5 sm:px-0.5 lg:px-2 py-1 sm:py-0.1 lg:py-1 bg-background border-t border-border">
+              <div className="flex items-center justify-between gap-1 sm:gap-1.5 lg:gap-2 mb-1 sm:mb-1.5 lg:mb-2">
+                <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2">
+                  <LightBulbIcon className="w-3 sm:w-3.5 lg:w-4 h-3 sm:h-3.5 lg:h-4 text-amber-500" />
+                  <span className="text-[10px] sm:text-xs lg:text-sm font-semibold text-foreground">
+                    Quick Questions
+                  </span>
+                </div>
+                <button
+                  onClick={() => setShowSuggestions(false)}
+                  className="hover:bg-gray-100 p-0.5 rounded transition-colors"
+                  title="Hide suggestions"
+                >
+                  <XMarkIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-muted-foreground hover:text-foreground" />
+                </button>
               </div>
-              <div className="flex flex-wrap gap-1 sm:gap-1.5">
+              <div className="flex flex-wrap gap-1 sm:gap-1.5 lg:gap-2">
                 {suggestions.map((suggestion, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="text-[10px] sm:text-xs bg-background hover:bg-emerald-50 text-foreground hover:text-emerald-700 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-border hover:border-emerald-300 transition-all"
+                    className="text-[10px] sm:text-xs lg:text-sm bg-background hover:bg-emerald-50 text-foreground hover:text-emerald-700 px-2 sm:px-2.5 lg:px-3 py-0.5 sm:py-1 lg:py-1.5 rounded-lg border border-border hover:border-emerald-300 transition-all"
                   >
                     {suggestion}
                   </button>
@@ -356,10 +367,10 @@ export default function AIChatbot({ language = "en" }) {
           )}
 
           {/* Disclaimer */}
-          <div className="px-2 sm:px-3 py-1.5 sm:py-2 bg-amber-50 border-t border-amber-200">
-            <div className="flex items-start gap-1 sm:gap-1.5">
+          {/* <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 lg:py-3 bg-amber-50 border-t border-amber-200">
+            <div className="flex items-start gap-1 sm:gap-1.5 lg:gap-2">
               <svg
-                className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-amber-600 shrink-0 mt-0.5"
+                className="w-3 sm:w-3.5 lg:w-4 h-3 sm:h-3.5 lg:h-4 text-amber-600 shrink-0 mt-0.5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -369,35 +380,35 @@ export default function AIChatbot({ language = "en" }) {
                   clipRule="evenodd"
                 />
               </svg>
-              <p className="text-[9px] sm:text-[10px] text-amber-900 leading-relaxed">
+              <p className="text-[9px] sm:text-[10px] lg:text-xs text-amber-900 leading-relaxed">
                 General info only. Consult a doctor for medical advice.
               </p>
             </div>
-          </div>
+          </div> */}
 
           {/* Input */}
           <form
             onSubmit={handleSubmit}
-            className="p-2 sm:p-3 bg-background border-t border-border"
+            className="p-2 sm:p-3 lg:p-4 bg-background border-t border-border"
           >
-            <div className="flex gap-1.5 sm:gap-2">
+            <div className="flex gap-1.5 sm:gap-2 lg:gap-3">
               <input
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 placeholder="Ask about medicines..."
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-background hover:bg-background transition-colors"
+                className="flex-1 px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 lg:py-3 text-xs sm:text-sm lg:text-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-background hover:bg-background transition-colors"
                 disabled={isTyping}
               />
               <button
                 type="submit"
                 disabled={isTyping || !inputMessage.trim()}
-                className="bg-linear-to-br from-emerald-500 to-teal-500 text-background p-2 sm:p-2.5 rounded-xl hover:shadow-lg transform hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="bg-linear-to-br from-emerald-500 to-teal-500 text-background p-2 sm:p-2.5 lg:p-3 rounded-xl hover:shadow-lg transform hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                <PaperAirplaneIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <PaperAirplaneIcon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
               </button>
             </div>
-            <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-muted-foreground text-center leading-relaxed">
+            <p className="mt-1.5 sm:mt-2 lg:mt-3 text-[9px] sm:text-[10px] lg:text-xs text-muted-foreground text-center leading-relaxed">
               AI assistance is not medical advice. Always consult a licensed
               clinician.
             </p>

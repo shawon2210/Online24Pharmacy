@@ -97,7 +97,7 @@ export default function HeroAIGlassPremium() {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="max-w-4xl text-center sm:text-left">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-4 sm:mb-6 mx-auto sm:mx-0">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-linear-to-r from-emerald-500/20 via-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-4 sm:mb-6 mx-auto sm:mx-0">
               <ShieldCheckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-300" />
               <span className="text-emerald-200 text-sm sm:text-base font-bold">
                 {tf("hero.badge", "🎉 Special Offer")}
@@ -106,10 +106,10 @@ export default function HeroAIGlassPremium() {
 
             {/* Heading - Enhanced Mobile Responsive Sizes */}
             <h1 className="mb-4 sm:mb-6">
-              <span className="block text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-tight mb-2 sm:mb-3 drop-shadow-lg break-words">
+              <span className="block text-3xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight mb-2 sm:mb-3 drop-shadow-lg break-words">
                 {tf("hero.heading1", "Healthcare at your fingertips")}
               </span>
-              <span className="block text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight bg-linear-to-br from-emerald-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent drop-shadow-lg break-words">
+              <span className="block text-3xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight bg-linear-to-br from-emerald-300 via-cyan-300 to-blue-300 bg-clip-text text-transparent drop-shadow-lg break-words">
                 {tf("hero.heading2", "Fast delivery, certified pharmacists")}
               </span>
             </h1>
@@ -117,7 +117,7 @@ export default function HeroAIGlassPremium() {
             {/* CTA Buttons - Enhanced Mobile Optimization */}
             <div className="mb-6 sm:mb-10 flex justify-center sm:justify-start">
               <Link to="/Category/Buy-Surgical-Product-Online-in-Dhaka">
-                <button className="group inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-linear-to-br from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105 active:scale-95">
+                <button className="group inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-linear-to-r from-emerald-600 via-cyan-600 to-blue-600 hover:from-emerald-700 hover:via-cyan-700 hover:to-blue-700 text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105 active:scale-95">
                   {tf("hero.cta", "Shop Now")}
                   <ArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
                 </button>
@@ -127,13 +127,13 @@ export default function HeroAIGlassPremium() {
             {/* Typing Animation - Enhanced Text Sizes */}
             <div className="inline-flex items-center gap-3 sm:gap-4 justify-center sm:justify-start">
               <div className="relative shrink-0">
-                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-linear-to-br from-emerald-300 to-cyan-300 rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-4 h-4 sm:w-5 sm:h-5 bg-linear-to-br from-emerald-300 to-cyan-300 rounded-full animate-ping opacity-75" />
+                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-linear-to-br from-emerald-300 via-cyan-300 to-blue-300 rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-4 h-4 sm:w-5 sm:h-5 bg-linear-to-br from-emerald-300 via-cyan-300 to-blue-300 rounded-full animate-ping opacity-75" />
               </div>
-              <span className="text-white text-xl sm:text-xl md:text-2xl font-bold tracking-wide drop-shadow-lg break-words max-w-xs sm:max-w-sm md:max-w-md">
+              <span className="text-white text-lg sm:text-lg md:text-xl font-bold tracking-wide drop-shadow-lg break-words max-w-xs sm:max-w-sm md:max-w-md">
                 {displayText || "Loading..."}
               </span>
-              <span className="text-emerald-300 text-3xl sm:text-4xl font-light animate-pulse shrink-0">
+              <span className="bg-linear-to-br from-emerald-300 via-cyan-300 to-blue-300 bg-clip-text text-transparent text-2xl sm:text-3xl font-light animate-pulse shrink-0">
                 |
               </span>
             </div>

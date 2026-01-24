@@ -572,8 +572,9 @@ export async function getAdminUnreadNotifications(options = {}) {
  * @returns {Promise<object>} Paginated admin notifications
  */
 export async function getAdminNotifications(userId, options = {}) {
+  const { limit = 20, offset = 0, unreadOnly = false, types = [] } = options;
+
   try {
-    const { limit = 20, offset = 0, unreadOnly = false, types = [] } = options;
     
     const where = {
       userId,

@@ -11,6 +11,7 @@ export default function CartPage() {
   const cart = useCartStore((state) => state.items);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
+  const _getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const { t } = useTranslation();
 
   if (cart.length === 0) {
@@ -27,10 +28,14 @@ export default function CartPage() {
     );
   }
 
-  const subtotal = cart.reduce(
-    (sum, item) => sum + (item.product?.price || 0) * item.quantity,
-    0
-  );
+  // Calculate subtotal with proper price handling
+  const subtotal = cart.reduce((sum, item) => {
+    const price =
+      item.product?.discountPrice || item.product?.price || item.price || 0;
+    const quantity = item.quantity || 0;
+    return sum + parseFloat(price) * parseFloat(quantity);
+  }, 0);
+
   const delivery =
     subtotal >= DELIVERY.FREE_SHIPPING_THRESHOLD
       ? 0
@@ -38,12 +43,13 @@ export default function CartPage() {
   const total = subtotal + delivery;
 
   const hasPrescriptionItems = cart.some(
-    (item) => item.product?.requiresPrescription
+    (item) => item.product?.requiresPrescription,
   );
   const canCheckout =
     !hasPrescriptionItems ||
     cart.every(
-      (item) => !item.product?.requiresPrescription || item.prescriptionUploaded
+      (item) =>
+        !item.product?.requiresPrescription || item.prescriptionUploaded,
     );
 
   return (

@@ -120,14 +120,28 @@ async function runTests() {
     assert(Array.isArray(data.results) || Array.isArray(data), 'Should return results');
   });
 
-  // Category Tests
-  console.log('\nCategory Endpoints:');
+  // Chatbot Tests
+  console.log('\nChatbot Endpoints:');
   
-  await test('GET /api/categories - should return categories', async () => {
-    const { response, data } = await apiRequest('/api/categories');
+  await test('POST /api/chatbot - should respond to basic message', async () => {
+    const { response, data } = await apiRequest('/api/chatbot', {
+      method: 'POST',
+      body: JSON.stringify({ message: 'Hello, what services do you offer?' })
+    });
     
     assert(response.ok, 'Should return success');
-    assert(Array.isArray(data) || data.categories, 'Should return categories');
+    assert(data.answer, 'Should have answer');
+    assert(typeof data.answer === 'string', 'Answer should be string');
+    assert(data.language, 'Should have language');
+  });
+
+  await test('POST /api/chatbot - should handle empty message', async () => {
+    const { response } = await apiRequest('/api/chatbot', {
+      method: 'POST',
+      body: JSON.stringify({ message: '' })
+    });
+    
+    assert(response.status === 400 || response.ok, 'Should handle empty message');
   });
 
   // Summary

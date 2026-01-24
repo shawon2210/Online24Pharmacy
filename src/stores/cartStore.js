@@ -27,6 +27,7 @@ export const useCartStore = create(
                 id: productId,
                 name: product.name,
                 price: product.price,
+                discountPrice: product.discountPrice,
                 image: product.images?.[0] || product.image,
                 images: product.images || [product.image]
               },

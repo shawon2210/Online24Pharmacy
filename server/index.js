@@ -24,8 +24,8 @@ import mapLocationsRoutes from './routes/mapLocations.js';
 import notificationRoutes from './routes/notifications.js';
 
 // Load cron jobs (side-effect imports)
-import './cron/reminders.js';
-import './cron/geocode.js';
+// import './cron/reminders.js';
+// import './cron/geocode.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -86,8 +86,18 @@ app.use((err, req, res, _next) => {
  
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Attempting to start server on port ${PORT}...`);
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Server successfully listening on port ${PORT}`);
+  });
+
+  server.on('error', (err) => {
+    console.error('❌ Server failed to start:', err.message);
+    process.exit(1);
+  });
+
+  server.on('listening', () => {
+    console.log(`🚀 Server is now accepting connections on port ${PORT}`);
   });
 }
 

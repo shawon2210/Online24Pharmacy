@@ -96,18 +96,18 @@ export default function MyPrescriptionsPage() {
     return prescriptions;
   }, [prescriptions, tab]);
 
-  const isExpired = (rx) => rx.derivedStatus === "EXPIRED";
+  const _isExpired = (rx) => rx.derivedStatus === "EXPIRED";
   const _isPending = (rx) => rx.status?.toUpperCase() === "PENDING";
-  const isApproved = (rx) => rx.status?.toUpperCase() === "APPROVED";
+  const _isApproved = (rx) => rx.status?.toUpperCase() === "APPROVED";
 
   const handleUpload = () => navigate("/prescription");
 
-  const handleReorder = async (_rx) => {
+  const _handleReorder = async (_rx) => {
     toast.success(t("myPrescriptionsPage.medicinesAdded"));
     setTimeout(() => navigate("/cart"), 800);
   };
 
-  const handleReminder = async (_rx) => {
+  const _handleReminder = async (_rx) => {
     toast.success(t("myPrescriptionsPage.reminderSet"));
   };
 
@@ -220,7 +220,7 @@ export default function MyPrescriptionsPage() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center shrink-0">
                         <DocumentIcon className="w-6 h-6 text-foreground/70" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -270,7 +270,7 @@ export default function MyPrescriptionsPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2 w-full">
+                    {/* <div className="flex flex-col sm:flex-row gap-2 w-full">
                       {isApproved(rx) && rx.isReorderable && (
                         <button
                           onClick={() => handleReorder(rx)}
@@ -288,7 +288,7 @@ export default function MyPrescriptionsPage() {
                           {t("myPrescriptionsPage.remind")}
                         </button>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
