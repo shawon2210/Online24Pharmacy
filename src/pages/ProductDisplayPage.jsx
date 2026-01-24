@@ -632,10 +632,10 @@ function ProductDetail({ slug }) {
           </div>
         </div>
         <div className="container mx-auto px-4 py-8">
-          <div className="bg-background rounded-xl shadow-lg p-6 lg:p-8 border border-border">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-background rounded-xl shadow-lg p-4 lg:p-8 border border-border">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
               <div className="relative">
-                <div className="bg-background rounded-xl p-6 border border-border">
+                <div className="bg-background rounded-xl p-4 lg:p-6 border border-border">
                   <img
                     src={product.images?.[0] || "/placeholder-product.jpg"}
                     alt={product.name}
@@ -679,7 +679,7 @@ function ProductDetail({ slug }) {
                     )}
                   </button>
                 </div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-4 leading-tight">
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground mb-4 leading-tight">
                   {product.name}
                 </h2>
                 <div className="flex items-center gap-3 mb-5">
@@ -700,9 +700,9 @@ function ProductDetail({ slug }) {
                     {t("productPage.reviews")})
                   </span>
                 </div>
-                <div className="mb-6 p-4 bg-background rounded-lg border border-border">
+                <div className="mb-6 p-3 lg:p-4 bg-background rounded-lg border border-border">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-foreground">
+                    <span className="text-2xl lg:text-3xl font-bold text-foreground">
                       ৳{product.price}
                     </span>
                     <span className="text-muted-foreground">
@@ -729,7 +729,7 @@ function ProductDetail({ slug }) {
                 {(product.brand ||
                   product.manufacturer ||
                   product.requiresPrescription) && (
-                  <div className="mb-6 p-4 bg-muted rounded-lg border border-border">
+                  <div className="mb-6 p-3 lg:p-4 bg-muted rounded-lg border border-border">
                     <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                       🛡️ {t("productPage.productInfo")}
                     </h3>
@@ -847,7 +847,7 @@ function ProductDetail({ slug }) {
                   {t("productPage.customersAlsoChecked")}
                 </p>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
                 {relatedProducts.map((relatedProduct) => (
                   <ProductCard
                     key={relatedProduct.slug || relatedProduct.id}

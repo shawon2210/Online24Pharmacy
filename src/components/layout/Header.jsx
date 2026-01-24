@@ -5,7 +5,7 @@ import { useCartStore } from "../../stores/cartStore";
 import { useAuth } from "../../hooks/useAuth";
 import ThemeToggle from "../common/ThemeToggle";
 import LanguageSwitcher from "../common/LanguageSwitcher";
-import NotificationBell from "../notifications/NotificationBell";
+// import NotificationBell from "../notifications/NotificationBell";
 import {
   UserCircle,
   LogOut,
@@ -256,9 +256,9 @@ export default function Header() {
             </Link>
 
             {/* Notifications */}
-            <div className="hidden sm:block">
+            {/* <div className="hidden sm:block">
               <NotificationBell />
-            </div>
+            </div> */}
 
             {/* Divider */}
             <div className="hidden lg:block w-px h-6 bg-linear-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent mx-1"></div>

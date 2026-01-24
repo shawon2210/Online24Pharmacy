@@ -40,7 +40,7 @@ export default function CartPage() {
     subtotal >= DELIVERY.FREE_SHIPPING_THRESHOLD
       ? 0
       : DELIVERY.DEFAULT_SHIPPING_COST;
-  const total = subtotal + delivery;
+  // const total = subtotal + delivery;
 
   const hasPrescriptionItems = cart.some(
     (item) => item.product?.requiresPrescription,
@@ -75,7 +75,7 @@ export default function CartPage() {
               <OrderSummary
                 subtotal={subtotal}
                 delivery={delivery}
-                total={total}
+                total={subtotal}
                 canCheckout={canCheckout}
               />
             </div>

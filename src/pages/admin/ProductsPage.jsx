@@ -5,7 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, Loader } from "lucide-react";
+import AdminProductTable from "../../components/admin/AdminProductTable";
 
 const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
@@ -106,7 +107,7 @@ const ProductForm = ({ product, onSuccess, onCancel }) => {
   useEffect(() => {
     if (product && categoriesData) {
       const parentCategory = categoriesData.find((cat) =>
-        cat.subcategories.some((sub) => sub.id === product.subcategoryId)
+        cat.subcategories.some((sub) => sub.id === product.subcategoryId),
       );
       if (parentCategory) {
         setSelectedCategory(parentCategory.id);
@@ -139,7 +140,7 @@ const ProductForm = ({ product, onSuccess, onCancel }) => {
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-        }
+        },
       );
       setUploadedImages([data.imageUrl]);
       toast.success("Image uploaded successfully!");
@@ -371,11 +372,14 @@ const ProductForm = ({ product, onSuccess, onCancel }) => {
 const AdminProductsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["adminProducts"],
     queryFn: fetchProducts,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
   });
 
   const { mutate: createProductMutation } = useMutation({
@@ -404,11 +408,14 @@ const AdminProductsPage = () => {
   const { mutate: deleteProductMutation } = useMutation({
     mutationFn: deleteProduct,
     onSuccess: () => {
+      setDeletingId(null);
       toast.success("Product deactivated successfully!");
       queryClient.invalidateQueries(["adminProducts"]);
     },
-    onError: (err) =>
-      toast.error(err.response?.data?.error || "Failed to deactivate product."),
+    onError: (err) => {
+      setDeletingId(null);
+      toast.error(err.response?.data?.error || "Failed to deactivate product.");
+    },
   });
 
   const handleAddProduct = () => {
@@ -421,9 +428,10 @@ const AdminProductsPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteProduct = (id) => {
+  const handleDeleteProduct = (product) => {
     if (window.confirm("Are you sure you want to deactivate this product?")) {
-      deleteProductMutation(id);
+      setDeletingId(product.id);
+      deleteProductMutation(product.id);
     }
   };
 
@@ -504,8 +512,8 @@ const AdminProductsPage = () => {
                       ? JSON.parse(product.images)
                       : [product.images]
                     : Array.isArray(product.images)
-                    ? product.images
-                    : [];
+                      ? product.images
+                      : [];
                 const firstImage = images[0];
 
                 return (
@@ -555,10 +563,15 @@ const AdminProductsPage = () => {
                         <Edit size={16} />
                       </button>
                       <button
-                        onClick={() => handleDeleteProduct(product.id)}
-                        className="text-red-600 hover:text-red-900"
+                        onClick={() => handleDeleteProduct(product)}
+                        disabled={deletingId === product.id}
+                        className="text-red-600 hover:text-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Trash2 size={16} />
+                        {deletingId === product.id ? (
+                          <Loader size={16} className="animate-spin" />
+                        ) : (
+                          <Trash2 size={16} />
+                        )}
                       </button>
                     </td>
                   </tr>

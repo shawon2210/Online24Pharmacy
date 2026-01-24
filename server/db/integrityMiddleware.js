@@ -394,10 +394,15 @@ export async function transitionOrderStatus(orderId, newStatus, adminId) {
  */
 async function logOrderAudit(adminId, orderId, action, oldValue, newValue) {
   try {
-    await prisma.$executeRaw`
-      INSERT INTO order_audit_logs (admin_id, order_id, action, old_value, new_value, timestamp)
-      VALUES (${adminId}, ${orderId}, ${action}, ${JSON.stringify(oldValue)}::jsonb, ${JSON.stringify(newValue)}::jsonb, CURRENT_TIMESTAMP)
-    `;
+    await prisma.adminLog.create({
+      data: {
+        adminId,
+        action: `ORDER_${action}`,
+        targetType: 'Order',
+        targetId: orderId,
+        details: { old: oldValue, new: newValue },
+      },
+    });
   } catch (error) {
     console.error('Failed to log order audit:', error);
   }

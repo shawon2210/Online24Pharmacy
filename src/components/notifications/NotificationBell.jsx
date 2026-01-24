@@ -7,23 +7,31 @@
 import { useState, useEffect, useCallback } from "react";
 import { Bell, X } from "lucide-react";
 import { NotificationPanel } from "./NotificationPanel";
+import { useAuth } from "../../hooks/useAuth";
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const { isAuthenticated } = useAuth();
 
   // ============================================
   // FETCH UNREAD COUNT
   // ============================================
 
   const fetchUnreadCount = async () => {
+    if (!isAuthenticated) return;
+
     try {
       const csrfToken = document
         .querySelector('meta[name="csrf-token"]')
         ?.getAttribute("content");
+      const accessToken = localStorage.getItem("auth_token");
       const headers = {};
       if (csrfToken) {
         headers["X-CSRF-Token"] = csrfToken;
+      }
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
       const response = await fetch("/api/notifications/unread-count", {
@@ -44,6 +52,8 @@ export function NotificationBell() {
   // ============================================
 
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     // Initial fetch
     fetchUnreadCount();
 
@@ -67,9 +77,14 @@ export function NotificationBell() {
           const csrfToken = document
             .querySelector('meta[name="csrf-token"]')
             ?.getAttribute("content");
+          const accessToken = localStorage.getItem("auth_token");
+          const headers = {};
+          if (csrfToken) headers["X-CSRF-Token"] = csrfToken;
+          if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+
           await fetch("/api/notifications/unread-count", {
             credentials: "include",
-            headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
+            headers,
           })
             .then((response) => response.json())
             .then((data) => setUnreadCount(data.count || 0))
@@ -92,7 +107,7 @@ export function NotificationBell() {
     const cleanup = setupWebSocketListener();
 
     return cleanup;
-  }, []);
+  }, [isAuthenticated]);
 
   const handleNotificationRead = useCallback(async () => {
     // Mark notifications as read with CSRF protection

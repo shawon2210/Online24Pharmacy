@@ -63,7 +63,7 @@ function CategoryPage() {
   });
 
   const currentCategory = categoryData?.find(
-    (cat) => cat.slug?.toLowerCase() === slug?.toLowerCase()
+    (cat) => cat.slug?.toLowerCase() === slug?.toLowerCase(),
   );
   const currentCategoryName =
     currentCategory?.name ||
@@ -108,8 +108,8 @@ function CategoryPage() {
               sortBy === "priceLow"
                 ? "price"
                 : sortBy === "priceHigh"
-                ? "price"
-                : "name"
+                  ? "price"
+                  : "name"
             }&sortOrder=${sortBy === "priceHigh" ? "desc" : "asc"}`;
       const availabilityParam =
         filters.availability === "inStock" ? "&requiresPrescription=false" : "";
@@ -124,17 +124,17 @@ function CategoryPage() {
           method: "GET",
           headers,
           credentials: "include",
-        }
+        },
       );
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch products: ${response.status} ${response.statusText}`
+          `Failed to fetch products: ${response.status} ${response.statusText}`,
         );
       }
       const result = await response.json();
       return result;
     },
-    enabled: !!currentCategory?.id, // Only run when we have the category
+    enabled: !!slug, // Only run when we have a slug
   });
 
   const handleFilterChange = (key, value) => {
@@ -168,14 +168,14 @@ function CategoryPage() {
   const activeFiltersCount = Object.entries(filters).filter(
     ([_k, v]) =>
       (Array.isArray(v) && v.length > 0) ||
-      (typeof v === "string" && v !== "all")
+      (typeof v === "string" && v !== "all"),
   ).length;
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title={`${slug ? slug.replace(/[<>"']/g, "") : ""} - ${t(
-          "categoryPage.title"
+          "categoryPage.title",
         )}`}
       />
 
@@ -389,7 +389,7 @@ function CategoryPage() {
                     onChange={(e) =>
                       handleFilterChange(
                         "prescriptionRequired",
-                        e.target.checked ? "required" : "all"
+                        e.target.checked ? "required" : "all",
                       )
                     }
                     className="rounded text-emerald-600 focus:ring-emerald-500 bg-background border border-border"
@@ -463,7 +463,7 @@ function CategoryPage() {
                         onChange={(e) =>
                           handleFilterChange(
                             "prescriptionRequired",
-                            e.target.checked ? "required" : "all"
+                            e.target.checked ? "required" : "all",
                           )
                         }
                         className="rounded text-emerald-600 bg-background border border-border"

@@ -52,26 +52,13 @@ export const logAdminAction = async ({ adminId, action, targetType, targetId, de
  */
 export async function logProductAudit(adminId, productId, action, oldValue, newValue, ipAddress = null) {
   try {
-    await prisma.$executeRaw`
-      INSERT INTO product_audit_logs (admin_id, product_id, action, old_value, new_value, ip_address, timestamp)
-      VALUES (
-        ${adminId}::uuid,
-        ${productId},
-        ${action},
-        ${oldValue ? JSON.stringify(oldValue) : null}::jsonb,
-        ${newValue ? JSON.stringify(newValue) : null}::jsonb,
-        ${ipAddress},
-        CURRENT_TIMESTAMP AT TIME ZONE 'UTC+06'
-      )
-    `;
-
-    // Also log to admin_logs for general audit trail
+    // Log to admin_logs for general audit trail
     await logAdminAction({
       adminId,
       action: `PRODUCT_${action}`,
       targetType: 'Product',
       targetId: productId,
-      details: { old: oldValue, new: newValue },
+      details: { oldValue, newValue },
       ipAddress,
     });
   } catch (error) {
@@ -86,18 +73,13 @@ export async function logStockMovement(data) {
   const { productId, movementType, quantityChange, reason, adminId = null, orderId = null } = data;
 
   try {
-    await prisma.$executeRaw`
-      INSERT INTO stock_movement_logs (product_id, movement_type, quantity_change, reason, admin_id, order_id, timestamp)
-      VALUES (
-        ${productId},
-        ${movementType},
-        ${quantityChange},
-        ${reason},
-        ${adminId}::uuid,
-        ${orderId},
-        CURRENT_TIMESTAMP AT TIME ZONE 'UTC+06'
-      )
-    `;
+    await logAdminAction({
+      adminId,
+      action: 'STOCK_MOVEMENT',
+      targetType: 'Product',
+      targetId: productId,
+      details: { movementType, quantityChange, reason, orderId },
+    });
   } catch (error) {
     console.error('Failed to log stock movement:', error);
   }
@@ -108,21 +90,7 @@ export async function logStockMovement(data) {
  */
 export async function logPrescriptionAudit(adminId, prescriptionId, action, oldStatus, newStatus, adminNotes = null, ipAddress = null) {
   try {
-    await prisma.$executeRaw`
-      INSERT INTO prescription_audit_logs (admin_id, prescription_id, action, old_status, new_status, admin_notes, ip_address, timestamp)
-      VALUES (
-        ${adminId}::uuid,
-        ${prescriptionId},
-        ${action},
-        ${oldStatus},
-        ${newStatus},
-        ${adminNotes},
-        ${ipAddress},
-        CURRENT_TIMESTAMP AT TIME ZONE 'UTC+06'
-      )
-    `;
-
-    // Also log to admin_logs
+    // Log to admin_logs
     await logAdminAction({
       adminId,
       action: `PRESCRIPTION_${action}`,
@@ -141,20 +109,7 @@ export async function logPrescriptionAudit(adminId, prescriptionId, action, oldS
  */
 export async function logOrderAudit(adminId, orderId, action, oldValue, newValue, ipAddress = null) {
   try {
-    await prisma.$executeRaw`
-      INSERT INTO order_audit_logs (admin_id, order_id, action, old_value, new_value, ip_address, timestamp)
-      VALUES (
-        ${adminId}::uuid,
-        ${orderId},
-        ${action},
-        ${oldValue ? JSON.stringify(oldValue) : null}::jsonb,
-        ${newValue ? JSON.stringify(newValue) : null}::jsonb,
-        ${ipAddress},
-        CURRENT_TIMESTAMP AT TIME ZONE 'UTC+06'
-      )
-    `;
-
-    // Also log to admin_logs
+    // Log to admin_logs
     await logAdminAction({
       adminId,
       action: `ORDER_${action}`,
