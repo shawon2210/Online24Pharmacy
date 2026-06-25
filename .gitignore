@@ -41,3 +41,4 @@ pm2-*.log
 *.njsproj
 *.sln
 *.sw?
+.vercel
