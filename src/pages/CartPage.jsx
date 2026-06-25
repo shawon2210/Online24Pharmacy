@@ -11,7 +11,7 @@ export default function CartPage() {
   const cart = useCartStore((state) => state.items);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
-  const _getTotalPrice = useCartStore((state) => state.getTotalPrice);
+
   const { t } = useTranslation();
 
   if (cart.length === 0) {

@@ -165,7 +165,6 @@ export default function TrackOrderPage() {
   };
 
   const handlePrint = () => {
-    console.log("Print button clicked");
 
     if (!printRef.current) {
       console.error("Print ref not found");
@@ -173,15 +172,7 @@ export default function TrackOrderPage() {
       return;
     }
 
-    console.log("Print ref found:", printRef.current);
-    console.log(
-      "Print content HTML length:",
-      printRef.current.innerHTML.length,
-    );
-    console.log(
-      "Print content preview:",
-      printRef.current.innerHTML.substring(0, 200),
-    );
+
 
     // Create a new window for printing
     const printWindow = window.open("", "_blank", "width=800,height=600");
@@ -250,7 +241,6 @@ export default function TrackOrderPage() {
     printWindow.document.write(printHTML);
     printWindow.document.close();
 
-    console.log("Print window opened and content written");
   };
 
   return (

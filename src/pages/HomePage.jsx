@@ -157,7 +157,6 @@ export default function HomePage() {
             return [];
           }
           const data = await response.json();
-          console.log("Categories with products:", data.categories);
           return data.categories || [];
         } catch (error) {
           console.error("Failed to fetch categories with products:", error);
@@ -172,13 +171,6 @@ export default function HomePage() {
 
   const displayCategories = categoriesData || [];
   const categoryProductSections = categoriesWithProducts || [];
-
-  console.log(
-    "HomePage - Categories with products:",
-    categoryProductSections.length,
-    categoryProductSections,
-  );
-  console.log("HomePage - Loading state:", categoriesLoading);
 
   return (
     <>

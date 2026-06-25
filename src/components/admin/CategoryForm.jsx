@@ -68,12 +68,9 @@ export default function CategoryForm({ onSuccess }) {
       const formData = new FormData();
       formData.append("image", imageFile);
 
-      console.log(
         "Uploading image to:",
         `${API_URL}/api/admin/categories/upload`
       );
-      console.log("Token:", token ? "Present" : "Missing");
-      console.log("File:", imageFile.name, imageFile.size, imageFile.type);
 
       const response = await axios.post(
         `${API_URL}/api/admin/categories/upload`,
@@ -85,7 +82,6 @@ export default function CategoryForm({ onSuccess }) {
         }
       );
 
-      console.log("Upload response:", response.data);
       setImageUrl(response.data.imageUrl);
       setImageFile(null);
       setImagePreview("");

@@ -17,7 +17,6 @@ export default function SubscriptionOption({ product }) {
     setIsSubscribing(true);
     try {
       // API call to create subscription
-      console.log("Creating subscription:", {
         productId: product.id,
         type: subscriptionType,
       });

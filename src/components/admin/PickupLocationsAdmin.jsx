@@ -95,15 +95,12 @@ const PickupLocationsAdmin = () => {
     }
 
     try {
-      console.log("Fetching locations...");
       const response = await fetch("/api/admin/pickup-locations", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Fetch response status:", response.status);
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Fetched locations:", data);
         setLocations(data);
       } else {
         const errorText = await response.text();
@@ -118,7 +115,6 @@ const PickupLocationsAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData);
 
     if (!formData.lat || !formData.lng) {
       alert("Latitude and Longitude are required.");
@@ -140,7 +136,6 @@ const PickupLocationsAdmin = () => {
         : "/api/admin/pickup-locations";
       const method = editingLocation ? "PUT" : "POST";
 
-      console.log("Making request to:", url, "with method:", method);
 
       const response = await fetch(url, {
         method,
@@ -152,12 +147,9 @@ const PickupLocationsAdmin = () => {
         body: JSON.stringify(formData),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
 
       if (response.ok) {
         const result = await response.json();
-        console.log("Success response:", result);
         fetchLocations();
         setShowForm(false);
         setEditingLocation(null);
@@ -206,7 +198,6 @@ const PickupLocationsAdmin = () => {
       const csrfToken = document
         .querySelector('meta[name="csrf-token"]')
         ?.getAttribute("content");
-      console.log("Deleting location:", id);
       const response = await fetch(`/api/admin/pickup-locations/${id}`, {
         method: "DELETE",
         headers: {
@@ -214,10 +205,8 @@ const PickupLocationsAdmin = () => {
           ...(csrfToken && { "X-CSRF-Token": csrfToken }),
         },
       });
-      console.log("Delete response status:", response.status);
 
       if (response.ok) {
-        console.log("Location deleted successfully");
         fetchLocations();
       } else {
         const errorText = await response.text();

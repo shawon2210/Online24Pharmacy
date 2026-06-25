@@ -62,10 +62,7 @@ class ErrorBoundary extends Component {
   }
 }
 
-console.log("🚀 Starting app...");
-
 const rootElement = document.getElementById("root");
-console.log("✅ Root found:", !!rootElement);
 
 const root = createRoot(rootElement);
 root.render(
@@ -78,5 +75,3 @@ root.render(
     </ErrorBoundary>
   </StrictMode>
 );
-
-console.log("✅ App mounted");

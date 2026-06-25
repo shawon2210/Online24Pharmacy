@@ -58,14 +58,11 @@ export default function ProductForm({ product, onClose, onSuccess }) {
 
   const fetchCategories = async () => {
     try {
-      console.log(
         "🔍 Fetching categories from:",
         `${API_URL}/products/categories`
       );
       const response = await axios.get(`${API_URL}/products/categories`);
-      console.log("✅ Categories response:", response.data);
       setCategories(response.data.categories || []);
-      console.log(
         "📦 Categories state set to:",
         response.data.categories || []
       );
@@ -77,14 +74,11 @@ export default function ProductForm({ product, onClose, onSuccess }) {
 
   const fetchSubcategories = async () => {
     try {
-      console.log(
         "🔍 Fetching subcategories from:",
         `${API_URL}/products/subcategories`
       );
       const response = await axios.get(`${API_URL}/products/subcategories`);
-      console.log("✅ Subcategories response:", response.data);
       setSubcategories(response.data.subcategories || []);
-      console.log(
         "📦 Subcategories state set to:",
         response.data.subcategories || []
       );
@@ -167,13 +161,11 @@ export default function ProductForm({ product, onClose, onSuccess }) {
       throw new Error("No authentication token found. Please login again.");
     }
 
-    console.log("Starting upload for", imageFiles.length, "files");
     const uploadedUrls = [];
 
     try {
       for (let i = 0; i < imageFiles.length; i++) {
         const file = imageFiles[i];
-        console.log(
           `Uploading file ${i + 1}/${imageFiles.length}:`,
           file.name,
           file.type,
@@ -194,7 +186,6 @@ export default function ProductForm({ product, onClose, onSuccess }) {
           }
         );
 
-        console.log(`Upload ${i + 1} response:`, response.data);
         uploadedUrls.push(response.data.url);
       }
       return uploadedUrls;
@@ -226,9 +217,7 @@ export default function ProductForm({ product, onClose, onSuccess }) {
       // Upload new images first (if any)
       let newImageUrls = [];
       if (imageFiles.length > 0) {
-        console.log("Uploading", imageFiles.length, "images...");
         newImageUrls = await uploadImages();
-        console.log("Upload successful, URLs:", newImageUrls);
       }
 
       const token = localStorage.getItem("auth_token");
@@ -244,7 +233,6 @@ export default function ProductForm({ product, onClose, onSuccess }) {
         images: [...formData.images, ...newImageUrls],
       };
 
-      console.log("Saving product with payload:", payload);
 
       if (product) {
         await axios.put(`${API_URL}/admin/products/${product.id}`, payload, {

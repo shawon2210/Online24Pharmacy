@@ -12,7 +12,6 @@ import { PhoneIcon, UserIcon } from "@heroicons/react/24/outline";
 
 import { useTranslation } from "react-i18next";
 import { useCreateOrder } from "../hooks/useApi.js";
-import { ROUTES } from "../utils/constants";
 
 const Input = ({ label, icon, ...props }) => {
   const { t } = useTranslation();

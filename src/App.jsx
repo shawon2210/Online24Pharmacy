@@ -2,7 +2,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -14,9 +13,6 @@ import {
 } from "./components/auth/ProtectedRoute";
 
 // Common Components
-// ThemeProvider is provided at app root (main.jsx); do not re-wrap here
-// ThemeInitializer is executed at root (ThemeInit) so skip duplicate import
-
 import AIChatbot from "./components/chatbot/AIChatbot";
 import ScrollToTop from "./components/common/ScrollToTop";
 import Layout from "./components/layout/Layout";
@@ -57,6 +53,7 @@ import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminTest from "./pages/admin/AdminTest";
 import AdminReviews from "./pages/admin/AdminReviews";
+import NotFoundPage from "./pages/NotFoundPage";
 import AdminAuditLog from "./pages/admin/AdminAuditLog";
 import AdminShopsPage from "./pages/admin/AdminShopsPage";
 import AdminNotifications from "./pages/admin/AdminNotifications";
@@ -255,6 +252,8 @@ function App() {
                 }
               />
             </Routes>
+            {/* 404 Catch-all */}
+            <Route path="*" element={<NotFoundPage />} />
           </Router>
         </div>
       </AuthProvider>
